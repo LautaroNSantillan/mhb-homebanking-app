@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#90fd1b" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+    crossorigin="anonymous">
+  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+  <link rel="stylesheet" href="./assets/scss/main.min.css">
+  <title>MHB&CO | Accounts</title>
+</head>
+
+<div v-if="loading" class="loader flex-dir-column">
+  <img src="./assets/images/logo.png" alt="MHB" class="loader__image">
+  <div class="lds-circle">
+    <div>
+    </div>
+  </div>
+  <p>Loading... &#128116; 	&#9749;</p>
+</div>
+
+<body v-else id="app" class="green-theme">
+
+  <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
+  <nav class="top-bar off-canvas-content" data-off-canvas-content>
+    <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
+      data-toggle="offCanvas">
+      <svg viewBox="0 0 100 100">
+        <path class="line line1"
+          d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+        <path class="line line2" d="M 20,50 H 80" />
+        <path class="line line3"
+          d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+      </svg>
+    </button>
+    <p class="mhb">MIND HUB BROTHERS & CO. BANK</p>
+    <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
+  </nav>
+
+  <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge"
+    aria-label="Main Menu" data-toggle="offCanvasRight">
+    <svg viewBox="0 0 100 100">
+      <path class="line line1"
+        d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+      <path class="line line2" d="M 20,50 H 80" />
+      <path class="line line3"
+        d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+    </svg>
+  </button>
+
+
+  <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
+    data-transition="overlap">
+    <ul class="vertical menu" data-accordion-menu multi-open-false>
+      <li><a href="#">Profile</a></li>
+      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i></li>
+    </ul>
+  </div>
+
+  <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
+  <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
+
+    <ul v-if="client" class="ul-off-canvas welcome-large">
+      <div class="flex-container align-middle">
+        <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
+
+        <li>Welcome, {{client.firstName}} </li>
+      </div>
+    </ul>
+
+    <ul class="vertical menu accordion-menu " data-accordion-menu>
+      <li class="flex-container align-middle active"><a
+          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+            <ul class="vertical menu nested">
+              <li v-for="account in clientAccounts">
+                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested is-active">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i>
+      </li>
+    </ul>
+  </div>
+  <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
+  <main class="off-canvas-content tinted-image" data-off-canvas-content data-close="offCanvas"
+    @click="toggleTogglerMain">
+    <div class="feed flex-container flex-dir-column align-center hide-for-large">
+      <h4 v-if="client" class="hide-for-large text-center  welcome txt-shadow">Welcome, {{client.firstName}} !</h4>
+      <p class="align-middle text-center txt-shadow">
+        Your total balance : </p>
+      <div class="flex-container align-center">
+        <p v-if="eyeToggled">$ ********</p>
+        <p v-else class="txt-shadow">$ {{totalBalance}}</p>
+        <i class="fa-solid fa-eye align-self-middle" @click="eyeToggler" id="eyeToggler"></i>
+      </div>
+    </div>
+    <!------------------------------------------------------------------------------------------------------------------ MOBILE ACCOUNT CARDS -->
+
+    <!-----------------------------------------------------------------CAROUSEL -->
+    <div class="orbit hide-for-large" role="region" aria-label="Favorite Space Pictures" data-orbit>
+      <div class="orbit-wrapper">
+        <div class="orbit-controls">
+          <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+          <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+        </div>
+        <ul class="orbit-container">
+          <li class="is-active orbit-slide">
+            <figure class="orbit-figure">
+              <img class="orbit-image" src="./assets/images/1harold.png" alt="Hide the pain">
+              <figcaption class="orbit-caption">Hide the Pain, Trust Mind Hub Brothers & Co. Bank</figcaption>
+            </figure>
+          </li>
+          <li class="orbit-slide">
+            <figure class="orbit-figure">
+              <img class="orbit-image" src="./assets/images/3harold.png" alt="Space">
+              <figcaption class="orbit-caption">Hide the Pain, Reveal the Gain with Mind Hub Brothers & Co. Bank
+              </figcaption>
+            </figure>
+          </li>
+          <li class="orbit-slide">
+            <figure class="orbit-figure">
+              <img class="orbit-image" src="./assets/images/2harold.png" alt="Space">
+              <figcaption class="orbit-caption">Experience the Power of Mind Hub Brothers & Co. Bank, Backed by Harold
+              </figcaption>
+            </figure>
+          </li>
+          <li class="orbit-slide">
+            <figure class="orbit-figure">
+              <img class="orbit-image" src="./assets/images/4harold.png" alt="Space">
+              <figcaption class="orbit-caption">A Painless Experience with Mind Hub Brothers & Co. Bank</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- ---------------------------------------------------------------------------------- -->
+
+    <h3 class="text-center txt-shadow hide-for-large">Your accounts &#128071;</h3>
+    <div v-if="clientAccounts.length==0" class="hide-for-large">
+      <p class="text-center">You don't have any accounts yet &#128533;</p>
+    </div>
+    <div class="parentCardContainer hide-for-large" v-else-if="client">
+      <div class="cardContainer" tabindex="1" v-for="account of clientAccounts" @focus="accountFocused">
+        <div class="cardContainer__tag">
+          <p> {{account.number}} </p>
+          <i class="fa-solid fa-eye align-self-middle accEye" tabindex="2"></i>
+        </div>
+        <div class="cardContainer__content flex-container flex-dir-column">
+          <p class="txt-shadow "> ALIAS : {{account.alias}} </p>
+          <p class="txt-shadow ">Balance : $ {{account.balance}}</p>
+          <p class="txt-shadow "> Creation : {{account.creationDate.slice(0,10)}} </p>
+          <a :href="'http://localhost:8080/web/account.html?accountId=' + account.id"><i
+              class="fa-solid fa-arrow-right-long"></i> <i class="fa-solid fa-money-bill-transfer"></i></a>
+        </div>
+        <div class="cardContainer__flap"></div>
+      </div>
+    </div>
+
+    <div class="btn-multi hide-for-large">
+      <input type="checkbox" id="multi-btn" name="multi-btn" />
+      <label for="multi-btn">
+        <a href="#" class="btn btn-circle" target="_blank" @click.prevent><i
+            class="fa-solid fa-hand-holding-dollar icon" aria-hidden="true" data-open="loansModal"></i>
+          <a href="http://localhost:8080/web/cards.html" class="btn btn-circle" target="_blank"><i
+              class="fa-regular fa-credit-card icon" aria-hidden="true"></i>
+            <a href="#" class="btn btn-circle" target="_blank"><i class="fa-solid fa-arrow-trend-up icon"
+                aria-hidden="true"></i></a>
+            <span class="btn btn-circle"><i class="fa-solid fa-xmark icon"></i></span>
+            <i class="fa-solid fa-bars icon"></i>
+      </label>
+    </div>
+    <div v-if="client" class="large reveal loans-reveal" id="loansModal" data-reveal data-animation-in="fade-in"
+      data-animation-out="fade-out">
+      <p v-if="client.loans.length==0">You don't have any loans &#128176; </p>
+      <div v-else>
+        <h2>Your loans &#128071;</h2>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <p v-if="client.loans.length==0">You don't have any loans &#128176; </p>
+        <table v-else class="fl-table">
+          <tbody>
+            <tr v-for="loan of client.loans">
+              <th>Loan No. {{loan.loanId}}</th>
+              <td>Type:{{loan.loanType.slice(0,1).toUpperCase() +loan.loanType.slice(1) }} </td>
+              <td>Amount: ${{loan.amount}} </td>
+              <td>Payments: {{loan.payments}} </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+    <!-- -------------------------------------------------------------------------------LARGE----------------------------------------------- -->
+
+    <div class="grid-y grid-frame show-for-large" v-if="client">
+      <div class="cell shrink  cell-block-container">
+        <h1 class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-brain content"></i>&nbsp; Dashboard&nbsp;<i
+            class="fa-sharp fa-solid fa-building-columns content"></i></h1>
+
+        <!-----------------------------------------------------------------CAROUSEL -->
+        <div class="orbit div-shadow" role="region" aria-label="Favorite Space Pictures" data-orbit>
+          <div class="orbit-wrapper">
+            <div class="orbit-controls">
+              <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+              <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+            </div>
+            <ul class="orbit-container">
+              <li class="is-active orbit-slide">
+                <figure class="orbit-figure">
+                  <img class="orbit-image" src="./assets/images/1harold.png" alt="Hide the pain">
+                  <figcaption class="orbit-caption">Hide the Pain, Trust Mind Hub Brothers & Co. Bank</figcaption>
+                </figure>
+              </li>
+              <li class="orbit-slide">
+                <figure class="orbit-figure">
+                  <img class="orbit-image" src="./assets/images/3harold.png" alt="Space">
+                  <figcaption class="orbit-caption">Hide the Pain, Reveal the Gain with Mind Hub Brothers & Co. Bank
+                  </figcaption>
+                </figure>
+              </li>
+              <li class="orbit-slide">
+                <figure class="orbit-figure">
+                  <img class="orbit-image" src="./assets/images/2harold.png" alt="Space">
+                  <figcaption class="orbit-caption">Experience the Power of Mind Hub Brothers & Co. Bank, Backed by
+                    Harold</figcaption>
+                </figure>
+              </li>
+              <li class="orbit-slide">
+                <figure class="orbit-figure">
+                  <img class="orbit-image" src="./assets/images/4harold.png" alt="Space">
+                  <figcaption class="orbit-caption">A Painless Experience with Mind Hub Brothers & Co. Bank</figcaption>
+                </figure>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- ---------------------------------------------------------------------------------- -->
+
+        <div class="client-info fazed-shadow">
+          <h3 class="align-left flex-container txt-shadow btm-border ">Your info &#128071;</h3>
+          <div>
+            <p> First Name : <i>{{client.firstName}} </i></p>
+            <p>Last Name : <i>{{client.lastName}}</i> </p>
+            <p> Email : <i>{{client.userEmail}}</i> </p>
+          </div>
+        </div>
+
+        <div class="grid-x grid-padding-x flex-dir-column fazed-shadow">
+          <h3 class="txt-shadow btm-border">Your Accounts &#128071;</h3>
+          <div v-if="clientAccounts.length==0">
+            <p class="text-center">You don't have any accounts yet &#128533;</p>
+          </div>
+          <div v-else class="cell medium-12 medium-cell-block flex-container ">
+
+            <div v-for="account of clientAccounts">
+              <div class="center">
+                <div class="card">
+                  <div class="additional">
+                    <div class="user-card flex-container align-middle align-center text-center">
+                      <h4> {{account.number}} </h4>
+                    </div>
+                    <div class="more-info">
+                      <h2>This account: </h2>
+                      <p class="txt-shadow "> ALIAS : {{account.alias}} </p>
+                      <div class="coords flex-container align-spaced">
+                        <p> Balance : ${{account.balance}} </p>
+                      </div>
+                      <div class="coords flex-container align-spaced">
+                        <p> Creation : {{account.creationDate.slice(0,10)}} </p>
+                      </div>
+                      <div class="stats ">
+                        <div><a class="flex-container align-spaced"
+                            :href="'http://localhost:8080/web/account.html?accountId=' + account.id">
+                            <div class="title">Transactions : </div>
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                            <div class="value"> {{account.transactions.length}} </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="general flex-container align-middle">
+
+                    <span class="more">Mouse over the card for more info</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="client.accounts.length<3" class="flex-container align-center-middle new-acc">
+            <p>Need a new account? Click this button to generate a new one!</p>
+            <button class="box-shadow-btn" @click="createNewAcc">Create</button>
+          </div>
+        </div>
+        <div v-if="createdAcc" class="callout small acc-created  success" data-closable>
+          <h5>Account created succesfully ! &#128116;&#128077;</h5>
+          <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div v-if="maxAcc" class="callout small acc-created alert" data-closable>
+          <h5>Maximum number of accounts reached</h5>
+          <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div v-if="loanSuccess" class="callout small acc-created  success" data-closable>
+          <h5>Succes ! You've taken out the loan ! &#128116;&#128077;</h5>
+          <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div v-if="loanError" class="callout small acc-created alert" data-closable>
+          <h5>Loan Error</h5>
+          <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="table-wrapper show-for-large fazed-shadow" v-if="client">
+      <h3 class="reveal-for-large txt-shadow btm-border">Your Loans &#128071;</h3>
+      <p v-if="client.loans.length==0">You don't have any loans</p>
+      <table v-else class="fl-table">
+        <tbody>
+          <tr v-for="loan of client.loans">
+            <th>Loan : {{loan.loanId}}</th>
+            <td>Type:{{loan.loanType.slice(0,1).toUpperCase() +loan.loanType.slice(1) }} </td>
+            <td>Amount: ${{loan.amount}} </td>
+            <td>Payments: {{loan.payments}} </td>
+          </tr>
+        </tbody>
+      </table>
+      <p> Short on cash? Request a loan here &#128073;<button class="box-shadow-btn"
+          data-open="requestLoan">Request</button></p>
+    </div>
+
+    <!-- ----------------------------------------------------------------------------------Loan requestModal -->
+
+    <div class="reveal" id="requestLoan" data-reveal>
+      <h3 class="text-center">Request &#128176;</h3>
+      <form @submit.prevent>
+        <div class="grid-container flex-container align-center-middle">
+          <div class="grid-x grid-padding-x grid-padding-y">
+
+
+            <div class="medium-8 cell">
+              <fieldset>
+                <legend class="triple-radio">Choose type</legend>
+                <div class="radio-group triple-radio">
+                  <input type="radio" id="option-one" name="selector" value="MORTGAGE" v-model="loanId"
+                    @click="getLoanDTO">
+                  <label for="option-one">Mortgage</label>
+                  <input type="radio" id="option-two" name="selector" value="AUTO" v-model="loanId" @click="getLoanDTO">
+                  <label for="option-two">Auto</label>
+                  <input type="radio" id="option-three" name="selector" value="PERSONAL" v-model="loanId"
+                    @click="getLoanDTO">
+                  <label for="option-three">Personal</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div v-if="loanDTO" class="medium-12 cell ">
+              <div>
+                <label v-for="fpayments in loanDTO.payments" @change="getPayments"> {{fpayments}}
+                  <input type="radio" :name="fpayments" :value="fpayments" v-model="requestedPayments" />
+                </label>
+              </div>
+            </div>
+
+            <div class="medium-6 cell">
+              <label aria-describedby="amountHelpText">Amount
+                <div class="input-group">
+                  <span class="input-group-label">$</span>
+                  <input class="input-group-field" type="number" v-model="requestedAmount" @change="getPayments">
+                </div>
+                <p v-if="loanId=='MORTGAGE'" class="help-text" id="amountHelpText"> Max: $500000</p>
+                <p v-else-if="loanId=='AUTO'" class="help-text" id="amountHelpText"> Max: $300000</p>
+                <p v-else-if="loanId=='PERSONAL'" class="help-text" id="amountHelpText"> Max: $100000</p>
+              </label>
+            </div>
+
+            <div v-if="requestedPayments && finalPayments" class="medium-6 cell">
+              <p> {{requestedPayments}} X {{finalPayments}} </p>
+            </div>
+
+            <div class="medium-8 cell">
+              <label v-if="client" v-cloak>Select destination
+                <select v-model="destinationAccNumber">
+                  <option value="null">Select an account</option>
+                  <option :value="account.number" v-for="account in client.accounts">{{account.number}}</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="medium-12 cell">
+              <button class="box-shadow-btn" @click.prevent data-open="transactionModal" data-close
+                @click="requestLoan()">Request</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+
+  </main>
+
+  <footer class="off-canvas-content" data-off-canvas-content>
+
+    <div class="grid-x align-center-middle">
+      <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
+            class="fa-brands fa-square-facebook"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
+            class="fa-brands fa-square-twitter"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
+            class="fa-brands fa-square-instagram"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+            class="fa-brands fa-square-youtube"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
+            class="fa-brands fa-square-github"></i></a></div>
+      <div class="cell small-6 flex-container align-left">
+        <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="cell small-6 flex-container align-right">
+        <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+      </div>
+    </div>
+
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
+    integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="./assets/scripts/accounts.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+  <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

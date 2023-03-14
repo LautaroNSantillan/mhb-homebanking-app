@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style-manager.css">
+    <title>Admin</title>
+</head>
+
+<body>
+    <nav></nav>
+    <main id="app">
+        <section class="form-data d-flex justify-content-around flex-wrap">
+            <div>
+                <div class="form-div">
+                    <h2>Client Manager</h2>
+                    <form>
+                        <fieldset>
+                            <legend class="row">
+                                <label class="col-6">
+                                    First Name
+                                    <input v-model="fName" type="text">
+                                </label>
+                                <label class="col-6">
+                                    Last Name
+                                    <input v-model="lName" type="text">
+                                </label>
+                            </legend>
+                            <legend class="d-flex justify-content-start align-items-center flex-wrap">
+                                <label class="d-flex flex-column">
+                                    Email
+                                    <input v-model="email" type="text">
+                                </label>
+                            </legend>
+                        </fieldset>
+                        <button type="button" @click="addClient" class="btn btn-outline-primary">Add Client</button>
+                    </form>
+                </div>
+
+                <div>
+                    <h2>Client List</h2>
+
+                </div>
+                <table class="tb">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="client of clients">
+                        <tr>
+                            <td> {{client.firstName}} </td>
+                            <td>{{client.lastName}}</td>
+                            <td>{{client.userEmail}}</td>
+                            <td class="table-btn"><button @click="removeClient(client)" type="button"
+                                    class="btn btn-danger">X</button></td>
+                            <td class="table-btn"><button type="button" class="btn btn-outline-warning"
+                                    data-bs-toggle="modal" data-bs-target="#modifyModal"
+                                    @click="getClientId(client)">Modify</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="data-div">
+                <h2>Client REST Response</h2>
+                <pre>{{clientsData}}</pre>
+            </div>
+        </section>
+
+        <div id="modifyModal" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><strong> Modify Client</strong></h5>
+                        
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <fieldset >
+                                <legend>
+                                    <label class="d-flex flex-column justify-content-center">
+                                        <p class="mx-auto"> First Name</p>
+                                            <input class="mx-auto" v-model="fNameMod" type="text">
+                                    </label class="d-flex flex-column justify-content-center">
+                                    <label class="d-flex flex-column justify-content-center">
+                                        <p class="mx-auto"> Last Name</p>
+                                            <input class="mx-auto" v-model="lNameMod" type="text">
+                                    </label>
+                                </legend>
+                                <legend>
+                                    <label class="d-flex flex-column justify-content-center">
+                                        <p class="mx-auto"> Email</p>
+                                            <input class="mx-auto" v-model="emailMod" type="text">
+                                    </label>
+                                </legend>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><b>Close</b></button>
+                        <button type="button" class="btn btn-outline-warning" @click="modClient"><b>Apply Changes</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./manager.js"></script>
+
+</body>
+
+</html>

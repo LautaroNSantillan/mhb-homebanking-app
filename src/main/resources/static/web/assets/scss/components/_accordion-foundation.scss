@@ -1,0 +1,25 @@
+%typeTypography{
+    font-weight: bolder;
+    font-size: large
+}
+
+main > .accordion-wrapper{
+    height: 90vh;
+    width: 100vw;
+    @media (min-width:1024px){
+        width: 100%;
+    }
+}
+
+.accordion-wrapper h2{
+    padding: 1.5rem
+}
+
+.credit{
+    @extend %typeTypography;
+    color: green;
+}
+.debit{
+    @extend %typeTypography;
+    color: red;
+}

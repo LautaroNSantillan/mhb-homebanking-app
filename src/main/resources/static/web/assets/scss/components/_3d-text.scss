@@ -1,0 +1,106 @@
+$LIGHTING_FLOOR: 1;
+$LIGHTING_CEIL: 2;
+$LIGHTING_FLAT: 3;
+
+@mixin text3d(
+  $primary,
+  $depth: 5,
+  $shadowsteps: 5,
+  $shadowincrementer: 3px,
+  $shadowopacity: 0.5,
+  $primaryshadowcolour: #000,
+  $lighting: $LIGHTING_CEIL
+) {
+  $predefinedShadows: (
+    0 0 5px rgba($primaryshadowcolour, 0.05),
+    0 -1px 3px rgba($primaryshadowcolour, 0.2),
+    0 3px 5px rgba($primaryshadowcolour, 0.2)
+  );
+  $value: ();
+  @for $i from 1 through $depth {
+    $num: $i + px;
+    $hueadjust: $i;
+    @if ($lighting == $LIGHTING_FLOOR) {
+      $hueadjust: ($i * 2 - $depth - 5) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_CEIL) {
+      $hueadjust: -($i * 2 + $depth - 10) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_FLAT) {
+      $hueadjust: -$depth * 1%;
+    }
+    $colour: adjust-color($primary, $lightness: $hueadjust);
+    $theShadow: 0 $num 0 $colour;
+    $value: append($value, $theShadow, comma);
+  }
+
+  @for $i from 1 through $shadowsteps {
+    @if ($i >= length($predefinedShadows)) {
+      $dist: $i * $shadowincrementer;
+      $value: append(
+        $value,
+        0 $dist $dist rgba($primaryshadowcolour, $shadowopacity)
+      );
+    } @else {
+      $value: append($value, nth($predefinedShadows, $i));
+    }
+  }
+
+  text-shadow: $value;
+}
+
+$primarycolour: green;
+
+.txt-3d {
+  color: #e7e7e7;
+  font-family: "Kanit";
+  font-size: 60px;
+  line-height: 1em;
+  text-align: center;
+  width: 100%;
+
+  @include text3d(
+    adjust-color($primarycolour, $lightness: -8%),
+    $depth: 8,
+    $primaryshadowcolour:
+      adjust-color($primarycolour, $lightness: -10%, $saturation: +20%),
+    $shadowopacity: 0.3
+  );
+}
+
+
+.dynamic-text-shadow {
+  text-shadow: .1em .1em 0 hsl(200 50% 30%);
+}
+
+.fazed-shadow{
+  border: 1px rgba(107, 240, 46, 0.4) solid;
+  box-shadow: rgba(107, 240, 46, 0.4) -5px 5px, rgba(107, 240, 46, 0.3) -10px 10px, rgba(107, 240, 46, 0.2) -15px 15px, rgba(107, 240, 46, 0.1) -20px 20px, rgba(107, 240, 46, 0.05) -25px 25px;
+}
+
+.cube-box {
+  --b:2px;   /* border length*/
+  --c:15px;  /* the cube perspective */
+  
+  --g:calc(var(--c)*0.707); /* 0.707 = cos(45deg) = sin(45deg) */
+  margin: 10px;
+  display: inline-block;
+  padding:var(--b) var(--b) var(--c) var(--c);
+  background:
+    linear-gradient(-45deg,transparent var(--g),#86ee60 0) left   /var(--c) 100%,
+    linear-gradient(135deg,transparent var(--g),#86ee60a4 0)     bottom /100% var(--c),
+    linear-gradient(#86ee60a4,#86ee60a4)                               top    /100% var(--b),
+    linear-gradient(#86ee60a4,#86ee60a4)                               right  /var(--b) 100%;
+  background-repeat:no-repeat;
+  clip-path: 
+    polygon(0% calc(var(--c) - var(--b)), calc(var(--c) - var(--b)) 0%, 
+    100% 0%, 
+    100% calc(100% - var(--c) + var(--b)), calc(100% - var(--c) + var(--b)) 100%, 
+    0% 100%);
+    
+    .content {
+      padding: .5rem;
+    }
+
+}
+

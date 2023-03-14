@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Abril+Fatface&family=Buda&family=Gravitas+One&family=Lato&family=Montserrat&family=PT+Sans:ital@0;1&family=Racing+Sans+One&display=swap');
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Montserrat', sans-serif;
+    background-color: black;
+}
+
+nav{
+    min-height: 10vh;
+}
+main{
+    min-height: 70vh;
+}
+footer{
+    min-height: 20vh;
+}
+
+h2{
+    color: #BAFF43;
+}
+
+input{
+    width: 15rem;
+    border: none;
+}
+
+label, pre, td{
+    color: white;
+}
+
+.form-data{
+    display: flex;
+}
+
+.tb{
+    border-collapse: collapse;
+}
+
+.tb th, .tb td{
+    padding: 5px; border: solid 1px #777;
+}
+
+.tb tr{
+    width: 100%;
+}
+
+.tb th { 
+    background-color: rgb(255,1,255); 
+    color: #0000FF;
+}
+
+.table-btn{
+    border-color:rgb(255,1,255)!important;
+    border-radius: .5rem!important;
+}
+
+.modal-body, .modal-header, .modal-footer{
+    background-color: rgb(255,1,255);
+}
+
+.form-data > div{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 33rem;
+}

@@ -1,0 +1,15 @@
+.orbit {
+  margin: auto;
+  margin-bottom: 4rem;
+  width: 90%;
+
+  &-caption {
+    font-size: larger;
+    font-weight: bold;
+  }
+  @media (max-width: 1024px) {
+    width: 95%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+}

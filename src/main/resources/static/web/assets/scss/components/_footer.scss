@@ -1,0 +1,30 @@
+footer{
+    padding: 1rem;
+    .grid-x{
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        div:nth-last-of-type(-n+2){
+            padding: 1rem;
+            p,i{
+                text-align: center;
+                font-size: medium;
+            }
+            i{
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+        }
+        .cell{
+            text-align: center;
+        }
+    }
+    i{
+        font-size: 2.5rem;
+    }
+    p{
+        text-align: end!important;
+        font-size: small; 
+        margin-top: auto;
+    }
+}

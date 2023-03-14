@@ -1,0 +1,128 @@
+.menu {
+  @include w-h(auto);
+}
+
+.off-canvas {
+  z-index: 15 !important;
+  max-height: 100vh;
+  @media (min-width: 1024px) {
+    width: 20%;
+  }
+  @media (min-width: 1440px) {
+    width: 15%;
+  }
+  &__user-img {
+    width: 4rem;
+  }
+}
+
+.off-canvas-content.has-reveal-left {
+  @media (min-width: 1024px) {
+    margin-left: 20%;
+  }
+  @media (min-width: 1440px) {
+    margin-left: 15%;
+  }
+}
+
+.position-left.reveal-for-large {
+  min-height: 100vh;
+}
+
+.position-left.reveal-for-large ~ .off-canvas-content {
+  @media (min-width: 1024px) {
+    margin-left: 20%;
+  }
+  @media (min-width: 1440px) {
+    margin-left: 15%;
+  }
+}
+
+.js-off-canvas-overlay {
+  height: fit-content;
+}
+
+.top-bar {
+  background-color: transparent;
+  height: 10vh;
+  @media (max-width: 1440px) {
+  }
+  p {
+    font-weight: bolder;
+  }
+}
+
+.nav-logo {
+  @include w-h(6vh);
+  margin-bottom: 1vh;
+  @media (min-width: 1024px) {
+    float: right;
+    margin-right: 1rem;
+    @include w-h(5vh);
+  }
+}
+
+.mhb {
+  text-align: center;
+  vertical-align: middle;
+  font-family: "Vollkorn", serif !important;
+  display: flex;
+  font-size: x-large;
+  margin-left: auto;
+  margin-right: 1rem;
+  &--index {
+    text-align: center;
+    margin: auto;
+    font-family: "Vollkorn", serif !important;
+    font-size: xx-large;
+    padding-bottom: 0.5rem;
+  }
+  @media (max-width: 1024px) {
+    &--index {
+      font-size: 30%;
+    }
+  }
+}
+
+.my-cards-a {
+  i {
+    padding-left: 0.8rem;
+  }
+}
+
+.ul-off-canvas {
+  list-style-type: none;
+  font-size: x-large;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-large {
+  margin-top: 10vh;
+  margin-left: 1rem;
+  font-size: x-large;
+  font-weight: bold;
+  font-family: "Vollkorn", serif !important;
+  div {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    li {
+      margin-right: 1rem;
+      width: fit-content;
+    }
+  }
+}
+
+.accounts-navbar{
+  a{
+    text-align: center;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: medium;
+    color: white;
+    margin: 0;
+  }
+}

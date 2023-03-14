@@ -1,0 +1,26 @@
+.pallete {
+  font-size: 2rem;
+  border-radius: 1rem;
+  background-color: rgba(128, 128, 128, 0.568);
+  padding: 1rem;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: rgba(41, 41, 41, 0.568);
+  }
+
+  &--red {
+    color: $red-dark;
+  }
+  &--blue {
+    color: $blue-primary;
+  }
+  &--green {
+    color: green;
+  }
+  &--dark {
+    color: black;
+  }
+  &--mh {
+    color: $mh-pink;
+  }
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#90fd1b" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+        crossorigin="anonymous">
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+    <link rel="stylesheet" href="./assets/scss/main.min.css">
+    <title>MHB&CO | Transactions</title>
+</head>
+
+<body id="transaction" class="green-theme">
+    <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
+    <nav class="top-bar off-canvas-content" data-off-canvas-content>
+        <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
+            data-toggle="offCanvas">
+            <svg viewBox="0 0 100 100">
+                <path class="line line1"
+                    d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+                <path class="line line2" d="M 20,50 H 80" />
+                <path class="line line3"
+                    d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+            </svg>
+        </button>
+        <p class="mhb">MIND HUB BROTHERS & CO. BANK</p>
+        <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
+    </nav>
+
+    <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge"
+        aria-label="Main Menu" data-toggle="offCanvasRight">
+        <svg viewBox="0 0 100 100">
+            <path class="line line1"
+                d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+            <path class="line line2" d="M 20,50 H 80" />
+            <path class="line line3"
+                d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+        </svg>
+    </button>
+
+
+    <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
+        data-transition="overlap">
+        <ul class="vertical menu" data-accordion-menu multi-open-false>
+            <li><a href="#">Profile</a></li>
+            <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+            <li>
+                <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+                        class="fa-regular fa-credit-card"></i></a>
+                <ul class="vertical menu nested">
+                    <li>
+                        <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+                    </li>
+                    <li>
+                        <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+            </div>
+          </li>
+        </ul>
+      </li> -->
+            <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+                    class="fa-solid fa-right-from-bracket"></i></li>
+        </ul>
+    </div>
+
+    <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
+    <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
+
+        <ul v-if="client" class="ul-off-canvas welcome-large">
+            <div class="flex-container align-middle">
+                <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
+
+                <li>Welcome, {{client.firstName}} </li>
+            </div>
+        </ul>
+
+        <ul class="vertical menu accordion-menu " data-accordion-menu>
+            <li class="flex-container align-middle active"><a
+                    :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i>
+            </li>
+            <li>
+                <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+                        class="fa-regular fa-credit-card"></i></a>
+                <ul class="vertical menu nested">
+                    <li>
+                        <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+                    </li>
+                    <li>
+                        <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+                    </li>
+                </ul>
+            </li>
+            <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested is-active">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+
+            </div>
+          </li>
+        </ul>
+      </li> -->
+            <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
+                    class="fa-solid fa-right-from-bracket"></i>
+            </li>
+        </ul>
+    </div>
+    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
+    <main class="off-canvas-content tinted-image" data-off-canvas-content data-close="offCanvas"
+        @click="toggleTogglerMain">
+
+        <div class=" flex-container align-center-middle align-self-middle">
+            <h1 class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-money-bill-transfer"></i>Transfer money<i class="fa-solid fa-money-bill-transfer"></i></h1>
+        </div>
+
+        <div v-if="invalidTransaction" class="callout small alert" data-closable>
+            <h5>Something went wrong ! ({{transactionError}})</h5>
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+              <span aria-hidden="true">&times;</span>
+          </button>
+          </div>
+
+          <div v-if="transactionSuccess" class="callout small acc-created  success" data-closable>
+            <h5>Transaction succesful ! &#128116;&#128077;</h5>
+            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="reveal" id="transactionModal" data-reveal>
+            <p class="lead">Do you wish to send ${{amount}} to {{destinationAccNumber}} ? </p>
+            <button class="box-shadow-btn" @click.prevent="makeTransaction" data-close>Confirm</button>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+
+        <form @submit.prevent class="transaction-form">
+            <div class="grid-container">
+                <div class="grid-x grid-padding-x grid-padding-y">
+                    <div class="medium-8 cell">
+                        <fieldset class="fieldset-stylish">
+                            <legend>Choose destination</legend>
+                            <div class="toggle-stylish">
+                                <input type="radio" name="destination" value="Own" id="sizeWeight"  v-model="destination" />
+                                <label for="sizeWeight">Own account</label>
+                                <input type="radio" name="destination" value="ThirdParty" id="sizeDimensions" v-model="destination"/>
+                                <label for="sizeDimensions">Third party</label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+                    <div  class="medium-8 cell">
+                        <label v-if="client" v-cloak >Select origin
+                            <select v-model="originAccNumber">
+                                <option value="null">Select an account</option>
+                                <option :value="account.number" v-for="account in client.accounts">{{account.number}}</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <!-- <div class="medium-8 cell">
+                        <label>
+                            <fieldset>
+                                <legend>Choose destination</legend>
+                                <input type="radio" name="destination" value="Own" id="own" required
+                                    v-model="destination"><label for="own">Own Account</label>
+                                <input type="radio" name="destination" value="ThirdParty" id="thirdparty"
+                                    v-model="destination"><label for="thirdparty">Third party</label>
+                            </fieldset>
+                        </label>
+                    </div> -->
+
+                    <div v-if="destination === 'Own'" class="medium-8 cell">
+                        <label>Select your account
+                            <p v-if="filteredAccounts.length==0">You don't have any more accounts</p>
+                          <select  v-else v-model="destinationAccNumber">
+                            <option v-for="account in filteredAccounts" :value="account.number">{{account.number}}</option>
+                          </select>
+                        </label>
+                      </div>
+
+                    <div v-else-if="destination=='ThirdParty'" class="medium-8 cell">
+                        <label >Third party account's number
+                            <input type="text" placeholder=".medium-6.cell"  maxlength="100"  v-model="destinationAccNumber">
+                        </label>
+                    </div>
+
+                    <div class="medium-6 cell">
+                        <label aria-describedby="descriptionHelpText">Description
+                            <input type="text" placeholder=".medium-6.cell"  maxlength="100" v-model="description">
+                            <p class="help-text" id="descriptionHelpText"> {{description.length}}/100 character limit </p>
+                        </label>
+                    </div>
+
+                    <div class="medium-6 cell">
+                        <label aria-describedby="amountHelpText">Amount
+                            <div class="input-group">
+                                <span class="input-group-label">$</span>
+                                <input class="input-group-field" type="number" v-model="amount">
+                            </div>
+                            <p class="help-text" id="amountHelpText">Minimun amount: $1</p>
+                        </label>
+                    </div>
+                    <div class="medium-12 cell">
+                        <button class="box-shadow-btn" @click.prevent data-open="transactionModal">Send</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer class="off-canvas-content" data-off-canvas-content>
+
+        <div class="grid-x align-center-middle">
+            <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
+                        class="fa-brands fa-square-facebook"></i></a></div>
+            <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
+                        class="fa-brands fa-square-twitter"></i></a></div>
+            <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
+                        class="fa-brands fa-square-instagram"></i></a></div>
+            <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+                        class="fa-brands fa-square-youtube"></i></a></div>
+            <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
+                        class="fa-brands fa-square-github"></i></a></div>
+            <div class="cell small-6 flex-container align-left">
+                <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="cell small-6 flex-container align-right">
+                <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+            </div>
+        </div>
+
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
+        integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./assets/scripts/transaction.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
+    <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

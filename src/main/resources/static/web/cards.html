@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#90fd1b" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+        crossorigin="anonymous">
+    <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+    <link rel="stylesheet" href="./assets/scss/main.min.css">
+    <title>MHB&CO | CARDS</title>
+</head>
+
+<body id="app" class="green-theme tinted-image">
+   <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
+  <nav class="top-bar off-canvas-content" data-off-canvas-content>
+    <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
+      data-toggle="offCanvas">
+      <svg viewBox="0 0 100 100">
+        <path class="line line1"
+          d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+        <path class="line line2" d="M 20,50 H 80" />
+        <path class="line line3"
+          d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+      </svg>
+    </button>
+    <p class="mhb">MIND HUB BROTHERS & CO. BANK</p>
+    <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
+  </nav>
+  
+  <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge" aria-label="Main Menu"
+  data-toggle="offCanvasRight">
+  <svg viewBox="0 0 100 100">
+    <path class="line line1"
+      d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+    <path class="line line2" d="M 20,50 H 80" />
+    <path class="line line3"
+      d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+  </svg>
+</button>
+ 
+
+  <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
+    data-transition="overlap">
+    <ul class="vertical menu" data-accordion-menu multi-open-false>
+      <li><a href="#">Profile</a></li>
+      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i></li>
+    </ul>
+  </div>
+
+  <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
+  <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
+
+    <ul v-if="client" class="ul-off-canvas welcome-large">
+      <div class="flex-container align-middle">
+        <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
+
+        <li>Welcome, {{client.firstName}} </li>
+      </div>
+    </ul>
+
+    <ul class="vertical menu accordion-menu " data-accordion-menu>
+      <li class="flex-container align-middle active"><a
+          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested is-active">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i>
+      </li>
+    </ul>
+  </div>
+  <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
+    <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
+
+        <h1 class="text-center txt-3d">Your Cards</h1>
+        <h2 class="card-h2 text-center div-underline txt-shadow cards-container"> Credit</h2>
+        <h3 class="text-center" v-if="client && creditCards.length==0">No cards here &#129335;</h3>
+        <div v-else class="flex-container align-spaced align-middle flex-wrap small-flex-dir-column cards-container">
+            <div :class="checkExpirationDate(card) ? 'wrap-cards bg-red' : 'wrap-cards'" v-for="card of creditCards">
+                <div v-if="client" class="credit-card ">
+                    <div
+                        :class="[card.cardColor === 'GOLD'? 'gold-card card__front card__part' : card.cardColor === 'SILVER'? 'silver-card card__front card__part' : 'titanium-card card__front card__part']">
+                        <h6>MIND HUB BROTHERS</h6>
+                        <p class="card_numer"> {{card.cardDigits}} </p>
+                        <div class="card__space-75">
+                            <span class="card__label">Card holder</span>
+                            <p class="card__info"> {{card.cardHolder}} </p>
+                        </div>
+                        <div class="card__space-25">
+                            <span class="card__label">From</span>
+                            <p class="card__info"> {{card.fromDate.slice(5,7)}}/{{card.fromDate.slice(2,4)}} </p>
+                        </div>
+                        <div class="card__space-25">
+                            <span class="card__label">Expires</span>
+                            <p class="card__info"> {{card.thruDate.slice(5,7)}}/{{card.thruDate.slice(2,4)}} </p>
+                        </div>
+                        <div class="card_type">
+                            <p > CREDIT</p>
+                        </div>
+                    </div>
+                    <div
+                        :class="[card.cardColor === 'GOLD'? 'card__back card__part gold-card' : card.cardColor === 'SILVER'? 'silver-card card__back card__part' : 'card__back card__part titanium-card ']">
+                        <div class="card__black-line"></div>
+                        <div class="card__back-content">
+                            <div class="card__secret">
+                                <p class="card__secret--last"> {{card.cvv}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal tiny expire-modal flex-dir-column align-spaced text-center" id="card-expire" data-reveal>
+                    <h5>This card is about to expire OR is expired</h5>
+                    <p class="lead">Click below to renew it! &#128071;</p>
+                    <button @click="renewCard(card)" class="box-shadow-btn">RENEW</button>
+                    <button  class="close-button" data-close aria-label="Close modal" type="button">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <a v-if="checkExpirationDate(card)" class="flex-container align-center-middle expire-modal-btn"  data-open="card-expire"><span class="double-exclamation">&#10071;&#10071;</span><p>&#128072;Click to see details!</p></a>
+            </div>
+        </div>
+
+        <h2 class="card-h2 text-center div-underline cards-container txt-shadow">Debit</h2>
+        <h3 class="text-center" v-if="client && debitCards.length==0">No cards here &#129335;</h3>
+        <div v-else v-if="client"class="flex-container align-spaced align-middle flex-wrap small-flex-dir-column cards-container">
+            <div class="wrap-cards" v-for="card of debitCards">
+                <div v-if="client" class="credit-card ">
+                    <div
+                        :class="[card.cardColor === 'GOLD'? 'gold-card card__front card__part' : card.cardColor === 'SILVER'? 'silver-card card__front card__part' : 'titanium-card card__front card__part']">
+                        <h6>MIND HUB BROTHERS</h6>
+                        <p class="card_numer"> {{card.cardDigits}} </p>
+                        <div class="card__space-75">
+                            <span class="card__label">Card holder</span>
+                            <p class="card__info"> {{card.cardHolder}} </p>
+                        </div>
+                        <div class="card__space-25">
+                            <span class="card__label">From</span>
+                            <p class="card__info"> {{card.fromDate.slice(5,7)}}/{{card.fromDate.slice(2,4)}} </p>
+                        </div>
+                        <div class="card__space-25">
+                            <span class="card__label">Expires</span>
+                            <p class="card__info"> {{card.thruDate.slice(5,7)}}/{{card.thruDate.slice(2,4)}} </p>
+                        </div>
+                        <div class="card_type">
+                            <p > DEBIT</p>
+                        </div>
+                    </div>
+                    <div
+                        :class="[card.cardColor === 'GOLD'? 'card__back card__part gold-card' : card.cardColor === 'SILVER'? 'silver-card card__back card__part' : 'card__back card__part titanium-card ']">
+                        <div class="card__black-line"></div>
+                        <div class="card__back-content">
+                            <div class="card__secret">
+                                <p class="card__secret--last"> {{card.cvv}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal small expire-modal" id="card-expire" data-reveal>
+                    <h5>This card is about to expire OR is expired</h5>
+                    <p class="lead">Click below to renew it! &#128071;</p>
+                    <button @click="renewCard(card)" class="box-shadow-btn">RENEW</button >
+                    <button class="close-button" data-close aria-label="Close modal" type="button">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <a v-if="checkExpirationDate(card)" class="expire-modal-btn flex-container align-center-middle" data-open="card-expire"><span >&#10071;&#10071;</span><p>&#9756;Click to see details!</p></a>
+               
+            </div>
+        </div>
+
+
+    </main>
+
+
+
+   
+  <footer class="off-canvas-content" data-off-canvas-content>
+
+    <div class="grid-x align-center-middle">
+      <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-square-facebook"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-square-twitter"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-square-instagram"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i class="fa-brands fa-square-youtube"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i class="fa-brands fa-square-github"></i></a></div>
+      <div class="cell small-6 flex-container align-left">
+        <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="cell small-6 flex-container align-right">
+        <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+      </div>
+    </div>
+
+  </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
+        integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./assets/scripts/cards.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
+    <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

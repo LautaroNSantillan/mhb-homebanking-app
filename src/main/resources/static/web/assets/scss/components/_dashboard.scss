@@ -1,0 +1,89 @@
+h1 {
+  display: flex;
+  align-items: center;
+  font-weight: bolder;
+  i {
+    font-size: 1.9rem;
+    margin: 1rem;
+  }
+}
+
+p {
+  font-size: larger;
+}
+
+.client-info {
+  padding: 0.7rem;
+  box-shadow: 0px 0.7rem 1.5rem rgba(0, 0, 0, 0.2);
+  margin: 1rem;
+  margin: auto;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+  > div {
+    font-size: large;
+    font-weight: bold;
+    margin: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    i {
+      font-weight: 400;
+    }
+  }
+}
+
+.btm-border {
+  border-bottom: 1px solid;
+}
+
+.div-shadow {
+  box-shadow: 1rem 0 1.2rem -4px rgba(0, 0, 0, 0.2),
+    -1rem 0 0.5rem -0.2rem rgba(0, 0, 0, 0.2);
+}
+
+.side-shadow {
+  box-shadow: 0 0 15px 0px #000;
+  clip-path: inset(0px -15px 0px -15px);
+}
+
+.grid-x {
+  width: 90%;
+  margin: auto;
+  margin-top: 4rem;
+  box-shadow: 0px 0.7rem 1.5rem rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  h3 {
+    margin-top: 0.5rem;
+  }
+}
+
+.welcome {
+  list-style-type: initial;
+  width: fit-content;
+  margin: auto;
+  padding-bottom: 1rem!important;
+  font-weight: bold;
+  text-decoration: underline; 
+  text-decoration-style: dotted!important;
+}
+.off-canvas{
+  .active{
+    background-color: #86EE60;
+    a{
+      background-color: #86EE60!important;
+    }
+    a,i{
+      color:black!important;
+    }
+}
+}
+
+.new-acc{
+  padding: 1rem;
+  text-align: center;
+  p{
+    margin-right: 1rem;
+  }
+}
+

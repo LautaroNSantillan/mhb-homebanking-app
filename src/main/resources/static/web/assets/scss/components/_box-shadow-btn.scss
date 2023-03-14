@@ -1,0 +1,46 @@
+.box-shadow-btn {
+    --border: 5px;    /* the border width */
+    --color: green; /* the color */
+    
+    font-size: 1.5rem;
+    padding: 0.25em 1.2em;
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    color: green;
+    box-shadow: 
+      0 0 0 200px inset var(--c,#0000),
+      0 0 0 var(--border) inset var(--color);
+    background: linear-gradient(var(--color) 0 0) bottom/100% 0% no-repeat;
+    transition: color var(--t,0.3s), background-size 0.3s;
+    position: relative;
+  }
+  .box-shadow-btn:before,
+  .box-shadow-btn:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    clip-path: polygon(0 0,100% 0,calc(100% + 20vmax) 20vmax,20vmax calc(100% + 20vmax),0 100%);
+    box-shadow: 0 0 0 .5vmax var(--color);
+    filter: brightness(1.1);
+  }
+  .box-shadow-btn:after {
+    inset: 0 0 0 auto;
+    filter: brightness(0.9);
+  }
+  .box-shadow-btn:hover,
+  .box-shadow-btn:active{
+    background-size: 100% 100%;
+    color: #fff;
+    --t: 0.2s 0.1s;
+  }
+  .box-shadow-btn:focus-visible {
+    outline-offset: calc(-1*var(--border));
+    outline: var(--border) solid #000a;
+  }
+  .box-shadow-btn:active {
+    --c: #0005;
+    transform: translate(4px,4px);
+    transition: none;
+  }

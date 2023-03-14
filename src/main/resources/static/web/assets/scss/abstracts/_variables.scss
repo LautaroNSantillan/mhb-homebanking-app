@@ -1,0 +1,48 @@
+$primary:null;
+$secondary: null;
+$terciary:null;
+$dark:null;
+
+$green-primary:#2E6E65;
+$green-secondary: #86EE60;
+$green-terciary:#F4F7ED;
+$green-dark:#2B3752;
+
+$mh-pink: rgb(255, 1, 255);
+$mh-blue: rgb(0, 0, 255);
+$mh-green: rgb(144, 253, 27);
+$mh-dark:#353839;
+
+$blue-primary:#39A2DB;
+$blue-secondary: #A2DBFA;
+$blue-terciary:#ececec;
+$blue-dark:#053742;
+
+$red-primary:#EE6F57;
+$red-secondary: #E3E3E3;
+$red-terciary:#FAFAFA;
+$red-dark:#CB3737;
+
+$dark-green-primary:#3E432E;
+$dark-green-secondary: #616F39;
+$dark-green-terciary:#A7D129;
+$dark-green-dark:#1e1f1e;
+
+$dark-primary:#414141;
+$dark-secondary: #313131;
+$dark-terciary:#722f33;
+$dark-dark:#525252;
+
+$pink-blue-gradient:linear-gradient(
+    0deg,
+    hsl(240deg 100% 50%) 13%,
+    hsl(259deg 100% 50%) 51%,
+    hsl(267deg 100% 50%) 65%,
+    hsl(273deg 100% 50%) 74%,
+    hsl(279deg 100% 50%) 81%,
+    hsl(284deg 100% 50%) 86%,
+    hsl(288deg 100% 50%) 91%,
+    hsl(292deg 100% 50%) 94%,
+    hsl(296deg 100% 50%) 97%,
+    hsl(300deg 100% 50%) 100%
+  );

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+        crossorigin="anonymous">
+        <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./assets/scss/main.min.css">
+    <title>MHB&CO | Account</title>
+</head>
+
+<body id="app" class="green-theme tinted-image">
+   <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
+  <nav class="top-bar off-canvas-content" data-off-canvas-content>
+    <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
+      data-toggle="offCanvas">
+      <svg viewBox="0 0 100 100">
+        <path class="line line1"
+          d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+        <path class="line line2" d="M 20,50 H 80" />
+        <path class="line line3"
+          d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+      </svg>
+    </button>
+    <p class="mhb">MIND HUB BROTHERS & CO. BANK</p>
+    <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
+  </nav>
+  
+  <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge" aria-label="Main Menu"
+  data-toggle="offCanvasRight">
+  <svg viewBox="0 0 100 100">
+    <path class="line line1"
+      d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+    <path class="line line2" d="M 20,50 H 80" />
+    <path class="line line3"
+      d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+  </svg>
+</button>
+ 
+
+  <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
+    data-transition="overlap">
+    <ul class="vertical menu" data-accordion-menu multi-open-false>
+      <li><a href="#">Profile</a></li>
+      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i></li>
+    </ul>
+  </div>
+
+  <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
+  <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
+
+    <ul v-if="client" class="ul-off-canvas welcome-large">
+      <div class="flex-container align-middle">
+        <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
+
+        <li>Welcome, {{client.firstName}} </li>
+      </div>
+    </ul>
+
+    <ul class="vertical menu accordion-menu " data-accordion-menu>
+      <li class="flex-container align-middle active"><a
+          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+          </li>
+        </ul>
+      </li>
+      <!-- <li>
+        <a href="#">Theme</a>
+        <ul class="vertical menu nested is-active">
+          <li>
+            <div class="grid-x">
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
+                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
+                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
+                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
+                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
+              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
+                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
+
+            </div>
+          </li>
+        </ul>
+      </li> -->
+      <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i>
+      </li>
+    </ul>
+  </div>
+  <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
+    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+
+    <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
+
+        <h1 class="text-center txt-3d"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp; {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1>
+        <!-- <div v-if="accounts" class="accordion-wrapper">
+            <div v-if="accounts && sortedTransactions.length==0">
+                <h3>No transactions to show</h3>
+            </div>
+            <div v-else>
+                <ul class="accordion" data-accordion>
+                    <li class="accordion-item" data-accordion-item v-for="transaction of sortedTransactions">
+
+                        <a href="#" class="accordion-title flex-container align-spaced">
+                            <p :class="[transaction.type === 'CREDIT'? 'credit' : 'debit']"> {{transaction.type }}</p>
+                            <p :class="[transaction.type === 'CREDIT'? 'credit' : 'debit']"> {{transaction.amount }}</p>
+                        </a>
+                        <div class="accordion-content" data-tab-content>
+                            <p> Type: {{transaction.type}} </p>
+                            <p> Description : {{transaction.description}} </p>
+                            <p> Date : {{transaction.date.slice(0,10)}}, {{transaction.date.slice(11,16)}}hs </p>
+                        </div>
+                    </li>
+                </ul>
+            </div> -->
+            <div v-if="accounts && sortedTransactions.length==0">
+                <h3 class="text-center">No transactions to show</h3>
+            </div>
+            <div v-else class="container">
+                <ul class="responsive-table" >
+                  <li class="table-header">
+                    <div class="col col-1">Date</div>
+                    <div class="col col-2">Type</div>
+                    <div class="col col-3">Amount</div>
+                    <div class="col col-4">Description</div>
+                  </li>
+                  <li class="table-row" v-for="transaction of sortedTransactions">
+                    <div class="col col-1" data-label="DATE"> {{transaction.date.slice(0,10)}} </div>
+                    <div :class="[transaction.type === 'CREDIT'? 'col col-2 credit' : ' col col-2 debit']" data-label="TYPE"> {{transaction.type}} </div>
+                    <div :class="[transaction.type === 'CREDIT'? 'col col-3 credit' : ' col col-3 debit']" data-label="AMOUNT"> {{transaction.amount}} </div>
+                    <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
+                  </li>
+                  
+                </ul>
+              </div>
+
+    </main>
+
+
+
+    <footer class="off-canvas-content" data-off-canvas-content>
+
+      <div class="grid-x align-center-middle">
+        <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-square-facebook"></i></a></div>
+        <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-square-twitter"></i></a></div>
+        <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-square-instagram"></i></a></div>
+        <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i class="fa-brands fa-square-youtube"></i></a></div>
+        <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i class="fa-brands fa-square-github"></i></a></div>
+        <div class="cell small-6 flex-container align-left">
+          <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="cell small-6 flex-container align-right">
+          <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+        </div>
+      </div>
+  
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
+        integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./assets/scripts/account.js"></script>
+    <script>
+        $(document).foundation();
+    </script>
+    <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

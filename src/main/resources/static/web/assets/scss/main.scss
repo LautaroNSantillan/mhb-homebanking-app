@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Vollkorn&display=swap');
+@import './abstracts/variables' ;
+@import './abstracts/mixins';
+@import './components/nav__toggler';
+@import './components/nav-foundation';
+@import './components/home__feed';
+@import './components/account-card';
+@import './components/accordion-foundation';
+@import './themes/theme';
+@import './themes/pallete__ico';
+@import './components/floating-action';
+@import './components/loan-table';
+@import './components/home-cards.scss';
+@import './components/credit-cards';
+@import './components/dashboard';
+@import './components/orbit';
+@import './components/footer';
+@import './components/transaction-table';
+@import './components/3d-text';
+@import './components/login';
+@import './components/box-shadow-btn';
+@import './components/callouts';
+@import './components/create-cards';
+@import './components/animation';
+@import './components/radio';
+@import './components/loader';
+
+
+body{
+    cursor: url('../images/pointer.png'), auto;
+    font-family: 'Montserrat'!important;
+// font-family: 'Vollkorn', serif;
+    p{
+        margin-bottom: 0!important;
+    }
+    footer{
+        min-height: 15vh;
+    }
+    main{
+        min-height: 75vh;
+        padding-bottom: 4rem;
+        margin-bottom: 0!important;
+    }
+    h1,h2,h3,h4,h5,h6{
+        font-family: 'Montserrat'!important;
+    }
+}
+
+.js-off-canvas-overlay{
+    top:auto;
+}
+
+.m-0{
+    margin: 0;
+}
+
+
+.p-0{
+    padding: 0;
+}
+
+.w-50{
+    width: 40%;
+    background-color: rgba(0, 0, 0, 0.137);
+    @media (max-width:1024px){
+        width: auto;
+    }
+}
+
+.margin-auto{
+    margin: auto !important;;
+}
+
+.txt-shadow{
+    text-shadow: .05em .05em 0px rgba(0,0,0,0.2);
+}
+
+.heavy-shadow{
+    text-shadow: 0px .1em .07em rgba(139, 139, 139, 0.4),
+             0px .5em .7em rgba(116, 116, 116, 0.1),
+             0px .7em .9em rgba(129, 129, 129, 0.1);
+}
+.tinted-image {
+    background-image: 
+      /* top, transparent red */
+      linear-gradient(
+        #f0f7e19c, 
+        #eef5df9d
+      ),
+      /* your image */
+      url('../images/mhbbg.png')!important;
+      background-size: contain;
+  }
+
+  [type=checkbox]+label, [type=radio]+label {
+    margin: 0!important;
+  }
+
+  .bg-red{
+    background-color: rgba(255, 0, 0, 0.226);
+  }

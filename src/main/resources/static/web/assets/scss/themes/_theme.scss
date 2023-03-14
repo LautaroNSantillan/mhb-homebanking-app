@@ -1,0 +1,594 @@
+//--------------------------------Green
+
+.green-theme {
+  $primary: $green-primary;
+  $secondary: $green-secondary;
+  $terciary: $green-terciary;
+  $dark: $green-dark;
+
+  // body {
+
+  // }
+  // main {
+
+  // }
+
+  h1 {
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+   // border-radius: 1rem;
+    width: fit-content;
+    //background-image: linear-gradient(to bottom, #86ee60a4, transparent);
+    background-color: #86ee605e;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: #b62f38;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+    li {
+      border-bottom: 1px solid $terciary;
+    }
+    a {
+      font-size: large;
+      font-weight: 800;
+      color: white;
+      text-align: center;
+    }
+
+    i {
+      color: $terciary;
+    }
+    @media (min-width: 1024px) {
+      li {
+        border-bottom: 0;
+      }
+      a {
+        border-bottom: 0;
+      }
+      ul:not(:first-child) {
+        li {
+          position: relative;
+          &:before {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            width: 95%;
+            border-bottom: 1px solid $terciary;
+          }
+          a {
+            text-align: start;
+          }
+        }
+      }
+    }
+  }
+
+  .card .additional {
+    background: linear-gradient(#2e6e65, #47a79a);
+    p {
+      color: $terciary;
+    }
+  }
+
+  .card .additional .stats div.title {
+    color: $terciary;
+  }
+
+  .card .additional {
+    h4 {
+      color: $terciary;
+    }
+
+    .stats {
+      .title,
+      i,
+      .value {
+        color: $terciary;
+      }
+    }
+    .more-info {
+      h2 {
+        color: $terciary;
+      }
+    }
+  }
+
+  .cardContainer {
+    &__content {
+      p,i {
+        color: $primary;
+      }
+    }}
+
+  .grid-x {
+    h3 {
+      background-color: $terciary;
+    }
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: $secondary;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+  .client-info {
+    background-color: $terciary;
+  }
+  .table-wrapper {
+    background-color: $terciary;
+  }
+
+  .table-header {
+    background-color: $primary;
+    color: $secondary;
+  }
+
+  .welcome {
+    color: $secondary;
+  }
+  .welcome-large {
+    color: $secondary;
+  }
+
+  .quality input[type="radio"]:checked ~ label {
+    background-color: $secondary;
+    color: $terciary;
+  }
+
+  .container-radio-color {
+  
+    [type="radio"] {
+  
+      &:checked ~ label {
+        border-color: $secondary;
+        background-color: rgba(172, 255, 47, 0.473);
+        color: $dark;
+        > span {
+          background-image: linear-gradient(to top right, $primary, $secondary);
+      }}
+    }}
+
+  .accordion-menu .is-accordion-submenu-parent:not(.has-submenu-toggle)>a::after {
+    border-width: 9px;
+    border-top-width: 9px;
+    border-right-width: 9px;
+    border-bottom-width: 9px;
+    border-left-width: 9px;
+    border-color: $secondary #f5171700 transparent;
+    border-top-color: $secondary;
+    border-right-color: rgba(245, 23, 23, 0);
+    border-bottom-color: transparent;
+    border-left-color: rgba(245, 23, 23, 0);
+  }
+
+  footer {
+    background-color: $dark;
+    i,
+    p {
+      color: $terciary;
+    }
+    .grid-x {
+      div:nth-last-of-type(-n+2) {
+        p:first-child,
+        i {
+          color: $secondary;
+        }
+      }
+    }
+  }
+}
+
+//--------------------------------DARK
+.dark-theme {
+  $primary: $dark-primary;
+  $secondary: $dark-secondary;
+  $terciary: $dark-terciary;
+  $dark: $dark-dark;
+
+  body {
+    background-color: $terciary !important;
+  }
+  main {
+    background-color: $terciary;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: #b62f38;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: #b62f38;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+
+  footer {
+    background-color: $dark;
+  }
+}
+
+//--------------------------------MIND HUB
+.mh-theme {
+  $primary: $mh-pink;
+  $secondary: $mh-blue;
+  $terciary: $mh-dark;
+  $dark: $mh-green;
+  main {
+    background-color: $terciary;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: $dark;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: $secondary;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+}
+
+//--------------------------------GREEN
+.dark-green-theme {
+  $primary: $dark-green-primary;
+  $secondary: $dark-green-secondary;
+  $terciary: $dark-green-terciary;
+  $dark: $dark-green-dark;
+  main {
+    background-color: $terciary;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: $dark;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: $terciary;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+}
+//--------------------------------BLUE
+.blue-theme {
+  $primary: $blue-primary;
+  $secondary: $blue-secondary;
+  $terciary: $blue-terciary;
+  $dark: $blue-dark;
+  main {
+    background-color: $terciary;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: $dark;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: $terciary;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+}
+
+//--------------------------------RED
+.red-theme {
+  $primary: $red-primary;
+  $secondary: $red-secondary;
+  $terciary: $red-terciary;
+  $dark: $red-dark;
+  main {
+    background-color: $terciary;
+  }
+
+  .cardContainer {
+    background-color: $secondary;
+    &__content {
+      color: $dark;
+    }
+    &__flap {
+      &::before {
+        background: $primary;
+      }
+      &::after {
+        background: $primary;
+      }
+    }
+    &__tag {
+      background-color: $dark;
+      p {
+        color: $secondary;
+      }
+      i {
+        color: $secondary;
+      }
+    }
+  }
+
+  .feed {
+    background-image: linear-gradient($primary, transparent), url(noise.png);
+    i {
+      color: $dark;
+    }
+  }
+
+  .off-canvas {
+    background-color: $primary;
+  }
+
+  .top-bar {
+    background-image: linear-gradient($dark, $primary);
+    p {
+      color: $terciary;
+    }
+  }
+  .line {
+    stroke: #ececec;
+  }
+
+  .accordion-item {
+    background-color: $primary;
+  }
+  .accordion-content {
+    background-color: $secondary;
+    font-weight: bold;
+    color: $dark;
+  }
+  .is-active > .accordion-title {
+    background-color: $dark !important;
+  }
+  .accordion-wrapper h2 {
+    background-color: $primary;
+  }
+}
