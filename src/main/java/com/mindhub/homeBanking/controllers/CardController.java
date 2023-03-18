@@ -1,20 +1,27 @@
 package com.mindhub.homeBanking.controllers;
 
 import com.mindhub.homeBanking.dtos.CardDTO;
+import com.mindhub.homeBanking.dtos.PaymentDTO;
 import com.mindhub.homeBanking.models.*;
+import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.CardsRepository;
 import com.mindhub.homeBanking.repositories.ClientRepository;
+import com.mindhub.homeBanking.repositories.TransactionRepository;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
+import com.mindhub.homeBanking.utilities.InsufficientFundsException;
+import com.mindhub.homeBanking.utilities.SuccessResponse;
 import com.mindhub.homeBanking.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +33,10 @@ public class CardController {
     private ClientRepository clientRepo;
     @Autowired
     private CardsRepository cardRepo;
+    @Autowired
+    private TransactionRepository transactionRepo;
+    @Autowired
+    private AccountRepository accRepo;
 
     @PostMapping("clients/current/cards")
     public ResponseEntity<Object> createNewCard(@RequestParam String type, @RequestParam String color, Authentication auth) {
@@ -91,6 +102,63 @@ public class CardController {
         else{
             return new ResponseEntity<>("Card not eligible for renewing", HttpStatus.FORBIDDEN);
         }
+    }
+
+    @DeleteMapping("clients/current/delete-card")
+    public ResponseEntity<Object> deleteCard(@RequestParam long cardId, Authentication auth) {
+        Client currentClient = clientRepo.findByEmail(auth.getName());
+        Optional<Card> optionalCard = cardRepo.findById(cardId);
+        if (optionalCard.isPresent()) {
+            Card cardToDelete = optionalCard.get();
+            if (cardToDelete.getCardHolder().equals(currentClient)) {
+                cardRepo.delete(cardToDelete);
+                return new ResponseEntity<>("Card deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("This card does not belong to the current client", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Card not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Transactional
+    @PostMapping("clients/current/pay-with-card")
+    public ResponseEntity<Object> payWithCard(@RequestBody PaymentDTO payment, Authentication auth) throws InsufficientFundsException {
+        Client currentClient = clientRepo.findByEmail(auth.getName());
+        Card cardUsed = cardRepo.findByCardDigits(payment.getNumber());
+
+        if(!cardRepo.existsByCardDigits(payment.getNumber())){
+            return new ResponseEntity<>(
+                    new ErrorResponse(HttpStatus.FORBIDDEN.value(),"Invalid card", null)
+                    , HttpStatus.FORBIDDEN);
+        }
+
+        boolean hasCard = currentClient.getCards()
+                .stream()
+                .anyMatch(card -> card.getId() == cardUsed.getId());
+
+        if(!hasCard){
+            return new ResponseEntity<>(
+                    new ErrorResponse(HttpStatus.FORBIDDEN.value(),"You don't own this card", null)
+                    , HttpStatus.FORBIDDEN);
+        }
+
+        if(cardUsed.isExpired()){
+            return new ResponseEntity<>(
+                    new ErrorResponse(HttpStatus.FORBIDDEN.value(),"This card is expired", null)
+                    , HttpStatus.FORBIDDEN);
+        }
+
+        Account accountToBeDebited = currentClient.getAccounts()
+                .stream()
+                .filter(acc -> acc.getBalance() >= payment.getAmount())
+                .findFirst()
+                .orElseThrow(InsufficientFundsException::new);
+
+        accountToBeDebited.withdraw(payment.getAmount(), payment.getDescription(), null, transactionRepo, accRepo, accountToBeDebited.getBalance());
+
+        return new ResponseEntity<>(new SuccessResponse(HttpStatus.CREATED.value(), "Purchase succesful", null), HttpStatus.CREATED);
+
     }
 
     public ResponseEntity<Object> createCard(int acc, Client currentClient, CardType enumType, CardColor enumColor, CardsRepository cardRepo){

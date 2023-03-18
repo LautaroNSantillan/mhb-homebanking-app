@@ -1,12 +1,16 @@
 package com.mindhub.homeBanking.models;
 
-import com.mindhub.homeBanking.repositories.TransactionRepository;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id")
@@ -14,6 +18,7 @@ public class Transaction {
     private Long id;
     private TransactionType type;
     private double amount;
+    private double remainingBalance;
     private String description ;
     private LocalDateTime date;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -22,47 +27,15 @@ public class Transaction {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="sender_id", nullable = true)
     private Client sender;
-
-    public Transaction(){}
-    public Transaction(TransactionType type, double amount, String description, LocalDateTime date, Client sender) {
+    public Transaction(TransactionType type, double amount, String description, LocalDateTime date, Client sender, Account acc) {
         this.setType(type);
         this.setAmount(amount);
         this.setDescription(description);
         this.setDate(date);
         this.setSender(sender);
+        this.setAccount(acc);
+        this.setRemainingBalance(this.account);
     }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public TransactionType getType() {
-        return type;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-    public Client getSender() {
-        return sender;
-    }
-
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
-
     public void setAmount(double amount) {
         if (this.getType().getTypeBool()){
             this.amount = amount;
@@ -70,18 +43,8 @@ public class Transaction {
             this.amount = -amount;
         }
     }
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRemainingBalance(Account acc){
+        this.remainingBalance =acc.getBalance()+this.amount;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-    public void setSender(Client sender) {
-        this.sender = sender;
-    }
 }

@@ -1,7 +1,6 @@
 package com.mindhub.homeBanking.dtos;
 
-import com.mindhub.homeBanking.models.Account;
-import com.mindhub.homeBanking.models.LoanType;
+import com.mindhub.homeBanking.models.CardType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoanApplicationDTO {
-    private String loanId;
+public class PaymentDTO {
+    private String number;
+    private byte cvv;
     private double amount;
-    private byte payments;
-    private String destinationAccNumber;
-
+    private String description;
+    private CardType cardType;
 }

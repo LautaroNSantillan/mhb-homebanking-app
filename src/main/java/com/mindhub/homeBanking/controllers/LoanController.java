@@ -4,11 +4,16 @@ import com.mindhub.homeBanking.dtos.AccountDTO;
 import com.mindhub.homeBanking.dtos.LoanApplicationDTO;
 import com.mindhub.homeBanking.dtos.LoanDTO;
 import com.mindhub.homeBanking.models.*;
+import com.mindhub.homeBanking.models.loans.DynamicLoan;
+import com.mindhub.homeBanking.models.loans.PredefinedLoan;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.ClientLoanRepository;
 import com.mindhub.homeBanking.repositories.ClientRepository;
 import com.mindhub.homeBanking.repositories.LoanRepository;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
+import com.mindhub.homeBanking.utilities.LoanNotFoundException;
+import com.mindhub.homeBanking.utilities.LoanValidationException;
+import com.mindhub.homeBanking.utilities.SuccessResponse;
 import net.bytebuddy.asm.Advice;
 import org.apache.catalina.filters.AddDefaultCharsetFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +48,7 @@ public class LoanController {
 
         Client currentClient;
         Loan injectedLoan;
-        LoanType loanType;
+        Loan loanType;
         Account clientAcc;
 
         try {
@@ -63,15 +68,13 @@ public class LoanController {
         }
 
         try {
-            injectedLoan = loanRepo.findById(requestedLoan.getLoanId());
+            injectedLoan = loanRepo.findById(requestedLoan.getLoanId()).orElse(null);
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid loan type", null),
                     HttpStatus.FORBIDDEN);
         }
 
-        try {
-           loanType = LoanType.valueOf(requestedLoan.getLoanId().toString());
 
             // Check if amount and payments are positive
             if (requestedLoan.getAmount() <= 0 || requestedLoan.getPayments() <= 0) {
@@ -86,7 +89,8 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-            if (requestedLoan.getAmount() > loanType.getMaxAmount()) {
+        assert injectedLoan != null;
+        if (requestedLoan.getAmount() > injectedLoan.getMaxAmount()) {
                 return new ResponseEntity<>(
                         new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Amount surpasses max amount available", null),
                         HttpStatus.FORBIDDEN);
@@ -105,20 +109,16 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-            if (!loanType.getPayments().contains(requestedLoan.getPayments())) {
+            if (!injectedLoan.getPayments().contains(requestedLoan.getPayments())) {
                 return new ResponseEntity<>(
                         new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid number of payments", null),
                         HttpStatus.FORBIDDEN);
             }
 
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(
-                    new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid Loan type", null),
-                    HttpStatus.FORBIDDEN);
-        }
+
 
         // Create a new loan object from loanType
-        double paymentAmount = (requestedLoan.getAmount() * 1.2)* 100.0 / 100.0;
+        double paymentAmount = requestedLoan.getAmount() * (1 + (injectedLoan.getInterestRate() / 100));
         ClientLoan clientLoan = new ClientLoan(paymentAmount, requestedLoan.getPayments(),currentClient,injectedLoan);
 
         clientAcc.setBalance(clientAcc.getBalance()+ requestedLoan.getAmount());
@@ -130,10 +130,12 @@ public class LoanController {
         return new  ResponseEntity<>(HttpStatus.CREATED);
 
     }
+
+
     @RequestMapping("/loans/{type}/DTO")
     @PreAuthorize("hasAuthority('CLIENT')")
-        public LoanDTO getDTO(@PathVariable String type) {
-            return new LoanDTO(loanRepo.findById(LoanType.valueOf(type.toUpperCase())));
+        public LoanDTO getDTO(@PathVariable String type) throws LoanNotFoundException {
+            return new LoanDTO(loanRepo.findById(type.toUpperCase()).orElseThrow(LoanNotFoundException::new));
         }
 
     @PostMapping("/loans/final-payments")
@@ -142,4 +144,31 @@ public class LoanController {
         return Math.round(paymentAmount * 100.0) / 100.0;
     }
 
+    @PostMapping("/loans/create")
+    public ResponseEntity<Object> createLoan(@RequestBody DynamicLoan newLoan) {
+        if (newLoan.getId().isEmpty() ) {
+            return new ResponseEntity<>("Missing ID", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getPayments().isEmpty() ) {
+            return new ResponseEntity<>("Missing payments", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getName().isEmpty() ) {
+            return new ResponseEntity<>("Missing name", HttpStatus.BAD_REQUEST);
+        }
+        if (Double.isNaN(newLoan.getInterestRate()) || newLoan.getInterestRate() <= 0 ) {
+            return new ResponseEntity<>("Invalid interest rate", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getMaxAmount()<=0 ) {
+            return new ResponseEntity<>("Invalid max amount", HttpStatus.BAD_REQUEST);
+        }
+
+        newLoan.setPredefinedLoan(false);
+        Loan createdLoan = new Loan(newLoan);
+
+        loanRepo.save(createdLoan);
+
+        String message = "Created new loan " + createdLoan.getName();
+        SuccessResponse success = new SuccessResponse(HttpStatus.CREATED.value(),message, " ");
+        return new ResponseEntity<>(success, HttpStatus.CREATED);
+    }
 }

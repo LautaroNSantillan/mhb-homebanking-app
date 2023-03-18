@@ -69,3 +69,17 @@ label, pre, td{
     gap: 2rem;
     width: 33rem;
 }
+
+.transaction-form{
+  padding-top: 3rem;
+}
+
+.transaction-form .grid-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.grid-container .grid-x{
+    margin: auto;
+  }

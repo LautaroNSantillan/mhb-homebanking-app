@@ -1,6 +1,6 @@
 package com.mindhub.homeBanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.mindhub.homeBanking.models.loans.LoanTypeInterface;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,10 +17,12 @@ public class Loan {
 //    private long id;
 
     @Id
-    @Enumerated(EnumType.STRING)
-    private LoanType id;
+    @Column(name = "loan_id", nullable = false)
+    private String id;
     private String name;
     private int maxAmount;
+    private double interestRate;
+    private boolean isPredefinedLoan;
     @ElementCollection
     @Column(name = "payments")
     private List<Byte> payments = new ArrayList<>();
@@ -35,11 +37,13 @@ public class Loan {
 //        this.setPayments(payments);
 //    }
 
-    public Loan(LoanType loanType) {
+    public Loan(LoanTypeInterface loanType) {
       this.setName(loanType.getName());
       this.setMaxAmount(loanType.getMaxAmount());
       this.setPayments(loanType.getPayments());
-      this.setId(LoanType.valueOf(loanType.getId()));
+      this.setId(loanType.getId());
+      this.setInterestRate(loanType.getInterestRate());
+      this.setPredefinedLoan(loanType.isPredefinedLoan());
    }
 
     public void addClientLoan(ClientLoan clientLoan) {
@@ -59,7 +63,10 @@ public class Loan {
         return name;
     }
 
-//    public long getId() {
+    public double getInterestRate() {
+        return interestRate;
+    }
+    //    public long getId() {
 //        return id;
 //    }
 
@@ -87,11 +94,23 @@ public class Loan {
         this.clientLoans = clientLoans;
     }
 
-    public LoanType getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(LoanType id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public void setInterestRate(double interestRate) {
+        this.interestRate = interestRate;
+    }
+
+    public boolean isPredefinedLoan() {
+        return isPredefinedLoan;
+    }
+
+    public void setPredefinedLoan(boolean predefinedLoan) {
+        isPredefinedLoan = predefinedLoan;
     }
 }

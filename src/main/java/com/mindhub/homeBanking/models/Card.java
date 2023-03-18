@@ -37,6 +37,11 @@ public class Card {
         this.setThruDate(thru);
     }
 
+    public boolean isExpired() {
+        LocalDate now = LocalDate.now();
+        return now.isAfter(thruDate) || now.isEqual(thruDate);
+    }
+
     public void addCard(Client cardHolder) {
         this.setCardHolder(cardHolder);
         cardHolder.getCards().add(this);
@@ -59,26 +64,6 @@ public class Card {
             }
         }
         return sb.toString();
-    }
-    public void setGeneratedCardDigits() {
-        String generatedCardDigits = generateCardsDigits();
-        boolean foundMatch = false;
-        Client client= this.getCardHolder();
-        if (client!=null && client.getCards().size() != 0) {
-            List<Card> cardList = new ArrayList<>(client.getCards());
-            while (!foundMatch) {
-                for (int i = 0; i < cardList.size(); i++) {
-                    String clientCardNumber = cardList.get(i).getCardDigits();
-                    if (clientCardNumber.equals(generatedCardDigits)) {
-                        generatedCardDigits = generateCardsDigits();
-                        foundMatch = false;
-                        break;
-                    }
-                    foundMatch = true;
-                }
-            }
-        }
-        this.setCardDigits(generatedCardDigits);
     }
 
     public long getId() {

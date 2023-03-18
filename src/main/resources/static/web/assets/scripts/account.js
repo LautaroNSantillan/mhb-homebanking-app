@@ -8,12 +8,14 @@ createApp({
             sortedTransactions: [],
             windowWidth: window.innerWidth,
             currentTheme: null,
+            fromDate: null,
+            toDate: null,
         }
     },
 
     updated() {
-        const app = document.getElementById('app');
-        $(app).foundation();
+        $(document).foundation();
+        this.datePicker()
     },
     unmounted() {
         console.log('Uunmount')
@@ -26,12 +28,14 @@ createApp({
         console.log($(app).foundation())
     },
     created() {
-      //  this.accId=this.client=localStorage.getItem('clientId');
+        $(document).foundation();
+        //  this.accId=this.client=localStorage.getItem('clientId');
         this.accId = new URLSearchParams(location.search).get("accountId");
         this.loadData()
         this.getCurrentTheme()
         this.setCurrentTheme()
         this.getClient()
+        this.datePicker()
     },
 
     methods: {
@@ -42,58 +46,163 @@ createApp({
                     this.accounts = data.data;
                     console.log(this.accounts)
                     console.log(this.accounts.transactions)
-                   // this.accounts.transactions.sort((a, b) =>b.id -a.id)      funciona si las creas en orden
+                    // this.accounts.transactions.sort((a, b) =>b.id -a.id)      funciona si las creas en orden
                     this.sortTransactions()
                 }
-                
+
                 )
                 .catch(error => {
                     console.log(error);
                 })
         },
 
-        sortTransactions(){
+        sortTransactions() {
             const transactions = [...this.accounts.transactions]
             const newTransactions = transactions.map(transaction => {
-                const newTransaction = {...transaction};
+                const newTransaction = { ...transaction };
                 newTransaction.date = new Date(transaction.date);
+                newTransaction.dateObj = new Date(transaction.date);
+                console.log(newTransaction.dateObj)
                 return newTransaction;
-              });
-              
-              newTransactions.sort((a, b) => b.date - a.date);
-              const sortedTransactionsString = JSON.stringify(newTransactions, (key, value) => {
+            });
+
+            newTransactions.sort((a, b) => b.date - a.date);
+            const sortedTransactionsString = JSON.stringify(newTransactions, (key, value) => {
                 if (key === 'date') {
-                  return value.toLocaleString();
+                    return value.toLocaleString();
                 }
                 return value;
-              });
+            });
 
-              const sortedTransactionsArray = JSON.parse(sortedTransactionsString)
+            const sortedTransactionsArray = JSON.parse(sortedTransactionsString)
 
-              this.sortedTransactions = sortedTransactionsArray;
-              console.log(this.sortedTransactions);
+            this.sortedTransactions = sortedTransactionsArray;
+            console.log(this.sortedTransactions);
         },
 
-        getClient(){
-           axios
-            .get(`http://localhost:8080/api/clients/current`)
-             .then(data => {
-                   this.client = data.data
-                     console.log(this.client)
-                    
-               })
-              .catch(error => {
-                     console.log(error);
-             })
+        getClient() {
+            axios
+                .get(`http://localhost:8080/api/clients/current`)
+                .then(data => {
+                    this.client = data.data
+                    console.log(this.client)
+
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         },
         toggleTogglerLarge() {
             const toggler = document.getElementById("togglerLarge");
             toggler.classList.toggle('opened'); toggler.setAttribute('aria-expanded', toggler.classList.contains('opened'))
         },
 
+        filterTransactionsByDate() {
+            let fromDate = new Date(this.fromDate);
+            fromDate.setHours(0, 0, 0, 0);
+            let toDate = new Date(this.toDate);
+            toDate.setHours(23, 59, 59, 999);
+
+            this.sortedTransactions = this.sortedTransactions.filter((transaction) => {
+                let transactionDate = new Date(transaction.date);
+                return transactionDate >= fromDate && transactionDate <= toDate;
+            });
+        },
+
+        downloadPDF(){
+            const data = {
+                fromDate: this.fromDate.toISOString(),
+                toDate: this.toDate.toISOString(),
+                accountNumber: this.accounts.number
+              };
+              axios.post('/api/getrans2', data, { responseType: 'blob' })
+                .then(response => {
+                  const url = window.URL.createObjectURL(response.data);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                  document.body.appendChild(link);
+                  link.click();
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+        },
+
+        getrans(){
+            const data = {
+                fromDate: this.fromDate.toISOString(), // convert fromDate to ISO string
+                toDate: this.toDate.toISOString(), // convert toDate to ISO string
+                accountNumber: this.accounts.number
+              };
+              axios.post('/api/getrans', data)
+                .then(response => {
+                  console.log(response)
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+        },
+
+        downloadPDF2() {
+            const data = {
+              fromDate: this.fromDate.toISOString(), // convert fromDate to ISO string
+              toDate: this.toDate.toISOString(), // convert toDate to ISO string
+              accountNumber: this.accounts.number
+            };
+            axios.post('/api/transaction/export-to-pdf', data, { responseType: 'blob' })
+              .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `transactions-${this.accounts.number}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          },
+
+        datePicker() {
+            // implementation of custom elements instead of inputs
+            var startDate = new Date();
+            startDate.setHours(0, 0, 0, 0);
+            this.fromDate = startDate
+            var endDate = new Date();
+            endDate.setHours(0, 0, 0, 0);
+            this.toDate = endDate
+            $('#dp4').fdatepicker()
+                .on('changeDate', function (ev) {
+                    if (ev.date.valueOf() > endDate.valueOf()) {
+                        $('#alert').show().find('strong').text('The start date can not be greater then the end date');
+                    } else {
+                        $('#alert').hide();
+                        startDate = new Date(ev.date);
+                        this.fromDate = startDate
+                        console.log(startDate)
+                        $('#startDate').text($('#dp4').data('date'));
+                    }
+                    $('#dp4').fdatepicker('hide');
+                });
+            $('#dp5').fdatepicker()
+                .on('changeDate', function (ev) {
+                    if (ev.date.valueOf() < startDate.valueOf()) {
+                        $('#alert').show().find('strong').text('The end date can not be less then the start date');
+                    } else {
+                        $('#alert').hide();
+                        endDate = new Date(ev.date);
+                        this.toDate = endDate
+                        console.log(this.toDate)
+                        $('#endDate').text($('#dp5').data('date'));
+                    }
+                    $('#dp5').fdatepicker('hide');
+                });
+        },
 
 
-        
+
+
 
         onResize(event) {
             this.windowWidth = screen.width
@@ -150,10 +259,10 @@ createApp({
         setCurrentTheme() {
             const body = document.querySelector('body');
             if (localStorage.getItem('theme')) {
-            localStorage.setItem('theme', body.className);
-            console.log(localStorage.getItem('theme'))
+                localStorage.setItem('theme', body.className);
+                console.log(localStorage.getItem('theme'))
+            }
         }
-    }
     }
 
 }).mount("#app")

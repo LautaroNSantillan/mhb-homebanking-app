@@ -31,7 +31,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
         http
                 .authorizeRequests()
 
-                .antMatchers("/manager.html").hasAuthority("ADMIN")
+                .antMatchers("/webADMIN/**").permitAll()//cambiar
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
 
@@ -41,6 +41,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .antMatchers(HttpMethod.PATCH, "/api/clients").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/clients/current").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST, "/api/loans/create").permitAll()//cambiar
                 .antMatchers("/api/clients/current").hasAuthority("CLIENT")
                 .antMatchers("/api/accounts").hasAuthority("CLIENT")
                 .antMatchers("/api/accounts/**").hasAuthority("CLIENT")
@@ -52,6 +53,9 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .antMatchers("/api/loans/**/DTO").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/loans/final-payments").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/loans/**").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/transaction/**").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/getrans").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/getrans2").hasAuthority("CLIENT")
                 .antMatchers("/api/**").hasAuthority("ADMIN")
 
                 .antMatchers("/web/index.html").permitAll()

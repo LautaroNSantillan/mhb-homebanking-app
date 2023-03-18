@@ -2,18 +2,23 @@
 <html lang="en" class="no-js">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
-        crossorigin="anonymous">
-        <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="./assets/scss/main.min.css">
-    <title>MHB&CO | Account</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+    crossorigin="anonymous">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./assets/scss/main.min.css">
+ 
+  <title>MHB&CO | Account</title>
 </head>
 
 <body id="app" class="green-theme tinted-image">
-   <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
+  <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
   <nav class="top-bar off-canvas-content" data-off-canvas-content>
     <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
       data-toggle="offCanvas">
@@ -28,18 +33,18 @@
     <p class="mhb">MIND HUB BROTHERS & CO. BANK</p>
     <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
   </nav>
-  
-  <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge" aria-label="Main Menu"
-  data-toggle="offCanvasRight">
-  <svg viewBox="0 0 100 100">
-    <path class="line line1"
-      d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
-    <path class="line line2" d="M 20,50 H 80" />
-    <path class="line line3"
-      d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
-  </svg>
-</button>
- 
+
+  <button class="toggler show-for-large toggler--large" id="togglerLarge" @click="toggleTogglerLarge"
+    aria-label="Main Menu" data-toggle="offCanvasRight">
+    <svg viewBox="0 0 100 100">
+      <path class="line line1"
+        d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+      <path class="line line2" d="M 20,50 H 80" />
+      <path class="line line3"
+        d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+    </svg>
+  </button>
+
 
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
     data-transition="overlap">
@@ -135,12 +140,13 @@
   </div>
   <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
+  <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-    <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
+  <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
 
-        <h1 class="text-center txt-3d"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp; {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1>
-        <!-- <div v-if="accounts" class="accordion-wrapper">
+    <h1 class="text-center txt-3d"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp;
+        {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1>
+    <!-- <div v-if="accounts" class="accordion-wrapper">
             <div v-if="accounts && sortedTransactions.length==0">
                 <h3>No transactions to show</h3>
             </div>
@@ -160,61 +166,101 @@
                     </li>
                 </ul>
             </div> -->
-            <div v-if="accounts && sortedTransactions.length==0">
-                <h3 class="text-center">No transactions to show</h3>
-            </div>
-            <div v-else class="container">
-                <ul class="responsive-table" >
-                  <li class="table-header">
-                    <div class="col col-1">Date</div>
-                    <div class="col col-2">Type</div>
-                    <div class="col col-3">Amount</div>
-                    <div class="col col-4">Description</div>
-                  </li>
-                  <li class="table-row" v-for="transaction of sortedTransactions">
-                    <div class="col col-1" data-label="DATE"> {{transaction.date.slice(0,10)}} </div>
-                    <div :class="[transaction.type === 'CREDIT'? 'col col-2 credit' : ' col col-2 debit']" data-label="TYPE"> {{transaction.type}} </div>
-                    <div :class="[transaction.type === 'CREDIT'? 'col col-3 credit' : ' col col-3 debit']" data-label="AMOUNT"> {{transaction.amount}} </div>
-                    <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
-                  </li>
-                  
-                </ul>
-              </div>
+    <div v-if="accounts && sortedTransactions.length==0">
+      <h3 class="text-center">No transactions to show</h3>
+    </div>
+    <div v-else class="container">
+      <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-1">Date</div>
+          <div class="col col-2">Type</div>
+          <div class="col col-3">Amount</div>
+          <div class="col col-4">Description</div>
+          <div class="col col-5">Sender</div>
+          <div class="col col-6">Balance Remaining</div>
+        </li>
+        <li class="table-row" v-for="transaction of sortedTransactions">
+          <div class="col col-1" data-label="DATE"> {{transaction.date.slice(0,10)}} </div>
+          <div :class="[transaction.type === 'CREDIT'? 'col col-2 credit' : ' col col-2 debit']" data-label="TYPE">
+            {{transaction.type}} </div>
+          <div :class="[transaction.type === 'CREDIT'? 'col col-3 credit' : ' col col-3 debit']" data-label="AMOUNT">
+            {{transaction.amount}} </div>
+          <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
+          <div v-if="!transaction.sender" class="col col-5" data-label="DESCRIPTION"> N/A </div>
+          <div v-else class="col col-5" data-label="DESCRIPTION"> {{transaction.sender}}</div>
+          <div class="col col-6" data-label="DESCRIPTION"> {{transaction.remainingBalance}} </div>
+        </li>
 
-    </main>
+      </ul>
+    </div>
+
+
+    <table class="datepicker-table">
+      <thead>
+        <tr>
+          <th>Start date&nbsp;
+            <a href="#" class="button tiny" id="dp4" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)" >Change</a>
+          </th>
+          <th>End date&nbsp;
+            <a href="#" class="button tiny" id="dp5" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)">Change</a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="startDate"></td>
+          <td id="endDate"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert alert-box" style="display:none;" id="alert"> <strong>Oh snap!</strong>
+      
+    </div>
+    
+      <button class="button" @click="filterTransactionsByDate">Filter Transactions</button>
+      <button class="btn-shadow" @click="downloadPDF">Download</button>
+      <button class="btn-shadow" @click="getrans">Download</button>
+    
+  </main>
 
 
 
-    <footer class="off-canvas-content" data-off-canvas-content>
+  <footer class="off-canvas-content" data-off-canvas-content>
 
-      <div class="grid-x align-center-middle">
-        <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-square-facebook"></i></a></div>
-        <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i class="fa-brands fa-square-twitter"></i></a></div>
-        <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i class="fa-brands fa-square-instagram"></i></a></div>
-        <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i class="fa-brands fa-square-youtube"></i></a></div>
-        <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i class="fa-brands fa-square-github"></i></a></div>
-        <div class="cell small-6 flex-container align-left">
-          <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
-        </div>
-        <div class="cell small-6 flex-container align-right">
-          <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
-        </div>
+    <div class="grid-x align-center-middle">
+      <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
+            class="fa-brands fa-square-facebook"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
+            class="fa-brands fa-square-twitter"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
+            class="fa-brands fa-square-instagram"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+            class="fa-brands fa-square-youtube"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
+            class="fa-brands fa-square-github"></i></a></div>
+      <div class="cell small-6 flex-container align-left">
+        <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
       </div>
-  
-    </footer>
+      <div class="cell small-6 flex-container align-right">
+        <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+      </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
-        integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
-        crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="./assets/scripts/account.js"></script>
-    <script>
-        $(document).foundation();
-    </script>
-    <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+    crossorigin="anonymous"></script>
+  <script src="
+        https://cdn.jsdelivr.net/npm/foundation-datepicker@1.5.6/js/foundation-datepicker.min.js
+        "></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="./assets/scripts/account.js"></script>
+
+  <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+
+
 </body>
 
 </html>

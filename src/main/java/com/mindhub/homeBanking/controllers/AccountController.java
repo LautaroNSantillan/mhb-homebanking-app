@@ -56,4 +56,23 @@ public class AccountController {
         }
     }
 
+    @DeleteMapping("clients/current/delete-account")
+    public ResponseEntity<Object> deleteAccount(@RequestParam long cardId, Authentication auth) {
+        Client currentClient = clientRepo.findByEmail(auth.getName());
+        Optional<Account> optionalAccount = accRepo.findById(cardId);
+        if (optionalAccount.isPresent()) {
+            Account accountToDelete = optionalAccount.get();
+            if (accountToDelete.getClient().equals(currentClient)) {
+                List<Transaction> transactionsToDelete = transactionRepo.findByAccount(accountToDelete);
+                transactionRepo.deleteAll(transactionsToDelete);
+                accRepo.delete(accountToDelete);
+                return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("This account does not belong to the current client", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
