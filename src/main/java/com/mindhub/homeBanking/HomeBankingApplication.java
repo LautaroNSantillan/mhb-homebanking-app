@@ -6,6 +6,8 @@ import com.mindhub.homeBanking.models.loans.PredefinedLoan;
 import com.mindhub.homeBanking.queries.Query;
 import com.mindhub.homeBanking.repositories.*;
 
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +30,8 @@ public class HomeBankingApplication {
 	}
 	@Autowired
 	PasswordEncoder pwdEncoder;
+	@Autowired
+	AccountServiceImpl accService;
 
 	@Autowired
 	Query query;
@@ -48,16 +52,24 @@ public class HomeBankingApplication {
 			Client admin = new Client("admin", "admin", "admin@admin.mindhub",pwdEncoder.encode("123") );
 			 Client melba = new Client("Melba", "Morel", "melba@mindhub.com",pwdEncoder.encode("melba") );
 			 Client jack = new Client("Jack", "Bauer", "jackb@email.com",pwdEncoder.encode("123") );
-			Account VIN001 = new Account ("VIN001", LocalDateTime.now(), 5000, accRepo);
-			Account VIN002 = new Account ("VIN002", LocalDateTime.now().plusDays(1), 7500, accRepo);
-			Account VIN003 = new Account ("VIN003", LocalDateTime.now(), 5000, accRepo);
-			Account VIN004 = new Account ("VIN004", LocalDateTime.now().plusDays(1), 7500, accRepo);
+			clientRepo.save(melba);
+			clientRepo.save(jack);
+			clientRepo.save(admin);
+			Account VIN001 = new Account (LocalDateTime.now(), 5000, accService,melba,AccountType.SAVINGS);
+			accRepo.save(VIN001);
+			Account VIN002 = new Account (LocalDateTime.now().plusDays(1), 7500, accService,melba,AccountType.CHECKING);
+			accRepo.save(VIN002);
+			Account VIN003 = new Account (LocalDateTime.now(), 5000, accService,jack, AccountType.SAVINGS);
+			accRepo.save(VIN003);
+			Account VIN004 = new Account (LocalDateTime.now().plusDays(1), 7500, accService,jack,AccountType.CHECKING);
+			accRepo.save(VIN004);
 
 			Transaction VINtrans01= new Transaction(TransactionType.CREDIT, 2000.00,"1",LocalDateTime.now().plusDays(1),null, VIN001);
 			Transaction VINtrans02= new Transaction(TransactionType.DEBIT, 3000.00, "bbb",LocalDateTime.now(),null, VIN001);
 			Transaction VINtrans03= new Transaction(TransactionType.DEBIT, 3000.00, "bbb",LocalDateTime.now(),null, VIN002);
 			Transaction VINtrans04= new Transaction(TransactionType.DEBIT, 3000.00, "bbb",LocalDateTime.now().plusDays(1),null, VIN003);
 			Transaction VINtrans05= new Transaction(TransactionType.DEBIT, 3000.00, "bbb",LocalDateTime.now(),null, VIN004);
+
 
 //			Loan housingLoan = new Loan(LoanType.MORTGAGE,"housing",500000,new ArrayList<>(Arrays.asList(12,24,36,48,60)));
 //			Loan personalLoan = new Loan(LoanType.PERSONAL,"personal",100000,new ArrayList<>(Arrays.asList(6,12,24)));
@@ -86,10 +98,10 @@ public class HomeBankingApplication {
 //			VIN003.addTransaction(VINtrans05);
 //			VIN001.addTransaction(VINtrans02);
 
-			melba.addAccount(VIN002);
-			melba.addAccount(VIN001);
-			jack.addAccount(VIN003);
-			jack.addAccount(VIN004);
+//			melba.addAccount(VIN002);
+//			melba.addAccount(VIN001);
+//			jack.addAccount(VIN003);
+//			jack.addAccount(VIN004);
 
 //			melba.addCard(melbaGoldCard);
 //			jack.addCard(jackGoldCard);

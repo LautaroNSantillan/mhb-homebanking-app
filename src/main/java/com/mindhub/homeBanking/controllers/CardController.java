@@ -3,14 +3,14 @@ package com.mindhub.homeBanking.controllers;
 import com.mindhub.homeBanking.dtos.CardDTO;
 import com.mindhub.homeBanking.dtos.PaymentDTO;
 import com.mindhub.homeBanking.models.*;
-import com.mindhub.homeBanking.repositories.AccountRepository;
-import com.mindhub.homeBanking.repositories.CardsRepository;
-import com.mindhub.homeBanking.repositories.ClientRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.CardServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
+import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
 import com.mindhub.homeBanking.utilities.InsufficientFundsException;
 import com.mindhub.homeBanking.utilities.SuccessResponse;
-import com.mindhub.homeBanking.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,18 +29,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 public class CardController {
-    @Autowired
-    private ClientRepository clientRepo;
-    @Autowired
-    private CardsRepository cardRepo;
-    @Autowired
-    private TransactionRepository transactionRepo;
-    @Autowired
-    private AccountRepository accRepo;
+
+    private final CardServiceImpl cardService;
+    private final AccountServiceImpl accountService;
+    private final ClientServiceImpl clientService;
+    private final TransactionServiceImpl transactionService;
+
+
+    public CardController(CardServiceImpl cardService, AccountServiceImpl accountService, ClientServiceImpl clientService, TransactionServiceImpl transactionService) {
+        this.cardService = cardService;
+        this.accountService = accountService;
+        this.clientService = clientService;
+        this.transactionService = transactionService;
+    }
 
     @PostMapping("clients/current/cards")
     public ResponseEntity<Object> createNewCard(@RequestParam String type, @RequestParam String color, Authentication auth) {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
+        Client currentClient = clientService.findByEmail(auth.getName());
         try {
             CardType enumType = CardType.valueOf(type);
             CardColor enumColor = CardColor.valueOf(color);
@@ -67,16 +72,16 @@ public class CardController {
                 switch (enumType) {
                     case CREDIT:
                         if(!hasSameColorCredit && numCreditCards<3){
-                            return createCard(numCreditCards, currentClient, enumType, enumColor,cardRepo);
+                            return cardService.saveNewCard(numCreditCards,cardService.createCard( currentClient, enumType, enumColor));
                         }break;
 
                     case DEBIT:
                         if (!hasSameColorDebit && numDebitCards<3){
-                            return createCard(numDebitCards, currentClient, enumType, enumColor,cardRepo);
+                            return cardService.saveNewCard(numDebitCards,cardService.createCard( currentClient, enumType, enumColor));
                         }break;
 
                     default:
-                       return new ResponseEntity<>("Invalid SWITCH ", HttpStatus.BAD_REQUEST);// ME LO PIDE HERMANO QUE QUERES QUE HAGA
+                       return new ResponseEntity<>("Invalid SWITCH ", HttpStatus.BAD_REQUEST);
                 }
             return new ResponseEntity<>("You already own the same card or Max number of cards reached", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IllegalArgumentException iae) {
@@ -87,16 +92,16 @@ public class CardController {
     }
     @PostMapping("clients/current/renew-card")
     public ResponseEntity<Object> renewCard(@RequestParam long cardId, Authentication auth){
-        Client currentClient = clientRepo.findByEmail(auth.getName());
+        Client currentClient = clientService.findByEmail(auth.getName());
         boolean hasCard = currentClient.getCards()
                 .stream()
                 .anyMatch(card -> card.getId() == cardId);
-        Card expiringCard = cardRepo.findById( cardId).orElse(null);
+        Card expiringCard = cardService.findById( cardId);
         LocalDateTime thresholdDateTime = LocalDateTime.now().plusDays(7);
         if(expiringCard !=null && hasCard && ChronoUnit.DAYS.between(expiringCard.getThruDate(), thresholdDateTime) > 0){
             expiringCard.setFromDate(LocalDate.now());
             expiringCard.setThruDate(LocalDate.now().plusYears(5));
-            cardRepo.save(expiringCard);
+            cardService.save(expiringCard);
             return new ResponseEntity<>(new CardDTO(expiringCard), HttpStatus.OK);
         }
         else{
@@ -106,12 +111,12 @@ public class CardController {
 
     @DeleteMapping("clients/current/delete-card")
     public ResponseEntity<Object> deleteCard(@RequestParam long cardId, Authentication auth) {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
-        Optional<Card> optionalCard = cardRepo.findById(cardId);
+        Client currentClient = clientService.findByEmail(auth.getName());
+        Optional<Card> optionalCard = cardService.findByIdOptional(cardId);
         if (optionalCard.isPresent()) {
             Card cardToDelete = optionalCard.get();
             if (cardToDelete.getCardHolder().equals(currentClient)) {
-                cardRepo.delete(cardToDelete);
+                cardService.delete(cardToDelete);
                 return new ResponseEntity<>("Card deleted successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("This card does not belong to the current client", HttpStatus.FORBIDDEN);
@@ -124,10 +129,10 @@ public class CardController {
     @Transactional
     @PostMapping("clients/current/pay-with-card")
     public ResponseEntity<Object> payWithCard(@RequestBody PaymentDTO payment, Authentication auth) throws InsufficientFundsException {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
-        Card cardUsed = cardRepo.findByCardDigits(payment.getNumber());
+        Client currentClient = clientService.findByEmail(auth.getName());
+        Card cardUsed = cardService.findByCardDigits(payment.getNumber());
 
-        if(!cardRepo.existsByCardDigits(payment.getNumber())){
+        if(!cardService.existsByCardDigits(payment.getNumber())){
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(),"Invalid card", null)
                     , HttpStatus.FORBIDDEN);
@@ -155,25 +160,25 @@ public class CardController {
                 .findFirst()
                 .orElseThrow(InsufficientFundsException::new);
 
-        accountToBeDebited.withdraw(payment.getAmount(), payment.getDescription(), null, transactionRepo, accRepo, accountToBeDebited.getBalance());
+        accountToBeDebited.withdraw(payment.getAmount(), payment.getDescription(), transactionService,accountService,  accountToBeDebited.getBalance());
 
-        return new ResponseEntity<>(new SuccessResponse(HttpStatus.CREATED.value(), "Purchase succesful", null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SuccessResponse(HttpStatus.CREATED.value(), "Purchase successful", null), HttpStatus.CREATED);
 
     }
 
-    public ResponseEntity<Object> createCard(int acc, Client currentClient, CardType enumType, CardColor enumColor, CardsRepository cardRepo){
-        if (acc < 3) {
-            String digits = Utils.generateCardsDigits();
-            while (cardRepo.existsByCardDigits(digits)) {
-                digits = Utils.generateCardsDigits();
-            }
-            Card newCard = new Card(currentClient, enumType, enumColor, LocalDate.now(), LocalDate.now().plusYears(5), digits);
-            cardRepo.save(newCard);
-            return new ResponseEntity<>(new CardDTO(newCard), HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>("Max owned cards reached", HttpStatus.FORBIDDEN);
-        }
-    }
+//    public ResponseEntity<Object> createCard(int acc, Client currentClient, CardType enumType, CardColor enumColor, CardsRepository cardRepo){
+//        if (acc < 3) {
+//            String digits = Utils.generateCardsDigits();
+//            while (cardRepo.existsByCardDigits(digits)) {
+//                digits = Utils.generateCardsDigits();
+//            }
+//            Card newCard = new Card(currentClient, enumType, enumColor, LocalDate.now(), LocalDate.now().plusYears(5), digits);
+//            cardRepo.save(newCard);
+//            return new ResponseEntity<>(new CardDTO(newCard), HttpStatus.CREATED);
+//        } else {
+//            return new ResponseEntity<>("Max owned cards reached", HttpStatus.FORBIDDEN);
+//        }
+//    }
 
 }
 

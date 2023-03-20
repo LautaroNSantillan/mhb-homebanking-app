@@ -1,22 +1,16 @@
 package com.mindhub.homeBanking.controllers;
 
-import com.mindhub.homeBanking.dtos.AccountDTO;
 import com.mindhub.homeBanking.dtos.LoanApplicationDTO;
 import com.mindhub.homeBanking.dtos.LoanDTO;
 import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.models.loans.DynamicLoan;
-import com.mindhub.homeBanking.models.loans.PredefinedLoan;
-import com.mindhub.homeBanking.repositories.AccountRepository;
-import com.mindhub.homeBanking.repositories.ClientLoanRepository;
-import com.mindhub.homeBanking.repositories.ClientRepository;
-import com.mindhub.homeBanking.repositories.LoanRepository;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientLoanServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
+import com.mindhub.homeBanking.services.impl.LoanServiceImpl;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
 import com.mindhub.homeBanking.utilities.LoanNotFoundException;
-import com.mindhub.homeBanking.utilities.LoanValidationException;
 import com.mindhub.homeBanking.utilities.SuccessResponse;
-import net.bytebuddy.asm.Advice;
-import org.apache.catalina.filters.AddDefaultCharsetFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,23 +18,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/api")
 public class LoanController {
-    @Autowired
-    private ClientRepository clientRepo;
-    @Autowired
-    private ClientLoanRepository clientLoanRepo;
-    @Autowired
-    private LoanRepository loanRepo;
-    @Autowired
-    private AccountRepository accRepo;
+
+    private final LoanServiceImpl loanService;
+    private final ClientLoanServiceImpl clientLoanService;
+    private final ClientServiceImpl clientService;
+    private final AccountServiceImpl accService;
+
+
+    public LoanController(LoanServiceImpl loanService, ClientLoanServiceImpl clientLoanService, ClientServiceImpl clientService, AccountServiceImpl accService) {
+        this.loanService = loanService;
+        this.clientLoanService = clientLoanService;
+        this.clientService = clientService;
+        this.accService = accService;
+    }
 
     @Transactional
     @PostMapping("/loans")
@@ -52,7 +46,7 @@ public class LoanController {
         Account clientAcc;
 
         try {
-            clientAcc = accRepo.findByNumber(requestedLoan.getDestinationAccNumber());
+            clientAcc = accService.findByNumber(requestedLoan.getDestinationAccNumber());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid account", null),
@@ -60,7 +54,7 @@ public class LoanController {
         }
 
         try {
-            currentClient = clientRepo.findByEmail(auth.getName());
+            currentClient = clientService.findByEmail(auth.getName());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid client", null),
@@ -68,7 +62,7 @@ public class LoanController {
         }
 
         try {
-            injectedLoan = loanRepo.findById(requestedLoan.getLoanId()).orElse(null);
+            injectedLoan = loanService.findById(requestedLoan.getLoanId());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid loan type", null),
@@ -115,27 +109,19 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-
-
-        // Create a new loan object from loanType
-        double paymentAmount = requestedLoan.getAmount() * (1 + (injectedLoan.getInterestRate() / 100));
-        ClientLoan clientLoan = new ClientLoan(paymentAmount, requestedLoan.getPayments(),currentClient,injectedLoan);
-
-        clientAcc.setBalance(clientAcc.getBalance()+ requestedLoan.getAmount());
-        accRepo.save(clientAcc);
+        accService.updateBalance(clientAcc, requestedLoan.getAmount());
+        accService.save(clientAcc);
 
         // Save the loan to the database and return the response
-        clientLoanRepo.save(clientLoan);
+        clientLoanService.saveNewClientLoan(this.calculatePayments(requestedLoan.getAmount(), injectedLoan.getInterestRate()), requestedLoan.getPayments(),currentClient,injectedLoan);
 
         return new  ResponseEntity<>(HttpStatus.CREATED);
 
     }
-
-
     @RequestMapping("/loans/{type}/DTO")
     @PreAuthorize("hasAuthority('CLIENT')")
         public LoanDTO getDTO(@PathVariable String type) throws LoanNotFoundException {
-            return new LoanDTO(loanRepo.findById(type.toUpperCase()).orElseThrow(LoanNotFoundException::new));
+            return new LoanDTO(loanService.findById(type.toUpperCase()));
         }
 
     @PostMapping("/loans/final-payments")
@@ -163,12 +149,14 @@ public class LoanController {
         }
 
         newLoan.setPredefinedLoan(false);
-        Loan createdLoan = new Loan(newLoan);
+       loanService.saveNewLoan(newLoan);
 
-        loanRepo.save(createdLoan);
-
-        String message = "Created new loan " + createdLoan.getName();
+        String message = "Created new loan " + newLoan.getName();
         SuccessResponse success = new SuccessResponse(HttpStatus.CREATED.value(),message, " ");
         return new ResponseEntity<>(success, HttpStatus.CREATED);
+    }
+
+    private double calculatePayments(double loanAmount, double interestRate){
+      return  loanAmount * (1 + (interestRate/ 100));
     }
 }

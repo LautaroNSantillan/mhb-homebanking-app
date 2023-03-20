@@ -115,13 +115,14 @@ createApp({
                 toDate: this.toDate.toISOString(),
                 accountNumber: this.accounts.number
               };
-              axios.post('/api/getrans2', data, { responseType: 'blob' })
+              axios.post('/api/export-to-PDF-stream-output', data, {responseType: 'blob'})
                 .then(response => {
-                  const url = window.URL.createObjectURL(response.data);
-                  const link = document.createElement('a');
-                  link.href = url;
-                  link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
-                  document.body.appendChild(link);
+                    console.log(response)
+                   const url = window.URL.createObjectURL(response.data);
+                   const link = document.createElement('a');
+                   link.href = url;
+                   link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                   document.body.appendChild(link);
                   link.click();
                 })
                 .catch(error => {
@@ -152,12 +153,12 @@ createApp({
             };
             axios.post('/api/transaction/export-to-pdf', data, { responseType: 'blob' })
               .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `transactions-${this.accounts.number}.pdf`);
-                document.body.appendChild(link);
-                link.click();
+                // const url = window.URL.createObjectURL(new Blob([response.data]));
+                // const link = document.createElement('a');
+                // link.href = url;
+                // link.setAttribute('download', `transactions-${this.accounts.number}.pdf`);
+                // document.body.appendChild(link);
+                // link.click();
               })
               .catch(error => {
                 console.log(error);

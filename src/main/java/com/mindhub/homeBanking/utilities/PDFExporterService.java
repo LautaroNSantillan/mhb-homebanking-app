@@ -1,4 +1,4 @@
-package com.mindhub.homeBanking.PDFExporter;
+package com.mindhub.homeBanking.utilities;
 
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
@@ -8,23 +8,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PDFExporter {
+@Service
+public class PDFExporterService {
     private List<Transaction> transactionList;
 
     private void writeTableHeader(PdfPTable table){

@@ -5,8 +5,10 @@ import com.mindhub.homeBanking.models.Card;
 import com.mindhub.homeBanking.models.CardColor;
 import com.mindhub.homeBanking.models.CardType;
 import com.mindhub.homeBanking.models.Client;
-import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.CardsRepository;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,8 +18,11 @@ import java.util.List;
 import java.util.Random;
 
 import com.github.javafaker.Faker;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 public class Utils {
+
     public static ResponseEntity<Object> createCard(int acc, Client currentClient, CardType enumType, CardColor enumColor, CardsRepository cardRepo){
         if (acc < 3) {
             String digits = Utils.generateCardsDigits();
@@ -76,15 +81,16 @@ public class Utils {
         return uniqueVin;
     }
 
-    public void generateUniqueAlias(AccountRepository accRepo) {
+    public static String generateUniqueAlias(AccountService accService) {
         String alias = Utils.aliasGenerator();
         do{
             alias = Utils.aliasGenerator();
-        }while(accRepo.existsByAlias(alias));
+        }while(accService.existsByAlias(alias));
+        return alias;
     }
     public static String aliasGenerator() {
             Faker faker = new Faker();
-            String alias = faker.animal().name().toUpperCase() + "." + faker.country().name().toUpperCase() + "." + faker.superhero().name().toUpperCase();
+            String alias = faker.animal().name().toUpperCase() + "."+ faker.book().author().toUpperCase() + "." + faker.superhero().name().toUpperCase();
             alias = alias.replace(" ", "");
             return alias;
     }

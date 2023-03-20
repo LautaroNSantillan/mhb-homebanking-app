@@ -1,9 +1,8 @@
 package com.mindhub.homeBanking.cronjobs;
 
 import com.mindhub.homeBanking.models.Account;
-import com.mindhub.homeBanking.repositories.AccountRepository;
-import com.mindhub.homeBanking.repositories.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +10,19 @@ import java.util.List;
 
 @Component
 public class UpdateSavingsAccJob {
-    @Autowired
-    AccountRepository accRepo;
-    @Autowired
-    TransactionRepository transactionRepo;
+    private final AccountServiceImpl accountService;
+    private final TransactionServiceImpl transactionService;
+
+    public UpdateSavingsAccJob(AccountServiceImpl accountService, TransactionServiceImpl transactionService) {
+        this.accountService = accountService;
+        this.transactionService = transactionService;
+    }
+
     @Scheduled(cron = "0 0 12 * * *", zone = "America/Argentina/Buenos_Aires")
     public void updateAccountBalances() {
-        List<Account> accounts = accRepo.findAll();
+        List<Account> accounts = accountService.findAll();
         for (Account account : accounts) {
-            account.depositInterest(accRepo, transactionRepo);
+            account.depositInterest(accountService, transactionService);
         }
     }
 }

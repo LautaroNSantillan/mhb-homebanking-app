@@ -8,4 +8,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByNumber(String number);
     boolean existsByNumber(String number);
     boolean existsByAlias(String alias);
+    long count();
 }

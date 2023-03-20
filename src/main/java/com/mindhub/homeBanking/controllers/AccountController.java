@@ -7,6 +7,8 @@ import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.ClientRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
+import com.mindhub.homeBanking.services.ClientService;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,30 +29,32 @@ import java.util.stream.Collectors;
 public class AccountController {
 
     @Autowired
-    private AccountRepository accRepo;
+    private AccountServiceImpl accService;
     @Autowired
-    private ClientRepository clientRepo;
+    private ClientService clientService;
     @Autowired
     private TransactionRepository transactionRepo;
 
     @RequestMapping("/accounts")
     public List<AccountDTO> getAccounts() {
-        return accRepo.findAll().stream().map(AccountDTO::new).collect(Collectors.toList());
+        return accService.getAccountsDTO();
     }
-
     @RequestMapping("accounts/{id}")
-    public Optional<AccountDTO> getAccount(@PathVariable Long id) {
-        return accRepo.findById(id).map(AccountDTO::new);
+    public AccountDTO getAccount(@PathVariable Long id) {
+        return accService.getAccountDTO(id);
     }
 
     @PostMapping("clients/current/accounts")
-    public ResponseEntity<Object> generateNewAccount(Authentication auth) {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
+    public ResponseEntity<Object> generateNewAccount(Authentication auth, @RequestParam String type) {
+        Client currentClient = clientService.findByEmail(auth.getName());
         if (currentClient.getAccounts().size() < 3) {
-            Account newAcc = new Account(Utils.generateVin(currentClient), LocalDateTime.now(), 0, accRepo);
-            currentClient.addAccount(newAcc);
-            accRepo.save(newAcc);
-            return new ResponseEntity<>(new AccountDTO(newAcc), HttpStatus.CREATED);
+            try {
+                AccountType accountType = AccountType.valueOf(type.toUpperCase());
+                accService.saveNewAccount(currentClient, accountType);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            } catch (IllegalArgumentException ex) {
+                return new ResponseEntity<>("Invalid account type", HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>("Client already has 3 or more accounts", HttpStatus.FORBIDDEN);
         }
@@ -58,14 +62,14 @@ public class AccountController {
 
     @DeleteMapping("clients/current/delete-account")
     public ResponseEntity<Object> deleteAccount(@RequestParam long cardId, Authentication auth) {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
-        Optional<Account> optionalAccount = accRepo.findById(cardId);
+        Client currentClient = clientService.findByEmail(auth.getName());
+        Optional<Account> optionalAccount = accService.findByIdOptional(cardId);
         if (optionalAccount.isPresent()) {
             Account accountToDelete = optionalAccount.get();
             if (accountToDelete.getClient().equals(currentClient)) {
                 List<Transaction> transactionsToDelete = transactionRepo.findByAccount(accountToDelete);
                 transactionRepo.deleteAll(transactionsToDelete);
-                accRepo.delete(accountToDelete);
+                accService.deleteAccount(accountToDelete);
                 return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("This account does not belong to the current client", HttpStatus.FORBIDDEN);
