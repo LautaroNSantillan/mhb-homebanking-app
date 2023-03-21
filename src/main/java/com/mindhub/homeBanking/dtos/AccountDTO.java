@@ -2,6 +2,7 @@ package com.mindhub.homeBanking.dtos;
 
 import com.mindhub.homeBanking.models.Account;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 @Getter
 @Setter
+@NoArgsConstructor
 public class AccountDTO {
     private long id;
     private String number;

@@ -89,3 +89,36 @@
     }
   }
 }
+
+.transaction-filters{
+  gap: 1rem;
+  background-color: #6c7a8950;
+  button{
+    height: 2rem;
+    margin: auto;
+  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  table{
+    margin: auto;
+    width: auto;
+  }
+  .datepicker-table{
+    thead,tbody{
+      background-color: rgb(226, 255, 225);
+      border-color: rgb(226, 255, 225);
+    }
+      
+    .button{
+      font-size: 1rem!important;
+      background-color: green!important;
+    }
+  }
+}
+
+.paginator-div{
+  a,i{
+    font-size: large;
+  }
+}

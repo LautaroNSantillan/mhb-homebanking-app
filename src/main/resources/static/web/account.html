@@ -166,6 +166,31 @@
                     </li>
                 </ul>
             </div> -->
+            <div class="transaction-filters flex-container flex-dir-column large-flex-dir-row">
+              <table class="datepicker-table">
+                <thead>
+                  <tr>
+                    <th>Start date&nbsp;
+                      <a href="#" class="button tiny" id="dp4" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)" >Change</a>
+                    </th>
+                    <th>End date&nbsp;
+                      <a href="#" class="button tiny" id="dp5" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)">Change</a>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id="startDate"></td>
+                    <td id="endDate"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="alert alert-box" style="display:none;" id="alert"> <strong>Oh snap!</strong>
+              </div>
+              
+                <button class="box-shadow-btn" @click="filterTransactionsByDate">Filter Transactions</button>
+                <button class="box-shadow-btn" @click="downloadPDF">Download PDF</button>
+          </div>
     <div v-if="accounts && slicedTransactions.length==0">
       <h3 class="text-center">No transactions to show</h3>
     </div>
@@ -192,39 +217,12 @@
         </li>
 
       </ul>
-      <nav aria-label="Pagination">
-        <ul class="pagination" id="paginationDiv">
+      <nav aria-label="Pagination" class="flex-container align-center-middle paginator-div" @click.prevent>
+        <ul class="pagination" id="paginationDiv" @click.prevent>
       
         </ul>
       </nav>
     </div>
-
-
-    <table class="datepicker-table">
-      <thead>
-        <tr>
-          <th>Start date&nbsp;
-            <a href="#" class="button tiny" id="dp4" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)" >Change</a>
-          </th>
-          <th>End date&nbsp;
-            <a href="#" class="button tiny" id="dp5" data-date-format="yyyy-mm-dd" :data-date="new Date().toISOString().slice(0,10)">Change</a>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="startDate"></td>
-          <td id="endDate"></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="alert alert-box" style="display:none;" id="alert"> <strong>Oh snap!</strong>
-      
-    </div>
-    
-      <button class="button" @click="filterTransactionsByDate">Filter Transactions</button>
-      <button class="btn-shadow" @click="downloadPDF">Download</button>
-      <button class="btn-shadow" @click="getrans">Download</button>
     
   </main>
 

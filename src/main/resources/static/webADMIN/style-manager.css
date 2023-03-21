@@ -83,3 +83,6 @@ label, pre, td{
 .grid-container .grid-x{
     margin: auto;
   }
+  .white-txt{
+    color: white;
+  }

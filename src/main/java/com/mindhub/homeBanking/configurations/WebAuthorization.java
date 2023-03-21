@@ -39,15 +39,16 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
               .antMatchers(HttpMethod.POST,"/api/login").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/clients").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/api/clients").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/clients").permitAll()//cambiar
                 .antMatchers(HttpMethod.POST, "/api/clients/current").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/loans/create").permitAll()//cambiar
                 .antMatchers("/api/clients/current").hasAuthority("CLIENT")
-                .antMatchers("/api/accounts").hasAuthority("CLIENT")
+                .antMatchers("/api/accounts").permitAll()//cambiar
                 .antMatchers("/api/accounts/**").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/renew-card").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/clients/current/accounts").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/clients/current/pay-with-card").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/transaction").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/loans").hasAuthority("CLIENT")
                 .antMatchers("/api/loans/**/DTO").hasAuthority("CLIENT")

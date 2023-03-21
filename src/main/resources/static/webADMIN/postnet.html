@@ -22,37 +22,38 @@
                 <div class="grid-x grid-padding-x grid-padding-y">
                     
 
-                    <h2>Create Loan</h2>
+                    <h2>Pay</h2>
 
                     <div  class="medium-6 cell">
-                        <label >ID
-                            <input type="text" placeholder=".medium-6.cell"  maxlength="50"  v-model="id">
+                        <label >Card digits
+                            <input type="text" placeholder=".medium-6.cell"  maxlength="50"  v-model="digits">
                         </label>
                     </div>
                     <div  class="medium-6 cell">
-                        <label >Name
-                            <input type="text" placeholder=".medium-6.cell"  maxlength="50"  v-model="name">
+                        <h3 class="white-txt"> CardType *we only accept debit at the moment</h3>
+                        <label   class="white-txt"> DEBIT
+                            <input type="radio" name="cardType" value="DEBIT" v-model="cardType" label="DEBIT" />
+                          </label>
+                    </div>
+                    <div  class="medium-6 cell">
+                        <label >CVV
+                            <input type="number" placeholder=".medium-6.cell"   v-model="cvv">
                         </label>
                     </div>
                     <div  class="medium-6 cell">
-                        <label >Max Amount
-                            <input type="number" placeholder=".medium-6.cell"   v-model="maxAmount">
+                        <label >Amount 
+                            <input type="number" placeholder=".medium-6.cell"    v-model="amount">
                         </label>
                     </div>
                     <div  class="medium-6 cell">
-                        <label >Interest 
-                            <input type="number" placeholder=".medium-6.cell"    v-model="interest">
-                        </label>
-                    </div>
-                    <div  class="medium-6 cell">
-                        <label >Payments
-                            <input type="text" placeholder=".medium-6.cell"    v-model="payments">
+                        <label >Description
+                            <input type="text" placeholder=".medium-6.cell"    v-model="description">
                         </label>
                     </div>
 
 
                     <div class="medium-12 cell">
-                        <button class="button" @click.prevent="createLoan">Send</button>
+                        <button class="button" @click.prevent="postPay">Send</button>
                     </div>
                 </div>
             </div>
@@ -68,7 +69,7 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <script src="./create-loan.js"></script>
+  <script src="./postnet.js"></script>
   
   <script>
     $(document).foundation();                             

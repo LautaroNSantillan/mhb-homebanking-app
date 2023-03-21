@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class CardController {
         this.clientService = clientService;
         this.transactionService = transactionService;
     }
-
+    @Transactional
     @PostMapping("clients/current/cards")
     public ResponseEntity<Object> createNewCard(@RequestParam String type, @RequestParam String color, Authentication auth) {
         Client currentClient = clientService.findByEmail(auth.getName());
@@ -90,6 +91,7 @@ public class CardController {
             return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
         }
     }
+    @Transactional
     @PostMapping("clients/current/renew-card")
     public ResponseEntity<Object> renewCard(@RequestParam long cardId, Authentication auth){
         Client currentClient = clientService.findByEmail(auth.getName());
@@ -130,13 +132,20 @@ public class CardController {
     @PostMapping("clients/current/pay-with-card")
     public ResponseEntity<Object> payWithCard(@RequestBody PaymentDTO payment, Authentication auth) throws InsufficientFundsException {
         Client currentClient = clientService.findByEmail(auth.getName());
-        Card cardUsed = cardService.findByCardDigits(payment.getNumber());
+
+        if (!EnumSet.of(CardType.CREDIT, CardType.DEBIT).contains(payment.getCardType())) {
+            return new ResponseEntity<>(
+                    new ErrorResponse(HttpStatus.FORBIDDEN.value(),"Invalid card type", null)
+                    , HttpStatus.FORBIDDEN);
+        }
 
         if(!cardService.existsByCardDigits(payment.getNumber())){
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(),"Invalid card", null)
                     , HttpStatus.FORBIDDEN);
         }
+
+        Card cardUsed = cardService.findByCardDigits(payment.getNumber());
 
         boolean hasCard = currentClient.getCards()
                 .stream()

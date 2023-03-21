@@ -4,6 +4,7 @@ import com.mindhub.homeBanking.models.Card;
 import com.mindhub.homeBanking.models.CardColor;
 import com.mindhub.homeBanking.models.CardType;
 import com.mindhub.homeBanking.models.Client;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

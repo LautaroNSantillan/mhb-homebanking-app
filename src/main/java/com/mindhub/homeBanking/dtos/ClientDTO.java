@@ -1,10 +1,11 @@
 package com.mindhub.homeBanking.dtos;
 
 import com.mindhub.homeBanking.models.Client;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@NoArgsConstructor
 public class ClientDTO {
     private long id;
     private String firstName;

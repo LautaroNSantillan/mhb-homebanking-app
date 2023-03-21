@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentDTO {
     private String number;
-    private byte cvv;
+    private String cvv;
     private double amount;
     private String description;
     private CardType cardType;

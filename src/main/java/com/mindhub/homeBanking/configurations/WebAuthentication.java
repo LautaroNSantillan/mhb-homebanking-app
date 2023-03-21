@@ -17,11 +17,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
+    @Autowired
+    PasswordEncoder pwdEncoder;
     @Autowired
     ClientRepository clientRepo;
 
@@ -47,7 +44,7 @@ public class WebAuthentication extends GlobalAuthenticationConfigurerAdapter {
         });
 
         InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-        UserDetails inMemoryAdmin = User.withUsername("memoAdmin").password(passwordEncoder().encode("123")).authorities("ADMIN").build();
+        UserDetails inMemoryAdmin = User.withUsername("memoAdmin").password(pwdEncoder.encode("123")).authorities("ADMIN").build();
         userDetailsService.createUser(inMemoryAdmin);
         auth.userDetailsService(userDetailsService);
     }

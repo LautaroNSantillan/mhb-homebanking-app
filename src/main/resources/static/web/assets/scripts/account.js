@@ -63,7 +63,7 @@ createApp({
                     this.sortTransactions()
                     this.renderRows()
                     this.setPageNumber();
-                    // this.renderNumbers()
+                    this.renderNumbers()
                 }
 
                 )
