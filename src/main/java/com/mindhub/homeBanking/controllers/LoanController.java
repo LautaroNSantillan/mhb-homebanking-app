@@ -1,17 +1,16 @@
 package com.mindhub.homeBanking.controllers;
 
-import com.mindhub.homeBanking.dtos.AccountDTO;
 import com.mindhub.homeBanking.dtos.LoanApplicationDTO;
 import com.mindhub.homeBanking.dtos.LoanDTO;
 import com.mindhub.homeBanking.models.*;
-import com.mindhub.homeBanking.repositories.AccountRepository;
-import com.mindhub.homeBanking.repositories.ClientLoanRepository;
-import com.mindhub.homeBanking.repositories.ClientRepository;
-import com.mindhub.homeBanking.repositories.LoanRepository;
+import com.mindhub.homeBanking.models.loans.DynamicLoan;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientLoanServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
+import com.mindhub.homeBanking.services.impl.LoanServiceImpl;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
-import net.bytebuddy.asm.Advice;
-import org.apache.catalina.filters.AddDefaultCharsetFilter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mindhub.homeBanking.utilities.LoanNotFoundException;
+import com.mindhub.homeBanking.utilities.SuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,23 +18,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/api")
 public class LoanController {
-    @Autowired
-    private ClientRepository clientRepo;
-    @Autowired
-    private ClientLoanRepository clientLoanRepo;
-    @Autowired
-    private LoanRepository loanRepo;
-    @Autowired
-    private AccountRepository accRepo;
+
+    private final LoanServiceImpl loanService;
+    private final ClientLoanServiceImpl clientLoanService;
+    private final ClientServiceImpl clientService;
+    private final AccountServiceImpl accService;
+
+
+    public LoanController(LoanServiceImpl loanService, ClientLoanServiceImpl clientLoanService, ClientServiceImpl clientService, AccountServiceImpl accService) {
+        this.loanService = loanService;
+        this.clientLoanService = clientLoanService;
+        this.clientService = clientService;
+        this.accService = accService;
+    }
 
     @Transactional
     @PostMapping("/loans")
@@ -43,11 +42,11 @@ public class LoanController {
 
         Client currentClient;
         Loan injectedLoan;
-        LoanType loanType;
+        Loan loanType;
         Account clientAcc;
 
         try {
-            clientAcc = accRepo.findByNumber(requestedLoan.getDestinationAccNumber());
+            clientAcc = accService.findByNumber(requestedLoan.getDestinationAccNumber());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid account", null),
@@ -55,7 +54,7 @@ public class LoanController {
         }
 
         try {
-            currentClient = clientRepo.findByEmail(auth.getName());
+            currentClient = clientService.findByEmail(auth.getName());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid client", null),
@@ -63,15 +62,13 @@ public class LoanController {
         }
 
         try {
-            injectedLoan = loanRepo.findById(requestedLoan.getLoanId());
+            injectedLoan = loanService.findById(requestedLoan.getLoanId());
         } catch (Exception e) {
             return new ResponseEntity<>(
                     new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid loan type", null),
                     HttpStatus.FORBIDDEN);
         }
 
-        try {
-           loanType = LoanType.valueOf(requestedLoan.getLoanId().toString());
 
             // Check if amount and payments are positive
             if (requestedLoan.getAmount() <= 0 || requestedLoan.getPayments() <= 0) {
@@ -86,7 +83,8 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-            if (requestedLoan.getAmount() > loanType.getMaxAmount()) {
+        assert injectedLoan != null;
+        if (requestedLoan.getAmount() > injectedLoan.getMaxAmount()) {
                 return new ResponseEntity<>(
                         new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Amount surpasses max amount available", null),
                         HttpStatus.FORBIDDEN);
@@ -105,35 +103,25 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-            if (!loanType.getPayments().contains(requestedLoan.getPayments())) {
+            if (!injectedLoan.getPayments().contains(requestedLoan.getPayments())) {
                 return new ResponseEntity<>(
                         new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid number of payments", null),
                         HttpStatus.FORBIDDEN);
             }
 
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(
-                    new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Invalid Loan type", null),
-                    HttpStatus.FORBIDDEN);
-        }
-
-        // Create a new loan object from loanType
-        double paymentAmount = (requestedLoan.getAmount() * 1.2)* 100.0 / 100.0;
-        ClientLoan clientLoan = new ClientLoan(paymentAmount, requestedLoan.getPayments(),currentClient,injectedLoan);
-
-        clientAcc.setBalance(clientAcc.getBalance()+ requestedLoan.getAmount());
-        accRepo.save(clientAcc);
+        accService.updateBalance(clientAcc, requestedLoan.getAmount());
+        accService.save(clientAcc);
 
         // Save the loan to the database and return the response
-        clientLoanRepo.save(clientLoan);
+        clientLoanService.saveNewClientLoan(this.calculatePayments(requestedLoan.getAmount(), injectedLoan.getInterestRate()), requestedLoan.getPayments(),currentClient,injectedLoan);
 
         return new  ResponseEntity<>(HttpStatus.CREATED);
 
     }
     @RequestMapping("/loans/{type}/DTO")
     @PreAuthorize("hasAuthority('CLIENT')")
-        public LoanDTO getDTO(@PathVariable String type) {
-            return new LoanDTO(loanRepo.findById(LoanType.valueOf(type.toUpperCase())));
+        public LoanDTO getDTO(@PathVariable String type) throws LoanNotFoundException {
+            return new LoanDTO(loanService.findById(type.toUpperCase()));
         }
 
     @PostMapping("/loans/final-payments")
@@ -142,4 +130,33 @@ public class LoanController {
         return Math.round(paymentAmount * 100.0) / 100.0;
     }
 
+    @PostMapping("/loans/create")
+    public ResponseEntity<Object> createLoan(@RequestBody DynamicLoan newLoan) {
+        if (newLoan.getId().isEmpty() ) {
+            return new ResponseEntity<>("Missing ID", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getPayments().isEmpty() ) {
+            return new ResponseEntity<>("Missing payments", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getName().isEmpty() ) {
+            return new ResponseEntity<>("Missing name", HttpStatus.BAD_REQUEST);
+        }
+        if (Double.isNaN(newLoan.getInterestRate()) || newLoan.getInterestRate() <= 0 ) {
+            return new ResponseEntity<>("Invalid interest rate", HttpStatus.BAD_REQUEST);
+        }
+        if (newLoan.getMaxAmount()<=0 ) {
+            return new ResponseEntity<>("Invalid max amount", HttpStatus.BAD_REQUEST);
+        }
+
+        newLoan.setPredefinedLoan(false);
+       loanService.saveNewLoan(newLoan);
+
+        String message = "Created new loan " + newLoan.getName();
+        SuccessResponse success = new SuccessResponse(HttpStatus.CREATED.value(),message, " ");
+        return new ResponseEntity<>(success, HttpStatus.CREATED);
+    }
+
+    private double calculatePayments(double loanAmount, double interestRate){
+      return  loanAmount * (1 + (interestRate/ 100));
+    }
 }

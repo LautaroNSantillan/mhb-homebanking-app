@@ -18,10 +18,15 @@ createApp({
             destinationAccNumber:null,
             loanSuccess:false,
             loanError:false,
-            loading:true
-
+            loading:true,
+            accType:null,
+            loanErrorMessage:null
         }
     },
+    watch: {
+        loanId: function(newValue, oldValue) {
+          this.requestedPayments = null;}
+        },
     updated() {
         $(document).foundation();
     },
@@ -73,7 +78,7 @@ createApp({
         },
 
         createNewAcc() {
-            axios.post('/api/clients/current/accounts')
+            axios.post('/api/clients/current/accounts', `type=${this.accType}`)
                 .then(response => {
                     if (response.status == "201") {
                         console.log(response),
@@ -97,6 +102,19 @@ createApp({
                     }
                 })    
         },
+        deleteAccount(id) {
+            axios.delete('/api/clients/current/delete-account', { params: { accId: id } })
+              .then(response => {
+                if (response.status === 200) {
+                  console.log(response);
+                  this.deletedAcc = true;
+                  this.loadData();
+                  setTimeout(() => {
+                    this.deletedAcc = false;
+                  }, 6000);
+                }
+              });
+          },
 
         requestLoan(){
             let newLoan={
@@ -115,6 +133,7 @@ createApp({
                 }
             })
             .catch(error =>
+                this.loanErrorMessage=error.response.data.message,
                 this.loanError=true,
                 setTimeout(() => {
                     this.loanError=false;
@@ -126,6 +145,9 @@ createApp({
             .then(r=>{
                 console.log(r)
                 this.finalPayments = r.data;
+            })
+            .catch(err => {
+                console.log(err)
             })
         },
         getLoanDTO(){

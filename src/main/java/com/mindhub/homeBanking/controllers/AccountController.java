@@ -1,58 +1,72 @@
 package com.mindhub.homeBanking.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindhub.homeBanking.dtos.AccountDTO;
-import com.mindhub.homeBanking.dtos.ClientDTO;
 import com.mindhub.homeBanking.models.*;
-import com.mindhub.homeBanking.repositories.AccountRepository;
-import com.mindhub.homeBanking.repositories.ClientRepository;
-import com.mindhub.homeBanking.repositories.TransactionRepository;
-import com.mindhub.homeBanking.utilities.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
+import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.*;
-
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/api")
 public class AccountController {
+    private final AccountServiceImpl accService;
+    private final ClientServiceImpl clientService;
+    private final TransactionServiceImpl transactionService;
 
-    @Autowired
-    private AccountRepository accRepo;
-    @Autowired
-    private ClientRepository clientRepo;
-    @Autowired
-    private TransactionRepository transactionRepo;
-
-    @RequestMapping("/accounts")
-    public List<AccountDTO> getAccounts() {
-        return accRepo.findAll().stream().map(AccountDTO::new).collect(Collectors.toList());
+    public AccountController(AccountServiceImpl accService, ClientServiceImpl clientService, TransactionServiceImpl transactionService) {
+        this.accService = accService;
+        this.clientService = clientService;
+        this.transactionService = transactionService;
     }
 
-    @RequestMapping("accounts/{id}")
-    public Optional<AccountDTO> getAccount(@PathVariable Long id) {
-        return accRepo.findById(id).map(AccountDTO::new);
+    @GetMapping("/accounts")
+    public List<AccountDTO> getAccounts() {
+        return accService.getAccountsDTO();
+    }
+    @GetMapping("accounts/{id}")
+    public AccountDTO getAccount(@PathVariable Long id) {
+        return accService.getAccountDTO(id);
     }
 
     @PostMapping("clients/current/accounts")
-    public ResponseEntity<Object> generateNewAccount(Authentication auth) {
-        Client currentClient = clientRepo.findByEmail(auth.getName());
+    public ResponseEntity<Object> generateNewAccount(Authentication auth, @RequestParam String type) {
+        Client currentClient = clientService.findByEmail(auth.getName());
         if (currentClient.getAccounts().size() < 3) {
-            Account newAcc = new Account(Utils.generateVin(currentClient), LocalDateTime.now(), 0, accRepo);
-            currentClient.addAccount(newAcc);
-            accRepo.save(newAcc);
-            return new ResponseEntity<>(new AccountDTO(newAcc), HttpStatus.CREATED);
+            try {
+                AccountType accountType = AccountType.valueOf(type.toUpperCase());
+                accService.saveNewAccount(currentClient, accountType);
+                return new ResponseEntity<>("Created",HttpStatus.CREATED);
+            } catch (IllegalArgumentException ex) {
+                return new ResponseEntity<>("Invalid account type", HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>("Client already has 3 or more accounts", HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @DeleteMapping("clients/current/delete-account")
+    public ResponseEntity<Object> deleteAccount(@RequestParam long accId, Authentication auth) {
+        Client currentClient = clientService.findByEmail(auth.getName());
+        Optional<Account> optionalAccount = accService.findByIdOptional(accId);
+        if (optionalAccount.isPresent()) {
+            Account accountToDelete = optionalAccount.get();
+            if (accountToDelete.getClient().equals(currentClient)) {
+                List<Transaction> transactionsToDelete = transactionService.findByAccount(accountToDelete);
+                //transactionService.deleteAll(transactionsToDelete);
+                accService.deleteAccount(accountToDelete);
+                return new ResponseEntity<>("Account deleted successfully", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("This account does not belong to the current client", HttpStatus.FORBIDDEN);
+            }
+        } else {
+            return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
         }
     }
 

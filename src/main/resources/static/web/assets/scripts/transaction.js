@@ -67,8 +67,8 @@ createApp({
                     })
         },
 
-        filteredAccounts() {
-            return this.client.accounts.filter(account => account.number !== this.originAccNumber)
+        filterAccounts() {
+            this.filteredAccounts = this.client.accounts.filter(account => account.number !== this.originAccNumber)
           },
 
         validateForm() {

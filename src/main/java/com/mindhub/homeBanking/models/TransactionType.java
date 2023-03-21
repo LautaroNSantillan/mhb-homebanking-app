@@ -6,7 +6,7 @@ public enum TransactionType {
 
         private Boolean tType;
 
-        private TransactionType (Boolean tType) {
+        TransactionType (Boolean tType) {
                 this.tType = tType;
         }
 

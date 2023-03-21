@@ -6,9 +6,8 @@ import com.mindhub.homeBanking.models.LoanType;
 public class ClientLoanDTO {
 
     private long id;
-    private LoanType loanId;
+    private String loanId;
     private String loanType;
-
     private double amount;
     private int payments;
     public ClientLoanDTO(){}
@@ -24,7 +23,7 @@ public class ClientLoanDTO {
         return id;
     }
 
-    public LoanType getLoanId() {
+    public String getLoanId() {
         return loanId;
     }
 
@@ -52,7 +51,7 @@ public class ClientLoanDTO {
         this.id = id;
     }
 
-    public void setLoanId(LoanType loanId) {
+    public void setLoanId(String loanId) {
         this.loanId = loanId;
     }
 

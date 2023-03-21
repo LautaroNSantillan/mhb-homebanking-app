@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class LoanDTO {
-    private LoanType id;
+    private String id;
     private String name;
     private int maxAmount;
     private List<Byte> payments = new ArrayList<>();

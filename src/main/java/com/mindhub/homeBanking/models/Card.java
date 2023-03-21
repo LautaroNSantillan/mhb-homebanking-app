@@ -1,12 +1,9 @@
 package com.mindhub.homeBanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.mindhub.homeBanking.utilities.CardUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @Entity
 public class Card {
@@ -37,48 +34,18 @@ public class Card {
         this.setThruDate(thru);
     }
 
+    public boolean isExpired() {
+        LocalDate now = LocalDate.now();
+        return now.isAfter(thruDate) || now.isEqual(thruDate);
+    }
+
     public void addCard(Client cardHolder) {
         this.setCardHolder(cardHolder);
         cardHolder.getCards().add(this);
     }
 
     public void setGeneratedCvv() {
-        Random random = new Random();
-        int randomNumber = random.nextInt(1000);
-        String randomCvv = String.format("%03d", randomNumber);
-        this.setCvv(randomCvv);
-    }
-
-    public String generateCardsDigits() {
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            sb.append(String.format("%04d", random.nextInt(10000)));
-            if (i < 3) {
-                sb.append("-");
-            }
-        }
-        return sb.toString();
-    }
-    public void setGeneratedCardDigits() {
-        String generatedCardDigits = generateCardsDigits();
-        boolean foundMatch = false;
-        Client client= this.getCardHolder();
-        if (client!=null && client.getCards().size() != 0) {
-            List<Card> cardList = new ArrayList<>(client.getCards());
-            while (!foundMatch) {
-                for (int i = 0; i < cardList.size(); i++) {
-                    String clientCardNumber = cardList.get(i).getCardDigits();
-                    if (clientCardNumber.equals(generatedCardDigits)) {
-                        generatedCardDigits = generateCardsDigits();
-                        foundMatch = false;
-                        break;
-                    }
-                    foundMatch = true;
-                }
-            }
-        }
-        this.setCardDigits(generatedCardDigits);
+        this.setCvv(CardUtils.getCvv());
     }
 
     public long getId() {

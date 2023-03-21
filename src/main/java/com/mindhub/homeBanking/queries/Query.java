@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.*;
 
-@Service
+//@Service
 public class Query {
     @Autowired
     PasswordEncoder pwdEncoder;

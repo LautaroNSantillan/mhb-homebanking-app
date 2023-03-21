@@ -3,9 +3,12 @@ package com.mindhub.homeBanking.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
+import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import com.mindhub.homeBanking.utilities.InsufficientFundsException;
 import com.mindhub.homeBanking.utilities.Utils;
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,50 +25,61 @@ public class Account {
     private LocalDateTime creationDate;
     private double balance;
     private String alias;
+    @Enumerated(EnumType.STRING)
+    private AccountType type;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     Set<Transaction> transactions = new HashSet<>();
 
     public Account() {
     }
 
-    public Account(String number, LocalDateTime creation, double balance, AccountRepository accRepo) {
+    public Account(LocalDateTime creation, double balance, AccountServiceImpl accService, Client client, AccountType accountType) {
         this.setBalance(balance);
-        this.setNumber(number);
+        this.setNumber(this.generateAccountNumber(accService));
         this.setCreationDate(creation);
-        this.setAlias(accRepo);
+        this.setAlias(accService);
+        this.setClient(client);
+        this.setType(accountType);
     }
 
-    public void setAlias(AccountRepository accRepo) {
-        String alias = Utils.aliasGenerator();
-        do{
-            alias = Utils.aliasGenerator();
-            this.alias = alias;
-        }while(accRepo.existsByAlias(alias));
-
+    public void depositInterest(AccountServiceImpl accountService, TransactionServiceImpl transactionService) {
+        if (type == AccountType.SAVINGS) {
+            double interest = balance * type.getAnnualPercentageYield() / 365;
+            this.deposit(interest, "SAVING INTEREST", null,transactionService, accountService);
+        }
+    }
+    public String generateAccountNumber(AccountServiceImpl accountService) {
+        String vinPrefix = "VIN-";
+        long accountNumber = accountService.countAccounts() + 1;
+        String accountNumberString = String.valueOf(accountNumber);
+        int numZeros = 3 - accountNumberString.length();
+        String zeros = "0".repeat(Math.max(0, numZeros));
+        return vinPrefix + zeros + accountNumberString;
+    }
+    public void setAlias(AccountService accService) {
+        this.alias=(Utils.generateUniqueAlias(accService));
     }
 
-    public Transaction withdraw(double amount, String description, Account senderAcc, TransactionRepository transactionRepo, AccountRepository accRepo, double accBalance) throws InsufficientFundsException {
+    public Transaction withdraw(double amount, String description, TransactionServiceImpl transactionService, AccountServiceImpl accService,double accBalance) throws InsufficientFundsException {
         if (accBalance < amount) {
             throw new InsufficientFundsException();
         }
         this.setBalance(this.getBalance()-amount);
-        Transaction withdraw = new Transaction(TransactionType.DEBIT, amount, description, LocalDateTime.now(), null);
-        senderAcc.addTransaction(withdraw);
-        transactionRepo.save(withdraw);
-        accRepo.save(this);
+        Transaction withdraw = transactionService.createNewDebitTransaction(amount, description, this);
+        transactionService.save(withdraw);
+        accService.save(this);
         return withdraw;
     }
 
-    public Transaction deposit(double amount, String description,Client originClient, Account destinationAcc, TransactionRepository transactionRepo, AccountRepository accRepo){
+    public Transaction deposit(double amount, String description,Client originClient,TransactionServiceImpl transactionService, AccountServiceImpl accService){
         this.setBalance(this.getBalance()+amount);
-        Transaction deposit = new Transaction(TransactionType.DEBIT, amount, description, LocalDateTime.now(),originClient);
-        destinationAcc.addTransaction(deposit);
-        transactionRepo.save(deposit);
-        accRepo.save(this);
+        Transaction deposit = transactionService.createNewCreditTransaction(amount, description, this, originClient);
+        transactionService.save(deposit);
+        accService.save(this);
         return deposit;
     }
 
@@ -115,5 +129,13 @@ public class Account {
         this.balance = balance;
     }
 
+    public AccountType getType() {
+        return type;
     }
+
+    public void setType(AccountType type) {
+        this.type = type;
+    }
+
+}
 
