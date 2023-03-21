@@ -7,8 +7,6 @@ import com.mindhub.homeBanking.models.CardType;
 import com.mindhub.homeBanking.models.Client;
 import com.mindhub.homeBanking.repositories.CardsRepository;
 import com.mindhub.homeBanking.services.AccountService;
-import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -18,16 +16,14 @@ import java.util.List;
 import java.util.Random;
 
 import com.github.javafaker.Faker;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 public class Utils {
 
     public static ResponseEntity<Object> createCard(int acc, Client currentClient, CardType enumType, CardColor enumColor, CardsRepository cardRepo){
         if (acc < 3) {
-            String digits = Utils.generateCardsDigits();
+            String digits = CardUtils.getCardNumbers();
             while (cardRepo.existsByCardDigits(digits)) {
-                digits = Utils.generateCardsDigits();
+                digits = CardUtils.getCardNumbers();
             }
             Card newCard = new Card(currentClient, enumType, enumColor, LocalDate.now(), LocalDate.now().plusYears(5), digits);
             cardRepo.save(newCard);
@@ -36,27 +32,16 @@ public class Utils {
             return new ResponseEntity<>("Max owned cards reached", HttpStatus.FORBIDDEN);
         }
     }
-    public static String generateCardsDigits() {
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            sb.append(String.format("%04d", random.nextInt(10000)));
-            if (i < 3) {
-                sb.append("-");
-            }
-        }
-        return sb.toString();
-    }
 
     public static String buildCardDigits(Client client) {    //   OBSOLETE
-        String generatedCardDigits = generateCardsDigits();
+        String generatedCardDigits = CardUtils.getCardNumbers();
         boolean foundMatch = false;
         List<Card> cardList = new ArrayList<>(client.getCards());
         while (!foundMatch) {
             for (int i = 0; i < cardList.size(); i++) {
                 String clientCardNumber = cardList.get(i).getCardDigits();
                 if (clientCardNumber.equals(generatedCardDigits)) {
-                    generatedCardDigits = generateCardsDigits();
+                    generatedCardDigits = CardUtils.getCardNumbers();
                     foundMatch = false;
                     break;
                 }

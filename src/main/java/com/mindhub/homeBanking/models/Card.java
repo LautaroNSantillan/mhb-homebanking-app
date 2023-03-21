@@ -1,12 +1,9 @@
 package com.mindhub.homeBanking.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.mindhub.homeBanking.utilities.CardUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @Entity
 public class Card {
@@ -48,22 +45,7 @@ public class Card {
     }
 
     public void setGeneratedCvv() {
-        Random random = new Random();
-        int randomNumber = random.nextInt(1000);
-        String randomCvv = String.format("%03d", randomNumber);
-        this.setCvv(randomCvv);
-    }
-
-    public String generateCardsDigits() {
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 4; i++) {
-            sb.append(String.format("%04d", random.nextInt(10000)));
-            if (i < 3) {
-                sb.append("-");
-            }
-        }
-        return sb.toString();
+        this.setCvv(CardUtils.getCvv());
     }
 
     public long getId() {

@@ -1,13 +1,12 @@
 package com.mindhub.homeBanking.services.impl;
 
-import com.mindhub.homeBanking.dtos.CardDTO;
 import com.mindhub.homeBanking.models.Card;
 import com.mindhub.homeBanking.models.CardColor;
 import com.mindhub.homeBanking.models.CardType;
 import com.mindhub.homeBanking.models.Client;
 import com.mindhub.homeBanking.repositories.CardsRepository;
 import com.mindhub.homeBanking.services.CardService;
-import com.mindhub.homeBanking.utilities.Utils;
+import com.mindhub.homeBanking.utilities.CardUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,9 +53,9 @@ private final CardsRepository cardRepo;
     }
     @Override
     public Card createCard( Client currentClient, CardType enumType, CardColor enumColor){
-            String digits = Utils.generateCardsDigits();
+            String digits = CardUtils.getCardNumbers();
             while (cardRepo.existsByCardDigits(digits)) {
-                digits = Utils.generateCardsDigits();
+                digits = CardUtils.getCardNumbers();
             }
         return new Card(currentClient, enumType, enumColor, LocalDate.now(), LocalDate.now().plusYears(5), digits);
 

@@ -73,7 +73,7 @@ public class ClientController {
         }
 
        clientService.saveNewClient(incomingObj.getFirstName(), incomingObj.getLastName(), incomingObj.getEmail(), incomingObj.getPassword());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("Logged in",HttpStatus.CREATED);
     }
 
     @RequestMapping("clients/current")

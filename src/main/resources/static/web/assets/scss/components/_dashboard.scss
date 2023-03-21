@@ -87,3 +87,22 @@ p {
   }
 }
 
+#accTypeModal{
+  .switch{
+    width: 20rem;
+    p{
+      text-align: center;
+      font-size: large;
+    }
+    .help-text{
+      padding: .7rem;
+      font-size: small!important;
+      margin-bottom: 1rem;
+    }
+  }
+  .box-shadow-btn{
+    margin: auto;
+  margin-top: 3rem;
+  }
+}
+

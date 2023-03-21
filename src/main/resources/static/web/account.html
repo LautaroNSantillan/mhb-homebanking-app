@@ -17,7 +17,7 @@
   <title>MHB&CO | Account</title>
 </head>
 
-<body id="app" class="green-theme tinted-image">
+<body id="app" class="green-theme tinted-image" >
   <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
   <nav class="top-bar off-canvas-content" data-off-canvas-content>
     <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
@@ -166,7 +166,7 @@
                     </li>
                 </ul>
             </div> -->
-    <div v-if="accounts && sortedTransactions.length==0">
+    <div v-if="accounts && slicedTransactions.length==0">
       <h3 class="text-center">No transactions to show</h3>
     </div>
     <div v-else class="container">
@@ -179,7 +179,7 @@
           <div class="col col-5">Sender</div>
           <div class="col col-6">Balance Remaining</div>
         </li>
-        <li class="table-row" v-for="transaction of sortedTransactions">
+        <li class="table-row" v-for="transaction of slicedTransactions">
           <div class="col col-1" data-label="DATE"> {{transaction.date.slice(0,10)}} </div>
           <div :class="[transaction.type === 'CREDIT'? 'col col-2 credit' : ' col col-2 debit']" data-label="TYPE">
             {{transaction.type}} </div>
@@ -192,6 +192,11 @@
         </li>
 
       </ul>
+      <nav aria-label="Pagination">
+        <ul class="pagination" id="paginationDiv">
+      
+        </ul>
+      </nav>
     </div>
 
 

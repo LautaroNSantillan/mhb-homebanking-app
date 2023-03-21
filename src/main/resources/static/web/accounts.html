@@ -344,8 +344,9 @@
               <div class="center">
                 <div class="card">
                   <div class="additional">
-                    <div class="user-card flex-container align-middle align-center text-center">
+                    <div class="user-card flex-container align-middle align-center text-center flex-dir-column">
                       <h4> {{account.number}} </h4>
+                     <a href="#" @click.prevent="deleteAccount(account.id)"> <i class="fa-solid fa-trash"></i>Delete</a>
                     </div>
                     <div class="more-info">
                       <h2>This account: </h2>
@@ -377,7 +378,7 @@
           </div>
           <div v-if="client.accounts.length<3" class="flex-container align-center-middle new-acc">
             <p>Need a new account? Click this button to generate a new one!</p>
-            <button class="box-shadow-btn" @click="createNewAcc">Create</button>
+            <button class="box-shadow-btn" data-open="accTypeModal">Create</button>
           </div>
         </div>
         <div v-if="createdAcc" class="callout small acc-created  success" data-closable>
@@ -402,7 +403,7 @@
         </div>
 
         <div v-if="loanError" class="callout small acc-created alert" data-closable>
-          <h5>Loan Error</h5>
+          <h5> {{loanErrorMessage}} </h5>
           <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
             <span aria-hidden="true">&times;</span>
           </button>
@@ -437,8 +438,8 @@
           <div class="grid-x grid-padding-x grid-padding-y">
 
 
-            <div class="medium-8 cell">
-              <fieldset>
+            <div class="medium-12 cell">
+              <fieldset class="flex-container align-center-middle">
                 <legend class="triple-radio">Choose type</legend>
                 <div class="radio-group triple-radio">
                   <input type="radio" id="option-one" name="selector" value="MORTGAGE" v-model="loanId"
@@ -453,10 +454,10 @@
               </fieldset>
             </div>
 
-            <div v-if="loanDTO" class="medium-12 cell ">
-              <div>
-                <label v-for="fpayments in loanDTO.payments" @change="getPayments"> {{fpayments}}
-                  <input type="radio" :name="fpayments" :value="fpayments" v-model="requestedPayments" />
+            <div v-if="loanDTO" class="medium-12 cell circle-radio flex-container align-center-middle " >
+              <div class="radio flex-container align-center-middle text-center ">
+                <label v-for="fpayments in loanDTO.payments" @change="getPayments">
+                  <input type="radio" name="payments" :value="fpayments" v-model="requestedPayments" :label="fpayments" />
                 </label>
               </div>
             </div>
@@ -473,8 +474,8 @@
               </label>
             </div>
 
-            <div v-if="requestedPayments && finalPayments" class="medium-6 cell">
-              <p> {{requestedPayments}} X {{finalPayments}} </p>
+            <div v-if="requestedPayments && finalPayments" class="medium-6 cell flex-container align-center-middle text-center">
+              <p> Payments: {{requestedPayments}} X {{finalPayments}} </p>
             </div>
 
             <div class="medium-8 cell">
@@ -497,6 +498,31 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
+<!-- ----------------------------------------------------------------------------------Account type modal-->
+    <div class="reveal" id="accTypeModal" data-reveal>
+      <div class="flex-container card-type-div align-center-middle flex-dir-column">
+        <p>&#128073; Choose your desired account type</p>
+        <div class='switch flex-container'>
+          <div class='quality'>
+            <input id='q1' name='q' type='radio' value="CHECKING" v-model="accType">
+            <label for='q1'>
+              <p>CHECKING</p>
+            </label>
+          </div>
+          <div class='quality'>
+            <input id='q2' name='q' type='radio' value="SAVINGS" v-model="accType">
+            <label for='q2'>
+              <p>SAVINGS</p>
+            </label>
+            <p class="help-text" > *0,35% APY </p>
+          </div>
+        </div>
+      </div>
+      <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <button v-if="accType" class="box-shadow-btn flex-container align-center-middle" @click="createNewAcc" data-close >Create new {{accType}} account</button>
+    </div>
 
 
   </main>
@@ -514,10 +540,10 @@
             class="fa-brands fa-square-youtube"></i></a></div>
       <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
             class="fa-brands fa-square-github"></i></a></div>
-      <div class="cell small-6 flex-container align-left">
+      <div class="cell small-12 medium-6 flex-container align-left">
         <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
       </div>
-      <div class="cell small-6 flex-container align-right">
+      <div class="cell cell small-12 medium-6 flex-container align-right">
         <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
       </div>
     </div>

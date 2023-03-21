@@ -5,10 +5,11 @@ import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 public class UpdateSavingsAccJob {
     private final AccountServiceImpl accountService;
     private final TransactionServiceImpl transactionService;

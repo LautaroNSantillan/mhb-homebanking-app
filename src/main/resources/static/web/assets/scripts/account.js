@@ -10,10 +10,20 @@ createApp({
             currentTheme: null,
             fromDate: null,
             toDate: null,
+            slicedTransactions: [],
+            currentPage: 1,
+            itemsPerPage: 5,
+            totalPages: 1,
+            paginationDiv: undefined,
         }
     },
 
     updated() {
+        this.paginationDiv = document.getElementById('paginationDiv')
+        console.log('updated', this.paginationDiv)
+        this.renderNumbers()
+        console.log(this.paginationDiv)
+        document.addEventListener('click', this.onDocumentClick)
         $(document).foundation();
         this.datePicker()
     },
@@ -28,6 +38,7 @@ createApp({
         console.log($(app).foundation())
     },
     created() {
+        window.addEventListener('click', this.onDocumentClick)
         $(document).foundation();
         //  this.accId=this.client=localStorage.getItem('clientId');
         this.accId = new URLSearchParams(location.search).get("accountId");
@@ -36,6 +47,8 @@ createApp({
         this.setCurrentTheme()
         this.getClient()
         this.datePicker()
+        this.paginationDiv = document.getElementById('paginationDiv')
+        console.log(this.paginationDiv)
     },
 
     methods: {
@@ -48,6 +61,9 @@ createApp({
                     console.log(this.accounts.transactions)
                     // this.accounts.transactions.sort((a, b) =>b.id -a.id)      funciona si las creas en orden
                     this.sortTransactions()
+                    this.renderRows()
+                    this.setPageNumber();
+                    // this.renderNumbers()
                 }
 
                 )
@@ -109,61 +125,61 @@ createApp({
             });
         },
 
-        downloadPDF(){
+        downloadPDF() {
             const data = {
                 fromDate: this.fromDate.toISOString(),
                 toDate: this.toDate.toISOString(),
                 accountNumber: this.accounts.number
-              };
-              axios.post('/api/export-to-PDF-stream-output', data, {responseType: 'blob'})
+            };
+            axios.post('/api/export-to-PDF-stream-output', data, { responseType: 'blob' })
                 .then(response => {
                     console.log(response)
-                   const url = window.URL.createObjectURL(response.data);
-                   const link = document.createElement('a');
-                   link.href = url;
-                   link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
-                   document.body.appendChild(link);
-                  link.click();
+                    const url = window.URL.createObjectURL(response.data);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                    document.body.appendChild(link);
+                    link.click();
                 })
                 .catch(error => {
-                  console.log(error);
+                    console.log(error);
                 });
         },
 
-        getrans(){
+        getrans() {
             const data = {
                 fromDate: this.fromDate.toISOString(), // convert fromDate to ISO string
                 toDate: this.toDate.toISOString(), // convert toDate to ISO string
                 accountNumber: this.accounts.number
-              };
-              axios.post('/api/getrans', data)
+            };
+            axios.post('/api/getrans', data)
                 .then(response => {
-                  console.log(response)
+                    console.log(response)
                 })
                 .catch(error => {
-                  console.log(error);
+                    console.log(error);
                 });
         },
 
         downloadPDF2() {
             const data = {
-              fromDate: this.fromDate.toISOString(), // convert fromDate to ISO string
-              toDate: this.toDate.toISOString(), // convert toDate to ISO string
-              accountNumber: this.accounts.number
+                fromDate: this.fromDate.toISOString(), // convert fromDate to ISO string
+                toDate: this.toDate.toISOString(), // convert toDate to ISO string
+                accountNumber: this.accounts.number
             };
             axios.post('/api/transaction/export-to-pdf', data, { responseType: 'blob' })
-              .then(response => {
-                // const url = window.URL.createObjectURL(new Blob([response.data]));
-                // const link = document.createElement('a');
-                // link.href = url;
-                // link.setAttribute('download', `transactions-${this.accounts.number}.pdf`);
-                // document.body.appendChild(link);
-                // link.click();
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          },
+                .then(response => {
+                    // const url = window.URL.createObjectURL(new Blob([response.data]));
+                    // const link = document.createElement('a');
+                    // link.href = url;
+                    // link.setAttribute('download', `transactions-${this.accounts.number}.pdf`);
+                    // document.body.appendChild(link);
+                    // link.click();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
 
         datePicker() {
             // implementation of custom elements instead of inputs
@@ -199,6 +215,81 @@ createApp({
                     }
                     $('#dp5').fdatepicker('hide');
                 });
+        },
+
+
+        //----------------------------------------------PAGINATOR--------------------------------
+        renderRows() {
+            this.slicedTransactions = this.sortedTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
+                this.itemsPerPage * this.currentPage);
+        },
+        setPageNumber() {
+            let numOfTransactions = this.sortedTransactions.length;
+            this.totalPages = Math.ceil(numOfTransactions / this.itemsPerPage);
+            console.log(this.totalPages);
+        },
+        renderNumbers() {
+            let paginationDiv = document.getElementById('paginationDiv')
+            console.log(paginationDiv)
+            console.log(this.totalPages > 0)
+
+            paginationDiv.innerHTML = `  <li ><a href="#" data-pagination="firstPage"><i class="fa-solid fa-backward-step"></i> First page </a></li>`
+
+            if (this.currentPage != 1) {
+
+                paginationDiv.innerHTML +=
+                    ` 
+              <li ><a href="#" data-pagination="previous"> <i class="fa-solid fa-chevron-left"></i>  <span > Previous </span></a></li>
+              
+              `
+            }
+
+            if (this.totalPages > 0) {
+                for (let i = 1; i <= this.totalPages; i++) {
+                    paginationDiv.innerHTML +=
+                        ` 
+                 <li> <a href="#" data-pagination="pageNumber"> ${i}</a> </li>
+                
+                 `
+                }
+            }
+
+            if (this.currentPage !== this.totalPages) {
+
+                paginationDiv.innerHTML +=
+                    ` 
+            <li ><a href="#" data-pagination="next">  Next <i class="fa-solid fa-chevron-right"></i> </a></li>
+            
+            `
+            }
+            paginationDiv.innerHTML += ` <li ><a href="#" data-pagination="lastPage"><i class="fa-solid fa-forward-step"></i>  <span >Last page</span> </a></li>`
+
+        },
+        onDocumentClick(event) {
+            console.log(event.target.dataset.pagination)
+            switch (event.target.dataset.pagination) {
+                case "pageNumber":
+                    this.currentPage = Number(event.target.innerText);
+                    break;
+                case "previous":
+                    this.currentPage = this.currentPage == 1 ? this.currentPage :
+                        this.currentPage - 1;
+                    break;
+                case "next":
+                    this.currentPage = this.currentPage == this.totalPages ? this.currentPage :
+                        this.currentPage + 1;
+                    break;
+                case "firstPage":
+                    this.currentPage = 1;
+                    break;
+                case "lastPage":
+                    this.currentPage = this.totalPages;
+                    break;
+                default:
+            }
+            this.renderRows()
+            this.renderNumbers()
+            console.log(this.currentPage)
         },
 
 
