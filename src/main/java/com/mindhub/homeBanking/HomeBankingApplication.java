@@ -3,7 +3,6 @@ package com.mindhub.homeBanking;
 import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.models.loans.DynamicLoan;
 import com.mindhub.homeBanking.models.loans.PredefinedLoan;
-import com.mindhub.homeBanking.queries.Query;
 import com.mindhub.homeBanking.repositories.*;
 
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;

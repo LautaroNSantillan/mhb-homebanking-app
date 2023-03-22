@@ -1,4 +1,4 @@
-package com.mindhub.homeBanking.queries;
+package com.mindhub.homeBanking.utilities.queries;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

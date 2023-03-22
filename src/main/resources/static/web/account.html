@@ -145,9 +145,9 @@
   <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
   <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
-
+    <span class="flex-container align-center-middle">
     <h1 v-if="accounts" class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp;
-        {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1>
+        {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1></span>
             <div v-if="sortedTransactions.length>0" class="transaction-filters flex-container flex-dir-column large-flex-dir-row">
               <table  class="datepicker-table">
                 <thead>
@@ -195,7 +195,7 @@
           <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
           <div v-if="!transaction.sender" class="col col-5" data-label="DESCRIPTION"> N/A </div>
           <div v-else class="col col-5" data-label="DESCRIPTION"> {{transaction.sender}}</div>
-          <div class="col col-6" data-label="DESCRIPTION"> {{transaction.remainingBalance}} </div>
+          <div class="col col-6" data-label="DESCRIPTION"> ${{transaction.remainingBalance}} </div>
         </li>
 
       </ul>

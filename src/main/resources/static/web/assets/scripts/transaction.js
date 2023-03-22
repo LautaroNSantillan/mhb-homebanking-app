@@ -46,28 +46,31 @@ createApp({
 
         makeTransaction() {
             axios.post('/api/transaction',`originAccNumber=${this.originAccNumber}&destinationAccNumber=${this.destinationAccNumber}&amount=${this.amount}&description=${this.description}`)
-            .then(response => {
+              .then(response => {
                 if(response.data=='Transaction successful'){
-                    console.log(response)
-                    this.transactionSuccess=true;
-                    setTimeout(() => {
-                        this.transactionSuccess = false;
-                      }, 5000)
+                  console.log(response)
+                  this.transactionSuccess=true;
+                  setTimeout(() => {
+                    this.transactionSuccess = false;
+                  }, 5000)
                 }
-            }
-                )
-
-                .catch(error =>  {
-                        console.log(error)
-                        this.transactionError = error.response.data.message
-                        console.log(this.transactionError)
-                        this.invalidTransaction = true
-                        setTimeout(() => {
-                            this.invalidTransaction = false;
-                          }, 5000)
-                    })
-        },
-
+              })
+              .catch(error =>  {
+                console.log(error)
+                this.transactionError = error.response.data.message
+                console.log(this.transactionError)
+                this.invalidTransaction = true
+                setTimeout(() => {
+                  this.invalidTransaction = false;
+                }, 5000)
+              })
+          
+            this.destination=null;
+            this.description="";
+            this.originAccNumber=null;
+            this.destinationAccNumber=null;
+            this.amount=null;
+          },
         filterAccounts() {
             this.filteredAccounts = this.client.accounts.filter(account => account.number !== this.originAccNumber)
           },
