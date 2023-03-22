@@ -4,12 +4,16 @@ import com.mindhub.homeBanking.models.Card;
 import com.mindhub.homeBanking.models.CardColor;
 import com.mindhub.homeBanking.models.CardType;
 import com.mindhub.homeBanking.models.Client;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-
+@Getter
+@Setter
+@NoArgsConstructor
 public class CardDTO {
     private long id;
     private CardType cardType;
@@ -19,8 +23,7 @@ public class CardDTO {
     private String cvv;
     private LocalDate fromDate;
     private LocalDate thruDate;
-    public CardDTO() {
-    }
+
     public CardDTO(Card card) {
         this.cardHolder=card.getCardHolder().stringName();
         this.id=card.getId();
@@ -32,35 +35,5 @@ public class CardDTO {
         this.thruDate=card.getThruDate();
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public CardType getCardType() {
-        return cardType;
-    }
-
-    public CardColor getCardColor() {
-        return cardColor;
-    }
-
-    public String getCardDigits() {
-        return cardDigits;
-    }
-
-    public String getCvv() {
-        return cvv;
-    }
-
-    public LocalDate getFromDate() {
-        return fromDate;
-    }
-
-    public LocalDate getThruDate() {
-        return thruDate;
-    }
-
-    public String getCardHolder() {
-        return cardHolder;
-    }
 }

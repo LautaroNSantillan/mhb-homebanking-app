@@ -2,7 +2,13 @@ package com.mindhub.homeBanking.dtos;
 
 import com.mindhub.homeBanking.models.ClientLoan;
 import com.mindhub.homeBanking.models.LoanType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class ClientLoanDTO {
 
     private long id;
@@ -10,7 +16,7 @@ public class ClientLoanDTO {
     private String loanType;
     private double amount;
     private int payments;
-    public ClientLoanDTO(){}
+
     public ClientLoanDTO(ClientLoan clientLoan){
         this.setId(clientLoan.getId());
         this.setLoanId(clientLoan.getLoan().getId());
@@ -19,43 +25,4 @@ public class ClientLoanDTO {
         this.setPayments(clientLoan.getPayments());
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getLoanId() {
-        return loanId;
-    }
-
-    public String getLoanType() {
-        return loanType;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public int getPayments() {
-        return payments;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public void setPayments(int payments) {
-        this.payments = payments;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setLoanId(String loanId) {
-        this.loanId = loanId;
-    }
-
-    public void setLoanType(String loanType) {
-        this.loanType = loanType;
-    }
 }

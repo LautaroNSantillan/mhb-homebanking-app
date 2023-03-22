@@ -92,7 +92,6 @@ public class Account {
     public Client getClient() {
         return client;
     }
-
     public long getId() {
         return id;
     }
@@ -100,7 +99,6 @@ public class Account {
     public Set<Transaction> getTransactions() {
         return transactions;
     }
-
     public String getNumber() {
         return number;
     }
@@ -110,15 +108,12 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-
     public String getAlias() {
         return alias;
     }
-
     public void setClient(Client client) {
         this.client = client;
     }
-
     public void setNumber(String number) {
         this.number = number;
     }
@@ -128,11 +123,9 @@ public class Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-
     public AccountType getType() {
         return type;
     }
-
     public void setType(AccountType type) {
         this.type = type;
     }
