@@ -15,6 +15,8 @@ createApp({
            validForm:false,
            invalidLogin:false,
            loginError:null,
+           wantsToLoginBool:false,
+           wantsToRegisterBool:true,
         }
     },
     updated() {
@@ -69,6 +71,17 @@ createApp({
             console.log(this.email)
             console.log(this.pwd)
             
+        },
+
+        wantsToLogin(){
+            this.wantsToLoginBool=true
+            this.wantsToRegisterBool=false
+            console.log("login")
+        },
+        wantsToRegister(){
+            this.wantsToLoginBool=false
+            this.wantsToRegisterBool=true
+            console.log("register")
         },
         validateForm() {
 			var fname = document.forms["register"]["firstname"].value;

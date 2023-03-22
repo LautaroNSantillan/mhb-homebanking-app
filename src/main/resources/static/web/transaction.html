@@ -44,98 +44,91 @@
 
 
     <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
-        data-transition="overlap">
-        <ul class="vertical menu" data-accordion-menu multi-open-false>
-            <li><a href="#">Profile</a></li>
-            <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
-            <li>
-                <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
-                        class="fa-regular fa-credit-card"></i></a>
-                <ul class="vertical menu nested">
-                    <li>
-                        <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
-                    </li>
-                    <li>
-                        <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
-                    </li>
-                </ul>
-            </li>
-            <!-- <li>
-        <a href="#">Theme</a>
+    data-transition="overlap">
+    <ul class="vertical menu" data-accordion-menu multi-open-false>
+      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+            class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div class="grid-x">
-              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-            </div>
+            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
-      </li> -->
-            <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
-                    class="fa-solid fa-right-from-bracket"></i></li>
+      </li>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <ul class="vertical menu nested">
+          <li>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+            <ul class="vertical menu nested">
+              <li v-for="account in clientAccounts">
+                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+          </li>
         </ul>
-    </div>
+      </li>
+      <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+          class="fa-solid fa-right-from-bracket"></i></li>
+    </ul>
+  </div>
 
     <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
     <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
 
         <ul v-if="client" class="ul-off-canvas welcome-large">
-            <div class="flex-container align-middle">
-                <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
-
-                <li>Welcome, {{client.firstName}} </li>
-            </div>
+          <div class="flex-container align-middle">
+            <img src="./assets/images/user-icon.png" alt="USER" class="off-canvas__user-img">
+    
+            <li>Welcome, {{client.firstName}} </li>
+          </div>
         </ul>
-
+    
         <ul class="vertical menu accordion-menu " data-accordion-menu>
-            <li class="flex-container align-middle active"><a
-                    :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i>
-            </li>
-            <li>
-                <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
-                        class="fa-regular fa-credit-card"></i></a>
-                <ul class="vertical menu nested">
-                    <li>
-                        <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
-                    </li>
-                    <li>
-                        <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
-                    </li>
-                </ul>
-            </li>
-            <!-- <li>
-        <a href="#">Theme</a>
-        <ul class="vertical menu nested is-active">
+          <li class="flex-container align-middle active"><a
+              :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
           <li>
-            <div class="grid-x">
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-
-            </div>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+                class="fa-regular fa-credit-card"></i></a>
+            <ul class="vertical menu nested">
+              <li>
+                <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+              </li>
+              <li>
+                <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+            <ul class="vertical menu nested">
+              <li>
+                <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+                <ul class="vertical menu nested">
+                  <li v-for="account in clientAccounts">
+                    <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                      class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+              </li>
+            </ul>
+          </li>
+          <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
+              class="fa-solid fa-right-from-bracket"></i>
           </li>
         </ul>
-      </li> -->
-            <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
-                    class="fa-solid fa-right-from-bracket"></i>
-            </li>
-        </ul>
-    </div>
+      </div>
     <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
     <main class="off-canvas-content tinted-image" data-off-canvas-content data-close="offCanvas"
@@ -193,18 +186,6 @@
                         </label>
                     </div>
 
-                    <!-- <div class="medium-8 cell">
-                        <label>
-                            <fieldset>
-                                <legend>Choose destination</legend>
-                                <input type="radio" name="destination" value="Own" id="own" required
-                                    v-model="destination"><label for="own">Own Account</label>
-                                <input type="radio" name="destination" value="ThirdParty" id="thirdparty"
-                                    v-model="destination"><label for="thirdparty">Third party</label>
-                            </fieldset>
-                        </label>
-                    </div> -->
-
                     <div v-if="destination === 'Own' && originAccNumber" class="medium-8 cell">
                         <label>Select your account
                             <p v-if="filteredAccounts.length==0">You don't have any more accounts</p>
@@ -216,13 +197,13 @@
 
                     <div v-else-if="destination=='ThirdParty'" class="medium-8 cell">
                         <label >Third party account's number
-                            <input type="text" placeholder=".medium-6.cell"  maxlength="100"  v-model="destinationAccNumber">
+                            <input type="text" placeholder="Third party account's number"  maxlength="100"  v-model="destinationAccNumber">
                         </label>
                     </div>
 
                     <div class="medium-6 cell">
                         <label aria-describedby="descriptionHelpText">Description
-                            <input type="text" placeholder=".medium-6.cell"  maxlength="100" v-model="description">
+                            <input type="text" placeholder="Description"  maxlength="100" v-model="description">
                             <p class="help-text" id="descriptionHelpText"> {{description.length}}/100 character limit </p>
                         </label>
                     </div>
@@ -247,25 +228,25 @@
     <footer class="off-canvas-content" data-off-canvas-content>
 
         <div class="grid-x align-center-middle">
-            <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
-                        class="fa-brands fa-square-facebook"></i></a></div>
-            <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
-                        class="fa-brands fa-square-twitter"></i></a></div>
-            <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
-                        class="fa-brands fa-square-instagram"></i></a></div>
-            <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
-                        class="fa-brands fa-square-youtube"></i></a></div>
-            <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
-                        class="fa-brands fa-square-github"></i></a></div>
-            <div class="cell small-6 flex-container align-left">
-                <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
-            </div>
-            <div class="cell small-6 flex-container align-right">
-                <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
-            </div>
+          <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
+                class="fa-brands fa-square-facebook"></i></a></div>
+          <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
+                class="fa-brands fa-square-twitter"></i></a></div>
+          <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
+                class="fa-brands fa-square-instagram"></i></a></div>
+          <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+                class="fa-brands fa-square-youtube"></i></a></div>
+          <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
+                class="fa-brands fa-square-github"></i></a></div>
+          <div class="cell small-12 medium-6 flex-container align-left">
+            <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+          </div>
+          <div class="cell cell small-12 medium-6 flex-container align-right">
+            <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+          </div>
         </div>
-
-    </footer>
+    
+      </footer>
 
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"

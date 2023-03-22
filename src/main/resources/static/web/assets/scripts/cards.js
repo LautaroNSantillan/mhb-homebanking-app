@@ -13,7 +13,8 @@ createApp({
             newCardColor: null,
             newCardType: null,
             loaded: false,
-            cardsToRenew:[]
+            cardsToRenew:[],
+            clientAccounts:[]
         }
     },
     beforeUpdate() {
@@ -48,7 +49,8 @@ createApp({
                     this.cards = this.client.cards
                     this.filterCreditCards()
                     this.filterDebitCards()
-                    this.addDateObj(this.cards)                
+                    this.addDateObj(this.cards)     
+                    this.sortAccounts()           
                 }
                 )
                 .catch(error => {
@@ -98,6 +100,11 @@ createApp({
             )
             .catch(error => console.log(error))
             this.loadData()
+        },
+
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
 

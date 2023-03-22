@@ -7,7 +7,7 @@
   left: 50%;
   bottom: 0px;
   transform: translate(-50%);
-  height: 45vh;
+  height: 57vh;
   width: 80vw;
   background: #f2f2f2;
   overflow: hidden;
@@ -21,8 +21,11 @@
     color: black;
     width: 100%;
     p {
+      span{
+        font-style: italic;
+      }
       font-weight: bolder;
-      font-size: 2rem;
+      font-size: 1.4rem;
       text-align: center;
       justify-self: center;
       margin: auto !important;
@@ -93,4 +96,20 @@ margin: auto;
     color: black;
     padding: 1rem;
     z-index: 20;
+}
+
+.delete-anchor{
+  color: red;
+  font-size: 1rem;
+  i{
+    color: red;
+  font-size: 1rem;
+  }
+}
+
+.alias-txt{
+  font-size: .8rem!important;
+  @media(min-width: 1024px){
+    font-size: small!important;
+  }
 }

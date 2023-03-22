@@ -44,45 +44,42 @@
 
 
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
-    data-transition="overlap">
-    <ul class="vertical menu" data-accordion-menu multi-open-false>
-      <li><a href="#">Profile</a></li>
-      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
-      <li>
-        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
-            class="fa-regular fa-credit-card"></i></a>
-        <ul class="vertical menu nested">
-          <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
-          </li>
-          <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
-          </li>
-        </ul>
-      </li>
-      <!-- <li>
-        <a href="#">Theme</a>
-        <ul class="vertical menu nested">
-          <li>
-            <div class="grid-x">
-              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-            </div>
-          </li>
-        </ul>
-      </li> -->
-      <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
-          class="fa-solid fa-right-from-bracket"></i></li>
-    </ul>
-  </div>
+  data-transition="overlap">
+  <ul class="vertical menu" data-accordion-menu multi-open-false>
+    <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
+    <li>
+      <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
+          class="fa-regular fa-credit-card"></i></a>
+      <ul class="vertical menu nested">
+        <li>
+          <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+        </li>
+        <li>
+          <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+      <ul class="vertical menu nested">
+        <li>
+          <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+          <ul class="vertical menu nested">
+            <li v-for="account in clientAccounts">
+              <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+        </li>
+      </ul>
+    </li>
+    <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
+        class="fa-solid fa-right-from-bracket"></i></li>
+  </ul>
+</div>
 
   <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
   <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
@@ -110,26 +107,23 @@
           </li>
         </ul>
       </li>
-      <!-- <li>
-        <a href="#">Theme</a>
-        <ul class="vertical menu nested is-active">
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <ul class="vertical menu nested">
           <li>
-            <div class="grid-x">
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-
-            </div>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+            <ul class="vertical menu nested">
+              <li v-for="account in clientAccounts">
+                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
-      </li> -->
+      </li>
       <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
           class="fa-solid fa-right-from-bracket"></i>
       </li>
@@ -152,21 +146,9 @@
       </button>
     </div>
 
-    <h1>Request New Card</h1>
+    <h1 class="text-center txt-3d cube-box target-animation">Request New Card</h1>
     <div class="div-shadow req-card" v-if="client.cards.length<6">
       <form class="request-card-form flex-container flex-dir-column align-center-middle">
-
-        <!-- <label @submit.prevent>
-        <input type="radio"  value="CREDIT" v-model="newCardType">
-        Credit Card
-      </label>
-      <label>
-        <input type="radio"  value="DEBIT" v-model="newCardType">
-        Debit Card
-      </label> -->
-
-
-
         <div class="flex-container card-type-div align-center-middle flex-dir-column">
           <p>&#128073; Choose your card type:</p>
           <div class='switch flex-container'>
@@ -279,23 +261,6 @@
             </div>
           </div>
           <button class="box-shadow-btn" @click.prevent="createNewCard">Request</button>
-
-
-          <!-- <p>Choose your preferred card color:</p>
-            <label>
-                <input type="radio"  value="SILVER" v-model="newCardColor">
-                Silver
-            </label>
-            <label>
-                <input type="radio"  value="GOLD" v-model="newCardColor">
-                Gold
-            </label>
-            <label>
-                <input type="radio"  value="TITANIUM" v-model="newCardColor">
-                Titanium
-            </label>
-
-            <input type="submit" value="Submit" @click.prevent="createNewCard" > -->
         </div>
       </form>
 
@@ -359,10 +324,10 @@
             class="fa-brands fa-square-youtube"></i></a></div>
       <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
             class="fa-brands fa-square-github"></i></a></div>
-      <div class="cell small-6 flex-container align-left">
+      <div class="cell small-12 medium-6 flex-container align-left">
         <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
       </div>
-      <div class="cell small-6 flex-container align-right">
+      <div class="cell cell small-12 medium-6 flex-container align-right">
         <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
       </div>
     </div>

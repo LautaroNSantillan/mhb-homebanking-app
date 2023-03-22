@@ -60,13 +60,13 @@ public class HomeBankingApplication {
 			clientRepo.save(melba);
 			clientRepo.save(jack);
 			clientRepo.save(admin);
-			Account VIN001 = new Account (LocalDateTime.now(), 5000, accService,melba,AccountType.SAVINGS);
+			Account VIN001 = new Account (LocalDateTime.now(), 5000.0d, accService,melba,AccountType.SAVINGS);
 			accRepo.save(VIN001);
-			Account VIN002 = new Account (LocalDateTime.now().plusDays(1), 7500, accService,melba,AccountType.CHECKING);
+			Account VIN002 = new Account (LocalDateTime.now().plusDays(1), 7500.0d, accService,melba,AccountType.CHECKING);
 			accRepo.save(VIN002);
-			Account VIN003 = new Account (LocalDateTime.now(), 5000, accService,jack, AccountType.SAVINGS);
+			Account VIN003 = new Account (LocalDateTime.now(), 5000.0d, accService,jack, AccountType.SAVINGS);
 			accRepo.save(VIN003);
-			Account VIN004 = new Account (LocalDateTime.now().plusDays(1), 7500, accService,jack,AccountType.CHECKING);
+			Account VIN004 = new Account (LocalDateTime.now().plusDays(1), 7500.0d, accService,jack,AccountType.CHECKING);
 			accRepo.save(VIN004);
 
 			Transaction VINtrans01= new Transaction(TransactionType.CREDIT, 2000.00,"1",LocalDateTime.now().plusDays(1),null, VIN001);

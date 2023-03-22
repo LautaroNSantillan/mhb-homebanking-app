@@ -15,6 +15,8 @@ createApp({
             itemsPerPage: 5,
             totalPages: 1,
             paginationDiv: undefined,
+            loading:true,
+            clientAccounts:[],
         }
     },
 
@@ -42,6 +44,7 @@ createApp({
         $(document).foundation();
         //  this.accId=this.client=localStorage.getItem('clientId');
         this.accId = new URLSearchParams(location.search).get("accountId");
+        this.loadClient()
         this.loadData()
         this.getCurrentTheme()
         this.setCurrentTheme()
@@ -53,6 +56,7 @@ createApp({
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
                 .get(`http://localhost:8080/api/accounts/${this.accId}`)
                 .then(data => {
@@ -70,6 +74,34 @@ createApp({
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
+        },
+
+        loadClient() {
+            this.isLoading()
+            axios
+                .get(`http://localhost:8080/api/clients/current`)
+                .then(data => {
+                    console.log(data);
+                    this.client = data.data;
+                    this.sortAccounts()
+                }
+                )
+                .catch(error => {
+                    console.log(error);
+                })
+                this.finishedLoading()
+        },
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
         sortTransactions() {
@@ -220,8 +252,11 @@ createApp({
 
         //----------------------------------------------PAGINATOR--------------------------------
         renderRows() {
-            this.slicedTransactions = this.sortedTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
-                this.itemsPerPage * this.currentPage);
+            if(this.sortedTransactions.length>0){
+               this.slicedTransactions = this.sortedTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
+                this.itemsPerPage * this.currentPage); 
+            }
+            
         },
         setPageNumber() {
             let numOfTransactions = this.sortedTransactions.length;
@@ -229,6 +264,9 @@ createApp({
             console.log(this.totalPages);
         },
         renderNumbers() {
+            if(this.sortedTransactions.length>0){
+
+            
             let paginationDiv = document.getElementById('paginationDiv')
             console.log(paginationDiv)
             console.log(this.totalPages > 0)
@@ -263,6 +301,7 @@ createApp({
             `
             }
             paginationDiv.innerHTML += ` <li ><a href="#" data-pagination="lastPage"><i class="fa-solid fa-forward-step"></i>  <span >Last page</span> </a></li>`
+        }
 
         },
         onDocumentClick(event) {

@@ -10,6 +10,7 @@ createApp({
             cardReqFailed: false,
             missingData: false,
             errMsg: "",
+            clientAccounts: [], 
         }
     },
     beforeUpdate() {
@@ -38,6 +39,7 @@ createApp({
                 .then(data => {
                     this.client = data.data
                     console.log(data)
+                    this.sortAccounts()
                 }
                 )
                 .catch(error => {
@@ -51,10 +53,8 @@ createApp({
             axios.post('/api/clients/current/cards', `type=${this.newCardType}&color=${this.newCardColor}`)
                 .then(response => {
                     if (response.status == "201") {
-                        console.log(response),
                             this.createdCard = response.data
                     }
-
                 }
                 )
                 .catch(error => {
@@ -84,6 +84,12 @@ createApp({
                     this.loadData()
                 )
                 .catch(error => console.log(error))
+        },
+
+
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
         toggleTogglerLarge() {

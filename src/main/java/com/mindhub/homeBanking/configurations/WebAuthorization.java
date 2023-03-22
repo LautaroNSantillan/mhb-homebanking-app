@@ -63,6 +63,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .antMatchers("/api/**").hasAuthority("ADMIN")
 
                 .antMatchers("/web/index.html").permitAll()
+                .antMatchers("/web/deprecatedIndex.html").permitAll()
                 .antMatchers("/web/assets/**").permitAll()
                 .antMatchers("/web/accounts.html").hasAuthority("CLIENT")
                 .antMatchers("/web/account.html").hasAuthority("CLIENT")

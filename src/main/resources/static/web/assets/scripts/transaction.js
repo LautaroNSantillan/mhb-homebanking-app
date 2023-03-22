@@ -13,6 +13,7 @@ createApp({
           invalidTransaction:false,
           transactionError:"",
           transactionSuccess:false,
+          clientAccounts:[]
           
         }
     },
@@ -35,7 +36,7 @@ createApp({
                     console.log(data);
                     this.client = data.data;
                     console.log(this.client);
-                   // this.currentId=this.client=localStorage.getItem('clientId');
+                   this.sortAccounts()
                 }
                 )
                 .catch(error => {
@@ -58,7 +59,7 @@ createApp({
 
                 .catch(error =>  {
                         console.log(error)
-                        this.transactionError = error.message
+                        this.transactionError = error.response.data.message
                         console.log(this.transactionError)
                         this.invalidTransaction = true
                         setTimeout(() => {
@@ -110,6 +111,12 @@ createApp({
 
         logOut(){
             axios.post('/api/logout').then(response => console.log('signed out!!!'))
+        },
+
+
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
         toggleToggler() {

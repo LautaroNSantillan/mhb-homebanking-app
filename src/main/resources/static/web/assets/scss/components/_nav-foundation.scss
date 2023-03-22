@@ -67,9 +67,12 @@
   vertical-align: middle;
   font-family: "Vollkorn", serif !important;
   display: flex;
-  font-size: x-large;
+  font-size: 2.2vw;
   margin-left: auto;
   margin-right: 1rem;
+  @media (max-width: 425px) {
+    font-size: 4vw;
+  }
   &--index {
     text-align: center;
     margin: auto;
