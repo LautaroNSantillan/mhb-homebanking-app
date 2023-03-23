@@ -44,7 +44,7 @@ createApp({
         loadData: function () {
             this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     this.client = data.data;
                     this.cards = this.client.cards

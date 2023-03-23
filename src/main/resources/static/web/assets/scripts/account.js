@@ -58,7 +58,7 @@ createApp({
         loadData: function () {
             this.isLoading()
             axios
-                .get(`http://localhost:8080/api/accounts/${this.accId}`)
+                .get(`/api/accounts/${this.accId}`)
                 .then(data => {
                     this.accounts = data.data;
                     console.log(this.accounts)
@@ -87,7 +87,7 @@ createApp({
         loadClient() {
             this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     console.log(data);
                     this.client = data.data;
@@ -130,7 +130,7 @@ createApp({
 
         getClient() {
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     this.client = data.data
                     console.log(this.client)

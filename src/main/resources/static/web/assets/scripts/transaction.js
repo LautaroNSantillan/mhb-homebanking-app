@@ -32,7 +32,7 @@ createApp({
         loadData() {
             this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     console.log(data);
                     this.client = data.data;
