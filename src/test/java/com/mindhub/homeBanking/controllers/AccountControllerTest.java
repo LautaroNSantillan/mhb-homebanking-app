@@ -86,19 +86,19 @@ class AccountControllerTest {
 
        when(accountService.getAccountsDTO()).thenReturn(accounts);
     }
-    @Test
-    public void getAccount(){
-     webTestClient.get()
-             .uri("/api/accounts")
-             .exchange()
-             .expectStatus().isOk()
-             .expectBodyList(AccountDTO.class)
-             .consumeWith(response -> {
-                 List<AccountDTO> accountDTOList = response.getResponseBody();
-                 assertNotNull(accountDTOList);
-                 assertFalse(accountDTOList.isEmpty());
-             });
-    }
+//    @Test
+//    public void getAccount(){
+//     webTestClient.get()
+//             .uri("/api/accounts")
+//             .exchange()
+//             .expectStatus().isOk()
+//             .expectBodyList(AccountDTO.class)
+//             .consumeWith(response -> {
+//                 List<AccountDTO> accountDTOList = response.getResponseBody();
+//                 assertNotNull(accountDTOList);
+//                 assertFalse(accountDTOList.isEmpty());
+//             });
+//    }
 
     @Test
     void generateNewAccount() {

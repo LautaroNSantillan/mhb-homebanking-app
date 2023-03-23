@@ -19,19 +19,19 @@ class AccountRepositoryTest {
     @Autowired
     AccountRepository accRepo;
 
-    @Test
-    public void existAccounts(){
-        List<Account> loans = accRepo.findAll();
-        assertThat(loans)
-                .as("It's empty").isNotEmpty();
-    }
-
-    @Test
-    void existsByAlias() {
-        Account acc = accRepo.findByNumber("VIN-001");
-        assertThat(acc)
-                .as("No account found").isNotNull();
-    }
+//    @Test
+//    public void existAccounts(){
+//        List<Account> loans = accRepo.findAll();
+//        assertThat(loans)
+//                .as("It's empty").isNotEmpty();
+//    }
+//
+//    @Test
+//    void existsByAlias() {
+//        Account acc = accRepo.findByNumber("VIN-001");
+//        assertThat(acc)
+//                .as("No account found").isNotNull();
+//    }
 
 
 

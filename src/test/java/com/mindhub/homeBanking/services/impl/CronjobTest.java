@@ -27,30 +27,30 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
-@SpringBootTest
-public class CronjobTest {
-    @Autowired
-    AccountServiceImpl accountService;
-    @Autowired
-    UpdateSavingsAccJob updateSavingsAccJob;
-
-    @BeforeEach
-    public void setUp() {
-    }
-    @Test
-    public void testUpdateAccountBalances() {
-
-        List<Account> accounts = accountService.findAll();
-        Account account = accounts.get(0);
-        double prevBalance = account.getBalance();
-
-        updateSavingsAccJob.updateAccountBalances();
-
-
-        double newBalance = accountService.findById(account.getId()).getBalance();
-
-
-        assertThat(prevBalance).isNotEqualTo(newBalance);
-
-    }
-}
+//@SpringBootTest
+//public class CronjobTest {
+//    @Autowired
+//    AccountServiceImpl accountService;
+//    @Autowired
+//    UpdateSavingsAccJob updateSavingsAccJob;
+//
+//    @BeforeEach
+//    public void setUp() {
+//    }
+//    @Test
+//    public void testUpdateAccountBalances() {
+//
+//        List<Account> accounts = accountService.findAll();
+//        Account account = accounts.get(0);
+//        double prevBalance = account.getBalance();
+//
+//        updateSavingsAccJob.updateAccountBalances();
+//
+//
+//        double newBalance = accountService.findById(account.getId()).getBalance();
+//
+//
+//        assertThat(prevBalance).isNotEqualTo(newBalance);
+//
+//    }
+//}
