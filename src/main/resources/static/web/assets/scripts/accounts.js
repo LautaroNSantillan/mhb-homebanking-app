@@ -22,6 +22,8 @@ createApp({
             accType: null,
             loanErrorMessage: null,
             accountToDelete: null,
+            deletedAccError:null,
+            deletedAccMsg:null,
         }
     },
     watch: {
@@ -115,7 +117,15 @@ createApp({
                             this.deletedAcc = false;
                         }, 6000);
                     }
-                });
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.deletedAccMsg= error.response.data;
+                    this.deletedAccError = true;
+                    setTimeout(() => {
+                        this.deletedAccError = false;
+                    }, 6000);
+                })
         },
         
         setAccountToDelete(id){

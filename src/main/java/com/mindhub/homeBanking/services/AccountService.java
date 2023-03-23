@@ -13,6 +13,7 @@ public interface AccountService {
     List<AccountDTO> getAccountsDTO();
     List<AccountDTO> mapAccountsSetToDTO(Set<Account> accs);
     List<Account> findAll();
+    List<Account> findNonDisabledAccountsByClient(Client client);
     AccountDTO getAccountDTO(Long id);
     Account findById(Long id);
     Account findByNumber(String number);

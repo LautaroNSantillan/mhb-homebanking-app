@@ -76,9 +76,17 @@ public class AccountController {
         if (optionalAccount.isPresent()) {
             Account account = optionalAccount.get();
             if (account.getClient().equals(currentClient)) {
-               accService.disableAcc(account);
-                accService.save(account);
-                return ResponseEntity.ok("Account deleted successfully");
+                // check if the account being deleted is the last account for the client
+                List<Account> accounts = accService.findNonDisabledAccountsByClient(currentClient);
+                if (accounts.size() == 1 && accounts.get(0).equals(account)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot delete your only account.");
+                }else if(account.getBalance()>0){
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You still have balance in this account.");
+                }else {
+                    accService.disableAcc(account);
+                    accService.save(account);
+                    return ResponseEntity.ok("Account deleted successfully");
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not own this account with.");
             }

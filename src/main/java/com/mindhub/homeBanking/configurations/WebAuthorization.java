@@ -25,7 +25,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
 
     @Autowired
     private CustomAuthenticationEntryPoint authenticationEntryPoint;
-
+    @CrossOrigin(origins = {"*"})
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
