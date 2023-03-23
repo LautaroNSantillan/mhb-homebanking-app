@@ -105,7 +105,7 @@ createApp({
                 })
         },
         deleteAccount() {
-            axios.delete('/api/clients/current/delete-account', { params: { accId: this.accountToDelete } })
+            axios.post('/api/clients/current/delete-account?accId=' + this.accountToDelete)
                 .then(response => {
                     if (response.status === 200) {
                         console.log(response);
@@ -117,6 +117,7 @@ createApp({
                     }
                 });
         },
+        
         setAccountToDelete(id){
             this.accountToDelete = id;
         },
@@ -146,7 +147,7 @@ createApp({
                         }, 5000)
                 }
                 )
-            
+            this.loadData()
         },
 
         getPayments() {

@@ -78,7 +78,7 @@ public class ClientController {
 
     @RequestMapping("clients/current")
     public ClientDTO getCurrentClient(Authentication authentication) {
-        return new ClientDTO(clientService.findByEmail(authentication.getName()));
+        return new ClientDTO(clientService.findClientByEmailExcludingDisabledAccounts(authentication.getName()));
     }
     @RequestMapping("clients/current/cards")
     public List<CardDTO> getCurrentCards(Authentication authentication) {

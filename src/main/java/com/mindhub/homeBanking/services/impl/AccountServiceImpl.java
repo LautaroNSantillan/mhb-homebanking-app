@@ -79,6 +79,10 @@ public class AccountServiceImpl implements AccountService {
     public void updateBalance(Account acc, double amount){
         acc.setBalance(acc.getBalance()+ amount);
     }
+    @Override
+    public void disableAcc(Account acc){
+        acc.setDisabled(true);
+    }
 
     private List<Account> findAccounts(){
         return this.accRepo.findAll();

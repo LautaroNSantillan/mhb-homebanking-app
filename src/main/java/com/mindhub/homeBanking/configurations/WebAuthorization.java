@@ -32,19 +32,19 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
         http
                 .authorizeRequests()
 
-                .antMatchers("/webADMIN/**").permitAll()//cambiar
-                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/webADMIN/**").hasAuthority("ADMIN")
+                .antMatchers("/h2-console/**").hasAuthority("ADMIN")
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
 
-                .antMatchers(HttpMethod.POST, "/api/clients","/api/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/clients","/api/login").hasAuthority("CLIENT")
               .antMatchers(HttpMethod.POST,"/api/login").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/clients").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/api/clients").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/clients").permitAll()//cambiar
+                .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current").hasAuthority("CLIENT")
-                .antMatchers(HttpMethod.POST, "/api/loans/create").permitAll()//cambiar
+                .antMatchers(HttpMethod.POST, "/api/loans/create").hasAuthority("CLIENT")
                 .antMatchers("/api/clients/current").hasAuthority("CLIENT")
-                .antMatchers("/api/accounts").permitAll()//cambiar
+                .antMatchers("/api/accounts").hasAuthority("CLIENT")
                 .antMatchers("/api/accounts/**").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/cards").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST, "/api/clients/current/renew-card").hasAuthority("CLIENT")
@@ -57,7 +57,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .antMatchers(HttpMethod.POST,  "/api/loans/**").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/transaction/**").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/get-filtered-transactions").hasAuthority("CLIENT")
-                .antMatchers(HttpMethod.DELETE,  "/api/clients/current/delete-account").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/clients/current/delete-account").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/export-to-PDF-bytes").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/export-to-PDF-stream-output").hasAuthority("CLIENT")
                 .antMatchers("/api/**").hasAuthority("ADMIN")

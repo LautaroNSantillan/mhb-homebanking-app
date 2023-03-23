@@ -35,6 +35,10 @@ public class ClientServiceImpl implements ClientService {
         return this.clientRepo.findByEmail(email);
     }
     @Override
+    public Client findClientByEmailExcludingDisabledAccounts(String email){
+        return this.clientRepo.findClientByEmailExcludingDisabledAccounts(email);
+    }
+    @Override
     public Client findById(Long id){
         return this.clientRepo.findById(id).orElse(null);
     }

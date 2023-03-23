@@ -1,4 +1,4 @@
-package com.mindhub.homeBanking.cronjobs;
+package com.mindhub.homeBanking.utilities.cronjobs;
 
 import com.mindhub.homeBanking.models.Account;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;

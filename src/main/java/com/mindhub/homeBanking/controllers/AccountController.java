@@ -51,8 +51,8 @@ public class AccountController {
         }
     }
 
-    @DeleteMapping("clients/current/delete-account")
-    public ResponseEntity<Object> deleteAccount(@RequestParam long accId, Authentication auth) {
+    @DeleteMapping("clients/current/delete-account--OBSOLETE")
+    public ResponseEntity<Object> deleteAccountObsolete(@RequestParam long accId, Authentication auth) {
         Client currentClient = clientService.findByEmail(auth.getName());
         Optional<Account> optionalAccount = accService.findByIdOptional(accId);
         if (optionalAccount.isPresent()) {
@@ -67,6 +67,23 @@ public class AccountController {
             }
         } else {
             return new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("clients/current/delete-account")
+    public ResponseEntity<Object> deleteAccount(@RequestParam long accId, Authentication auth) {
+        Client currentClient = clientService.findByEmail(auth.getName());
+        Optional<Account> optionalAccount = accService.findByIdOptional(accId);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            if (account.getClient().equals(currentClient)) {
+               accService.disableAcc(account);
+                accService.save(account);
+                return ResponseEntity.ok("Account deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You do not own this account with.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account with id " + accId + " not found.");
         }
     }
 

@@ -47,7 +47,7 @@ public class ClientLoan {
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        this.amount = Math.floor(amount * 10) / 10;
     }
 
     public void setPayments(int payments) {

@@ -15,25 +15,26 @@
 </head>
 
 <body id="login" class="green-theme tinted-image overflow-y-hidden">
-
     <div class="parallax__wrapper">
         <div class="parallax__group intro_screen flex-dir-column" id="intro">
             <div class="grid-x">
-                <div class="cell small-12 flex-container align-center-middle"><img src="./assets/images/logo.png"
+                <div class="target-animation-index cell small-12 flex-container align-center-middle "><img src="./assets/images/logo.png"
                         alt="MINDHUB BROTHERS" class="logo-index"></div>
-                <div class="cell small-12">
-                    <h2 class="text-center txt-shadow">WELCOME TO <br> MINDHUB BROTHERS & CO. <br> HOMEBANKING</h2>
-                    <h2 class="text-center txt-shadow">&#128116; &#9749;</h2>
+                <div class="cell small-12 flex-container align-center-middle flex-dir-column">
+                    <h2 class="text-center txt-shadow">WELCOME TO </h2>
+                    <h2 class="text-center txt-shadow volkorn" style="color:greenyellow;"> MINDHUB BROTHERS & CO. <span style="color:white"> 's</span> <h2> 
+                       <h2 class="text-center txt-shadow">HOMEBANKING</h2>
+                    <h2 class="text-center txt-shadow target-animation-index">&#128116; &#9749;</h2>
                 </div>
             </div>
-            <h3 class="txt-shadow">Keep scrolling ... &#128071;</h3>
+            <h3 class="txt-shadow shake">Keep scrolling ... &#128071;</h3>
 
         </div>
 
         <div class="parallax__group" id="group-2">
             <div class="parallax__layer mid_layer bg-cover"
                 style="background-image: url('./assets/images/indexharold.png')">
-                
+
             </div>
 
 
@@ -43,9 +44,9 @@
                         <h2 class="text-center txt-shadow">Only the best benefits for you:</h2>
                         <div class="text-center txt-shadow">
                             <ul>
-                                <li>&#128073;Credit and debit cards</li>
-                                <li>&#128073;Low interest rate for your loans</li>
-                                <li>&#128073;Fast and convinient app</li>
+                                <li><span class="float-sideways"> &#128073;</span>Credit and debit cards</li>
+                                <li><span class="float-sideways">&#128073;</span>Low interest rate for your loans</li>
+                                <li><span class="float-sideways">&#128073;</span>Fast and convinient app</li>
                             </ul>
                         </div>
                         <h2 class="text-center txt-shadow">We are the only pain-free way to manage your money!</h2>
@@ -64,6 +65,12 @@
             </div>
             <div class="parallax__layer mid_layer flex-container flex-dir-column">
                 <div class="flex-container">
+                    <div v-if="invalidLogin" class="callout small alert" id="index-callout" data-closable>
+                        <h5>Invalid Credentials ({{loginError}})</h5>
+                        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                     <button class="button-56 txt-shadow" @click.prevent="wantsToLogin">LOGIN</button>
                     <h5>or</h5>
                     <button class="button-56 txt-shadow" @click.prevent="wantsToRegister">REGISTER</button>
@@ -223,28 +230,32 @@
         <div class="parallax__group outro_screen flex-container flex-dir-column outro-div" id="outro">
             <img src="./assets/images/suitharold.png" alt="HAROLD" class="suit-harold">
 
-            
-                <div class=" flex-container align-left txt-shadow">
-                    <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer! <i class="fa-solid fa-brain"></i></p> 
-                </div>
 
-                <div class="grid-x flex-container align-center-middle outro">
-                    <div class="cell small-6 medium-2 flex-container align-center-middle "><a href="https://www.facebook.com/" target="_blank"><i
-                                class="fa-brands fa-square-facebook"></i></a></div>
-                    <div class="cell small-6 medium-2 flex-container align-center-middle"><a href="https://twitter.com/" target="_blank"><i
-                                class="fa-brands fa-square-twitter"></i></a></div>
-                    <div class="cell small-6 medium-2 flex-container align-center-middle"><a href="https://www.instagram.com/" target="_blank"><i
-                                class="fa-brands fa-square-instagram"></i></a></div>
-                    <div class="cell small-6 medium-2 flex-container align-center-middle"><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                            target="_blank"><i class="fa-brands fa-square-youtube"></i></a></div>
-                    <div class="cell small-6 medium-2 flex-container align-center-middle"><a href="https://github.com/LautaroNSantillan"
-                            target="_blank"><i class="fa-brands fa-square-github"></i></a></div>
+            <div class=" flex-container align-left txt-shadow">
+                <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer! <i class="fa-solid fa-brain"></i></p>
+            </div>
 
-                </div>
-                <div class=" flex-container align-right txt-shadow">
-                    <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
-                </div>
-            
+            <div class="grid-x flex-container align-center-middle outro">
+                <div class="cell small-6 medium-2 flex-container align-center-middle "><a
+                        href="https://www.facebook.com/" target="_blank"><i
+                            class="fa-brands fa-square-facebook"></i></a></div>
+                <div class="cell small-6 medium-2 flex-container align-center-middle"><a href="https://twitter.com/"
+                        target="_blank"><i class="fa-brands fa-square-twitter"></i></a></div>
+                <div class="cell small-6 medium-2 flex-container align-center-middle"><a
+                        href="https://www.instagram.com/" target="_blank"><i
+                            class="fa-brands fa-square-instagram"></i></a></div>
+                <div class="cell small-6 medium-2 flex-container align-center-middle"><a
+                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+                            class="fa-brands fa-square-youtube"></i></a></div>
+                <div class="cell small-6 medium-2 flex-container align-center-middle"><a
+                        href="https://github.com/LautaroNSantillan" target="_blank"><i
+                            class="fa-brands fa-square-github"></i></a></div>
+
+            </div>
+            <div class=" flex-container align-right txt-shadow">
+                <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+            </div>
+
 
         </div>
     </div>

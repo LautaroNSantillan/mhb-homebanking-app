@@ -14,6 +14,15 @@
     <title>MHB&CO | CARDS</title>
 </head>
 
+<div v-if="loading" class="loader flex-dir-column">
+  <img src="./assets/images/logo.png" alt="MHB" class="loader__image">
+  <div class="lds-circle">
+    <div>
+    </div>
+  </div>
+  <p>Loading... &#128116; 	&#9749;</p>
+</div>
+
 <body id="app" class="green-theme tinted-image">
    <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
   <nav class="top-bar off-canvas-content" data-off-canvas-content>

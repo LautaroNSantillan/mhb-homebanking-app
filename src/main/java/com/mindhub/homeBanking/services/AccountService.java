@@ -24,4 +24,5 @@ public interface AccountService {
     void updateBalance(Account acc, double amount);
     void deleteAccount(Account acc);
     void saveNewAccount(Client client, AccountType type);
+    void disableAcc(Account acc);
 }

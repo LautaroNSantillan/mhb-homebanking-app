@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 @SpringBootTest
+//@DataJpaTest
 class AccountRepositoryTest {
     @Autowired
     AccountRepository accRepo;
@@ -31,5 +32,7 @@ class AccountRepositoryTest {
         assertThat(acc)
                 .as("No account found").isNotNull();
     }
+
+
 
 }

@@ -25,6 +25,7 @@ public class Account {
     private LocalDateTime creationDate;
     private double balance;
     private String alias;
+    private boolean isDisabled;
     @Enumerated(EnumType.STRING)
     private AccountType type;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -44,6 +45,7 @@ public class Account {
         this.setAlias(accService);
         this.setClient(client);
         this.setType(accountType);
+        this.setDisabled(false);
     }
 
     public void depositInterest(AccountServiceImpl accountService, TransactionServiceImpl transactionService) {
@@ -130,5 +132,12 @@ public class Account {
         this.type = type;
     }
 
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+    }
 }
 

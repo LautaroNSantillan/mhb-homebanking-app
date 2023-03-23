@@ -42,6 +42,7 @@ createApp({
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
                 .get(`http://localhost:8080/api/clients/current`)
                 .then(data => {
@@ -56,6 +57,7 @@ createApp({
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         filterCreditCards() {
@@ -105,6 +107,13 @@ createApp({
         sortAccounts() {
             let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
             this.clientAccounts = sortedAccounts
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
         },
 
 

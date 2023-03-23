@@ -30,6 +30,7 @@ createApp({
 
     methods: {
         loadData() {
+            this.isLoading()
             axios
                 .get(`http://localhost:8080/api/clients/current`)
                 .then(data => {
@@ -42,6 +43,7 @@ createApp({
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         makeTransaction() {
@@ -114,6 +116,13 @@ createApp({
 
         logOut(){
             axios.post('/api/logout').then(response => console.log('signed out!!!'))
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
         },
 
 

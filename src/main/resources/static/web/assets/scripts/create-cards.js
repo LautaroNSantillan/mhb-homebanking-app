@@ -34,6 +34,7 @@ createApp({
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
                 .get(`http://localhost:8080/api/clients/current`)
                 .then(data => {
@@ -45,6 +46,7 @@ createApp({
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         createNewCard() {
@@ -95,6 +97,13 @@ createApp({
         toggleTogglerLarge() {
             const toggler = document.getElementById("togglerLarge");
             toggler.classList.toggle('opened'); toggler.setAttribute('aria-expanded', toggler.classList.contains('opened'))
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
         },
 
         //------

@@ -29,5 +29,60 @@
 	animation: float 6s ease-in-out infinite;
 	img { width: 100%; height: auto; }
 }
+.target-animation-index {
+	overflow: hidden;
+	animation: floating 3s ease-in-out infinite
+}
+
+@keyframes floating {
+    0% { transform: translate(0,  0px); }
+    50%  { transform: translate(0, 15px); }
+    100%   { transform: translate(0, -0px); }   
+}
+
+.shake {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both infinite;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    animation-delay: 2.5s;
+}
+  
+  @keyframes shake {
+	10%, 90% {
+	  transform: translate3d(-1px, 0, 0);
+	}
+	
+	20%, 80% {
+	  transform: translate3d(2px, 0, 0);
+	}
+  
+	30%, 50%, 70% {
+	  transform: translate3d(-4px, 0, 0);
+	}
+  
+	40%, 60% {
+	  transform: translate3d(4px, 0, 0);
+	}
+  }
+  @keyframes floatsideways {
+	0% {
+
+	  transform: translateX(0);
+	}
+	50% {
+
+	  transform: translateX(-25px);
+	}
+	100% {
+
+	  transform: translateX(0);
+	}
+  }
+  
+  .float-sideways {
+	display: inline-block;
+	animation: floatsideways 2s ease-in-out infinite;
+  }
 
 
