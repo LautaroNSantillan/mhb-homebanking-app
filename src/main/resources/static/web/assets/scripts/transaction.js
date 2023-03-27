@@ -114,10 +114,6 @@ createApp({
 			
         },
 
-        logOut(){
-            axios.post('/api/logout').then(response => console.log('signed out!!!'))
-        },
-
         isLoading() {
             this.loading = true;
         },
@@ -146,6 +142,13 @@ createApp({
                 toggler.classList.toggle('opened'); toggler.setAttribute('aria-expanded', toggler.classList.contains('opened'))
             }
 
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
         },
         
     }

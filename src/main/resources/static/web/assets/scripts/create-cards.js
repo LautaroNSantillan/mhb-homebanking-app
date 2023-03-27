@@ -128,7 +128,14 @@ createApp({
                 localStorage.setItem('theme', body.className);
                 console.log(localStorage.getItem('theme'))
             }
-        }
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
+        },
     }
 
 }).mount("#app")

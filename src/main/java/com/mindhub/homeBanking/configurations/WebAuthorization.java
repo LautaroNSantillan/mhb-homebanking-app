@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-@CrossOrigin(origins = {"*"})
+
 @EnableWebSecurity
-@Configuration
+@Configuration//
 class WebAuthorization extends WebSecurityConfigurerAdapter  {
 
 //    @Bean
@@ -25,8 +25,8 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
 
     @Autowired
     private CustomAuthenticationEntryPoint authenticationEntryPoint;
-    @CrossOrigin(origins = {"*"})
-    @Override
+
+    @Override//
     protected void configure(HttpSecurity http) throws Exception {
 
         http
@@ -60,6 +60,7 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .antMatchers(HttpMethod.POST,  "/api/clients/current/delete-account").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/export-to-PDF-bytes").hasAuthority("CLIENT")
                 .antMatchers(HttpMethod.POST,  "/api/export-to-PDF-stream-output").hasAuthority("CLIENT")
+                .antMatchers(HttpMethod.POST,  "/api/clients/current/pay-with-card").permitAll()
                 .antMatchers("/api/**").hasAuthority("ADMIN")
 
                 .antMatchers("/web/index.html").permitAll()
@@ -102,52 +103,6 @@ class WebAuthorization extends WebSecurityConfigurerAdapter  {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
 
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/manager/manager.html").hasAuthority("ADMIN")
-//                .antMatchers("/h2-console").hasAuthority("ADMIN")
-//                .antMatchers("/rest/**").hasAuthority("ADMIN")
-//                .antMatchers(HttpMethod.POST, "/api/clients").permitAll()
-//                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/api/clients").hasAuthority("ADMIN")
-//                .antMatchers(HttpMethod.PATCH, "/api/clients").hasAuthority("ADMIN")
-//                .antMatchers(HttpMethod.GET, "/api/clients").hasAuthority("ADMIN")
-//                .antMatchers(HttpMethod.POST, "/api/clients/current").hasAuthority("CLIENT")
-//                .antMatchers(HttpMethod.GET, "/api/clients/current").hasAuthority("CLIENT")
-//                .antMatchers(HttpMethod.POST, "/api/clients/renew-card").hasAuthority("CLIENT")
-//                .antMatchers(HttpMethod.POST,  "clients/current/accounts").hasAuthority("CLIENT")
-//                .antMatchers("/api/**").hasAuthority("ADMIN")
-//                .antMatchers("/web/index.html").permitAll()
-//                .antMatchers("/web/assets/**").permitAll()
-//                .antMatchers("/web/accounts.html").hasAuthority("CLIENT")
-//                .antMatchers("/web/account.html").hasAuthority("CLIENT")
-//                .antMatchers("/web/cards.html").hasAuthority("CLIENT")
-//                .antMatchers("/web/create-cards.html").hasAuthority("CLIENT")
-//                .and() // chaining with and()
-//                .formLogin()
-//                .usernameParameter("email")
-//                .passwordParameter("password")
-//                .loginPage("/api/login")
-//                .and() // chaining with and()
-//                .logout()
-//                .logoutUrl("/api/logout")
-//                .deleteCookies("JSESSIONID")
-//                // turn off checking for CSRF tokens
-//                .and()
-//                .csrf()
-//                .disable()
-//                //disabling frameOptions so h2-console can be accessed
-//                .headers().frameOptions().disable()
-//                // if user is not authenticated, just send an authentication failure response
-//                .and().exceptionHandling()
-//                .authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-//                // if login is successful, just clear the flags asking for authentication
-//                .and().formLogin()
-//                .successHandler((req, res, auth) -> clearAuthenticationAttributes(req))
-//                // if login fails, just send an authentication failure response
-//                .failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-//                // if logout is successful, just send a success response
-//                .and().logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 
 //        return http.build();
 

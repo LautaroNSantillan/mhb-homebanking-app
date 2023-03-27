@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
 import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.TransactionService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import com.mindhub.homeBanking.utilities.InsufficientFundsException;
@@ -66,7 +67,7 @@ public class Account {
         this.alias=(Utils.generateUniqueAlias(accService));
     }
 
-    public Transaction withdraw(double amount, String description, TransactionServiceImpl transactionService, AccountServiceImpl accService,double accBalance) throws InsufficientFundsException {
+    public Transaction withdraw(double amount, String description, TransactionService transactionService, AccountService accService, double accBalance) throws InsufficientFundsException {
         if (accBalance < amount) {
             throw new InsufficientFundsException();
         }
@@ -77,7 +78,7 @@ public class Account {
         return withdraw;
     }
 
-    public Transaction deposit(double amount, String description,Client originClient,TransactionServiceImpl transactionService, AccountServiceImpl accService){
+    public Transaction deposit(double amount, String description,Client originClient,TransactionService transactionService, AccountService accService){
         this.setBalance(this.getBalance()+amount);
         Transaction deposit = transactionService.createNewCreditTransaction(amount, description, this, originClient);
         transactionService.save(deposit);

@@ -173,7 +173,7 @@
                 <button class="box-shadow-btn" @click="filterTransactionsByDate">Filter Transactions</button>
                 <button class="box-shadow-btn" @click="downloadPDF">Download PDF</button>
           </div>
-    <div v-if="accounts && slicedTransactions.length==0">
+    <div v-if="accounts && filteredTransactions.length==0">
       <h3 class="text-center">No transactions to show&#129335; </h3>
     </div>
     <div v-else class="container">
@@ -199,7 +199,7 @@
         </li>
 
       </ul>
-      <nav aria-label="Pagination" class="flex-container align-center-middle paginator-div" @click.prevent v-if="sortedTransactions.length>0">
+      <nav aria-label="Pagination" class="flex-container align-center-middle paginator-div" @click.prevent v-if="filteredTransactions.length>0">
         <ul class="pagination" id="paginationDiv" @click.prevent>
       
         </ul>

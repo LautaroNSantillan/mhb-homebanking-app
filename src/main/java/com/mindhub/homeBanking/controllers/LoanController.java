@@ -4,6 +4,10 @@ import com.mindhub.homeBanking.dtos.LoanApplicationDTO;
 import com.mindhub.homeBanking.dtos.LoanDTO;
 import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.models.loans.DynamicLoan;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.ClientLoanService;
+import com.mindhub.homeBanking.services.ClientService;
+import com.mindhub.homeBanking.services.LoanService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientLoanServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
@@ -23,13 +27,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class LoanController {
 
-    private final LoanServiceImpl loanService;
-    private final ClientLoanServiceImpl clientLoanService;
-    private final ClientServiceImpl clientService;
-    private final AccountServiceImpl accService;
+    private final LoanService loanService;
+    private final ClientLoanService clientLoanService;
+    private final ClientService clientService;
+    private final AccountService accService;
 
 
-    public LoanController(LoanServiceImpl loanService, ClientLoanServiceImpl clientLoanService, ClientServiceImpl clientService, AccountServiceImpl accService) {
+    public LoanController(LoanService loanService, ClientLoanService clientLoanService, ClientService clientService, AccountService accService) {
         this.loanService = loanService;
         this.clientLoanService = clientLoanService;
         this.clientService = clientService;

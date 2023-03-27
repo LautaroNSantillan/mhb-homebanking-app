@@ -2,6 +2,9 @@ package com.mindhub.homeBanking.controllers;
 
 import com.mindhub.homeBanking.dtos.AccountDTO;
 import com.mindhub.homeBanking.models.*;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.ClientService;
+import com.mindhub.homeBanking.services.TransactionService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
 import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
@@ -16,11 +19,11 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-    private final AccountServiceImpl accService;
-    private final ClientServiceImpl clientService;
-    private final TransactionServiceImpl transactionService;
+    private final AccountService accService;
+    private final ClientService clientService;
+    private final TransactionService transactionService;
 
-    public AccountController(AccountServiceImpl accService, ClientServiceImpl clientService, TransactionServiceImpl transactionService) {
+    public AccountController(AccountService accService, ClientService clientService, TransactionService transactionService) {
         this.accService = accService;
         this.clientService = clientService;
         this.transactionService = transactionService;

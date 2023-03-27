@@ -4,6 +4,10 @@ import com.mindhub.homeBanking.dtos.CardDTO;
 import com.mindhub.homeBanking.dtos.PaymentDTO;
 import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.CardService;
+import com.mindhub.homeBanking.services.ClientService;
+import com.mindhub.homeBanking.services.TransactionService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.CardServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
@@ -31,13 +35,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class CardController {
 
-    private final CardServiceImpl cardService;
-    private final AccountServiceImpl accountService;
-    private final ClientServiceImpl clientService;
-    private final TransactionServiceImpl transactionService;
+    private final CardService cardService;
+    private final AccountService accountService;
+    private final ClientService clientService;
+    private final TransactionService transactionService;
 
 
-    public CardController(CardServiceImpl cardService, AccountServiceImpl accountService, ClientServiceImpl clientService, TransactionServiceImpl transactionService) {
+    public CardController(CardService cardService, AccountService accountService, ClientService clientService, TransactionService transactionService) {
         this.cardService = cardService;
         this.accountService = accountService;
         this.clientService = clientService;

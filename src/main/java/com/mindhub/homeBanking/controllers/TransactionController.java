@@ -4,6 +4,9 @@ import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.ClientRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.ClientService;
+import com.mindhub.homeBanking.services.TransactionService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
 import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
@@ -20,11 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
-    private final AccountServiceImpl accountService;
-    private final ClientServiceImpl clientService;
-    private final TransactionServiceImpl transactionService;
+    private final AccountService accountService;
+    private final ClientService clientService;
+    private final TransactionService transactionService;
 
-    public TransactionController(AccountServiceImpl accountService, ClientServiceImpl clientService, TransactionServiceImpl transactionService) {
+    public TransactionController(AccountService accountService, ClientService clientService, TransactionService transactionService) {
         this.accountService = accountService;
         this.clientService = clientService;
         this.transactionService = transactionService;
