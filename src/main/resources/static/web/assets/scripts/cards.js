@@ -97,11 +97,9 @@ createApp({
             axios.post('/api/clients/current/renew-card', `cardId=${card.id}`)
             .then(response =>
                 console.log(response),
-                this.loadData()
-                
             )
-            .catch(error => console.log(error))
-            this.loadData()
+            .catch(error => console.log(error));
+            location.reload();
         },
 
         sortAccounts() {

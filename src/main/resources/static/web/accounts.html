@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#90fd1b" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
     crossorigin="anonymous">
-  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/x-icon" href="./assets/images/favicon.ico" id="favicon" >
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
   <link rel="stylesheet" href="./assets/scss/main.min.css">
   <title>MHB&CO | Accounts</title>
@@ -20,7 +20,7 @@
     <div>
     </div>
   </div>
-  <p>Loading... &#128116; 	&#9749;</p>
+  <p>Loading... &#128116; &#9749;</p>
 </div>
 
 <body v-else id="app" class="green-theme">
@@ -56,33 +56,34 @@
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
     data-transition="overlap">
     <ul class="vertical menu" data-accordion-menu multi-open-false>
-      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
+      <li class="active"><a href="'/web/accounts.html">Dashboard<i class="fa-solid fa-house"></i></a></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+            <div><a href="/web/cards.html">See my cards</a></div>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+            <div><a href="/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
       </li>
       <li>
-        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i
+            class="fa-solid fa-money-bill-transfer"></i></a>
         <ul class="vertical menu nested">
           <li>
             <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
             <ul class="vertical menu nested">
               <li v-for="account in clientAccounts">
-                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
-                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+                <div class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id"> <i
+                      class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
               </li>
             </ul>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+            <div><a href="/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
       </li>
@@ -103,34 +104,35 @@
     </ul>
 
     <ul class="vertical menu accordion-menu " data-accordion-menu>
-      <li class="flex-container align-middle active"><a
-          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+      <li class="flex-container align-middle active"><a href="/web/accounts.html">Dashboard</a><i
+          class="fa-solid fa-house"></i></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+            <div><a href="/web/cards.html">See my cards</a></div>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+            <div><a href="/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
       </li>
       <li>
-        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i
+            class="fa-solid fa-money-bill-transfer"></i></a>
         <ul class="vertical menu nested">
           <li>
             <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
             <ul class="vertical menu nested">
               <li v-for="account in clientAccounts">
-                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
-                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+                <div class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id"> <i
+                      class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
               </li>
             </ul>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+            <div><a href="/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
       </li>
@@ -149,7 +151,8 @@
         Your total balance : </p>
       <div class="flex-container align-center">
         <p v-if="eyeToggled">$ ********</p>
-        <p v-else class="txt-shadow">$ {{totalBalance}}</p>
+        <p v-else class="txt-shadow">{{totalBalance.toLocaleString('de-DE', { style: 'currency', currency:
+          'USD' })}}</p>
         <i class="fa-solid fa-eye align-self-middle" @click="eyeToggler" id="eyeToggler"></i>
       </div>
     </div>
@@ -194,11 +197,11 @@
     </div>
     <!-- ----------------------------------------------------------MOBILE ACCOUNTS------------------------ -->
 
-    <h3 class="text-center txt-shadow hide-for-large">Your accounts &#128071;</h3>
     <div v-if="clientAccounts.length==0" class="hide-for-large">
       <p class="text-center">You don't have any accounts yet &#128533;</p>
     </div>
-    <div class="parentCardContainer hide-for-large" v-else-if="client">
+    <div class="parentCardContainer fazed-shadow hide-for-large" v-else-if="client">
+      <h3 class="text-center txt-shadow hide-for-large btm-border">Your accounts &#128071;</h3>
       <div class="cardContainer" tabindex="1" v-for="account of clientAccounts" @focus="accountFocused">
         <div class="cardContainer__tag">
           <p> {{account.number}} </p>
@@ -206,10 +209,14 @@
         </div>
         <div class="cardContainer__content flex-container flex-dir-column">
           <p class="txt-shadow alias-txt"><span>Alias :</span> {{account.alias}} </p>
-          <p class="txt-shadow "><span>Balance :</span> $ {{account.balance}}</p>
+          <p class="txt-shadow "><span>Balance :</span> {{account.balance.toLocaleString('de-DE', { style: 'currency',
+            currency:
+            'USD' })}}</p>
           <p class="txt-shadow "><span>Creation :</span> {{account.creationDate.slice(0,10)}} </p>
-          <a :href="'http://localhost:8080/web/account.html?accountId=' + account.id" class="flex-container"><p> See Transactions</p><i
-              class="fa-solid fa-arrow-right-long"></i> <i class="fa-solid fa-money-bill-transfer"></i></a>
+          <a :href="'/web/account.html?accountId=' + account.id" class="flex-container">
+            <p> See Transactions</p><i class="fa-solid fa-arrow-right-long"></i> <i
+              class="fa-solid fa-money-bill-transfer"></i>
+          </a>
         </div>
         <div class="cardContainer__flap"></div>
       </div>
@@ -219,8 +226,8 @@
 
     <div class="grid-y grid-frame show-for-large" v-if="client">
       <div class="cell shrink  cell-block-container">
-        <h1 class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-brain content"></i>&nbsp; Dashboard&nbsp;<i
-            class="fa-sharp fa-solid fa-building-columns content"></i></h1>
+        <h1 class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-brain content"></i>&nbsp;
+          Dashboard&nbsp;<i class="fa-sharp fa-solid fa-building-columns content"></i></h1>
 
         <!-----------------------------------------------------------------CAROUSEL -->
         <div class="orbit div-shadow" role="region" aria-label="Favorite Space Pictures" data-orbit>
@@ -283,22 +290,23 @@
                   <div class="additional">
                     <div class="user-card flex-container align-middle align-center text-center flex-dir-column">
                       <h4> {{account.number}} </h4>
-                     <a href="#" @click.prevent="setAccountToDelete(account.id)" class="delete-anchor" data-open="deleteAccModal"> <i class="fa-solid fa-trash"></i>Delete</a>
+                      <a href="#" @click.prevent="setAccountToDelete(account.id)" class="delete-anchor"
+                        data-open="deleteAccModal"> <i class="fa-solid fa-trash"></i>Delete</a>
                     </div>
                     <div class="more-info">
                       <h2>This account: </h2>
                       <div class="coords flex-container align-left">
-                      <p class="alias-txt"> Alias : {{account.alias}} </p>
-                    </div>
+                        <p class="alias-txt"> Alias : {{account.alias}} </p>
+                      </div>
                       <div class="coords flex-container align-left">
-                        <p> Balance : ${{account.balance}} </p>
+                        <p> Balance : {{account.balance.toLocaleString('de-DE', { style: 'currency', currency:
+                          'USD' })}} </p>
                       </div>
                       <div class="coords flex-container align-left">
                         <p> Creation : {{account.creationDate.slice(0,10)}} </p>
                       </div>
                       <div class="stats ">
-                        <div><a class="flex-container align-left"
-                            :href="'http://localhost:8080/web/account.html?accountId=' + account.id">
+                        <div><a class="flex-container align-left" :href="'/web/account.html?accountId=' + account.id">
                             <div class="title">Transactions : </div>
                             <i class="fa-solid fa-money-bill-transfer"></i>
                             <div class="value"> {{account.transactions.length}} </div>
@@ -400,10 +408,11 @@
               </fieldset>
             </div>
 
-            <div v-if="loanDTO" class="medium-12 cell circle-radio flex-container align-center-middle " >
+            <div v-if="loanDTO" class="medium-12 cell circle-radio flex-container align-center-middle ">
               <div class="radio flex-container align-center-middle text-center ">
                 <label v-for="fpayments in loanDTO.payments" @change="getPayments">
-                  <input type="radio" name="payments" :value="fpayments" v-model="requestedPayments" :label="fpayments" />
+                  <input type="radio" name="payments" :value="fpayments" v-model="requestedPayments"
+                    :label="fpayments" />
                 </label>
               </div>
             </div>
@@ -420,8 +429,9 @@
               </label>
             </div>
 
-            <div v-if="requestedPayments && finalPayments" class="medium-6 cell flex-container align-center-middle text-center">
-              <p> Payments: {{requestedPayments}} X {{finalPayments}} </p>
+            <div v-if="requestedPayments && finalPayments"
+              class="medium-6 cell flex-container align-center-middle text-center">
+              <p> Payments: {{requestedPayments}} X {{finalPayments}}$ </p>
             </div>
 
             <div class="medium-8 cell">
@@ -444,7 +454,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-<!-- ----------------------------------------------------------------------------------Account type modal-->
+    <!-- ----------------------------------------------------------------------------------Account type modal-->
     <div class="reveal" id="accTypeModal" data-reveal>
       <div class="flex-container card-type-div align-center-middle flex-dir-column">
         <p>&#128073; Choose your desired account type</p>
@@ -460,14 +470,15 @@
             <label for='q2'>
               <p>SAVINGS</p>
             </label>
-            <p class="help-text" > *0,35% APY </p>
+            <p class="help-text"> *0,35% APY </p>
           </div>
         </div>
       </div>
       <button class="close-button" data-close aria-label="Close modal" type="button">
         <span aria-hidden="true">&times;</span>
       </button>
-      <button v-if="accType" class="box-shadow-btn flex-container align-center-middle" @click="createNewAcc" data-close >Create new {{accType}} account</button>
+      <button v-if="accType" class="box-shadow-btn flex-container align-center-middle" @click="createNewAcc"
+        data-close>Create new {{accType}} account</button>
     </div>
 
     <!-- -----------------------------------------------------------DELETE ACCOUNT MODAL  -->

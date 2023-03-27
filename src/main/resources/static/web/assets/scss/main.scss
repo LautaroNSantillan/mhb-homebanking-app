@@ -29,6 +29,9 @@
 
 
 body{
+    img[src="./assets/images/favicon.ico"] {
+        display: none;
+      }
     cursor: url('../images/pointer.png'), auto;
     font-family: 'Montserrat'!important;
 // font-family: 'Vollkorn', serif;
@@ -42,6 +45,7 @@ body{
         min-height: 75vh;
         padding-bottom: 4rem;
         margin-bottom: 0!important;
+        margin-top: 0!important;
     }
     h1,h2,h3,h4,h5,h6{
         font-family: 'Montserrat'!important;
