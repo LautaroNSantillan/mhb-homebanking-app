@@ -58,16 +58,16 @@
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
     data-transition="overlap">
     <ul class="vertical menu" data-accordion-menu multi-open-false>
-      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
+      <li class="active"><a href="/web/accounts.html">Dashboard<i class="fa-solid fa-house"></i></a></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+            <div><a href="/web/cards.html">See my cards</a></div>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+            <div><a href="/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
       </li>
@@ -78,13 +78,13 @@
             <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
             <ul class="vertical menu nested">
               <li v-for="account in clientAccounts">
-                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                <div class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id">  <i
                   class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
               </li>
             </ul>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+            <div><a href="/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
       </li>
@@ -105,16 +105,16 @@
 
     <ul class="vertical menu accordion-menu " data-accordion-menu>
       <li class="flex-container align-middle active"><a
-          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+          href="/web/accounts.html">Dashboard</a><i class="fa-solid fa-house"></i></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+            <div><a href="/web/cards.html">See my cards</a></div>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+            <div><a href="/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
       </li>
@@ -125,13 +125,13 @@
             <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
             <ul class="vertical menu nested">
               <li v-for="account in clientAccounts">
-                <div v-if="accounts" class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                <div v-if="accounts" class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id">  <i
                   class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
               </li>
             </ul>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+            <div><a href="/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
       </li>
@@ -195,7 +195,8 @@
           <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
           <div v-if="!transaction.sender" class="col col-5" data-label="DESCRIPTION"> N/A </div>
           <div v-else class="col col-5" data-label="DESCRIPTION"> {{transaction.sender}}</div>
-          <div class="col col-6" data-label="DESCRIPTION"> ${{transaction.remainingBalance}} </div>
+          <div class="col col-6" data-label="DESCRIPTION"> {{transaction.remainingBalance.toLocaleString('de-DE', { style: 'currency', currency:
+            'USD' })}} </div>
         </li>
 
       </ul>

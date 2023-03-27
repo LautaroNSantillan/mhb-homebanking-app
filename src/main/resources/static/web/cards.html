@@ -56,16 +56,16 @@
 data-transition="overlap">
 <ul class="vertical menu" data-accordion-menu multi-open-false>
   <li><a href="#">Profile</a></li>
-  <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+  <li class="active"><a href="/web/accounts.html">Dashboard</a></li>
   <li>
     <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
         class="fa-regular fa-credit-card"></i></a>
     <ul class="vertical menu nested">
       <li>
-        <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+        <div><a href="/web/cards.html">See my cards</a></div>
       </li>
       <li>
-        <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+        <div><a href="/web/create-cards.html">Request new card</a></div>
       </li>
     </ul>
   </li>
@@ -76,13 +76,13 @@ data-transition="overlap">
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
         <ul class="vertical menu nested">
           <li v-for="account in clientAccounts">
-            <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+            <div class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id">  <i
               class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
           </li>
         </ul>
       </li>
       <li>
-        <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+        <div><a href="/web/transaction.html">Transfer money</a></div>
       </li>
     </ul>
   </li>
@@ -103,16 +103,16 @@ data-transition="overlap">
 
     <ul class="vertical menu accordion-menu " data-accordion-menu>
       <li class="flex-container align-middle active"><a
-          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+          href="/web/accounts.html">Dashboard</a><i class="fa-solid fa-house"></i></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div><a href="http://localhost:8080/web/cards.html">See my cards</a></div>
+            <div><a href="/web/cards.html">See my cards</a></div>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/create-cards.html">Request new card</a></div>
+            <div><a href="/web/create-cards.html">Request new card</a></div>
           </li>
         </ul>
       </li>
@@ -123,13 +123,13 @@ data-transition="overlap">
             <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
             <ul class="vertical menu nested">
               <li v-for="account in clientAccounts">
-                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                <div class="flex-container accounts-navbar"><a :href="'/web/account.html?accountId=' + account.id">  <i
                   class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
               </li>
             </ul>
           </li>
           <li>
-            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
+            <div><a href="/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
       </li>
@@ -142,7 +142,7 @@ data-transition="overlap">
 
     <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
           <span class="flex-container align-center-middle">
-            <h1 class="text-center txt-3d cube-box target-animation flex-container align-self-middle">Your Cards</h1>
+            <h1 class="text-center txt-3d cube-box target-animation flex-container align-self-middle"><i class="fa-solid fa-credit-card"></i> Your Cards <i class="fa-solid fa-credit-card"></i></h1>
           </span>
         
         <h2 class="card-h2 text-center div-underline txt-shadow cards-container"> Credit</h2>
@@ -183,7 +183,7 @@ data-transition="overlap">
                 <div class="reveal tiny expire-modal flex-dir-column align-spaced text-center" id="card-expire" data-reveal>
                     <h5>This card is about to expire OR is expired</h5>
                     <p class="lead">Click below to renew it! &#128071;</p>
-                    <button @click="renewCard(card)" class="box-shadow-btn">RENEW</button>
+                    <button @click="renewCard(card)" class="box-shadow-btn" data-close>RENEW</button>
                     <button  class="close-button" data-close aria-label="Close modal" type="button">
                       <span aria-hidden="true">&times;</span>
                     </button>

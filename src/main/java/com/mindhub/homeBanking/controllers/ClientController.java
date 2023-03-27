@@ -36,17 +36,17 @@ public class ClientController {
         return clientService.getClientsDTO();
     }
 
-    @RequestMapping("clients/{id}")
+    @GetMapping("clients/{id}")
     public ClientDTO getClient(@PathVariable Long id){
         return clientService.getClientDTO(id);
     }
 
-    @RequestMapping("clients/{id}/accounts")
+    @GetMapping("clients/{id}/accounts")
     public List<AccountDTO> getClientAccounts(@PathVariable Long id){
        return  accService.mapAccountsSetToDTO(clientService.findById(id).getAccounts());
     }
 
-    @RequestMapping("clients/{id}/loans")
+    @GetMapping("clients/{id}/loans")
     public List<Loan> getClientLoans(@PathVariable Long id){
         return Objects.requireNonNull(clientService.findById(id).getLoans());
     }
@@ -78,11 +78,11 @@ public class ClientController {
         return new ResponseEntity<>("Logged in",HttpStatus.CREATED);
     }
 
-    @RequestMapping("clients/current")
+    @GetMapping("clients/current")
     public ClientDTO getCurrentClient(Authentication authentication) {
         return new ClientDTO(clientService.findClientByEmailExcludingDisabledAccounts(authentication.getName()));
     }
-    @RequestMapping("clients/current/cards")
+    @GetMapping("clients/current/cards")
     public List<CardDTO> getCurrentCards(Authentication authentication) {
         Client currentClient= clientService.findByEmail(authentication.getName());
         return currentClient.getCards().stream().map(CardDTO::new).collect(Collectors.toList());

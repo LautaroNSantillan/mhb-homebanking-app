@@ -55,7 +55,7 @@
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
   data-transition="overlap">
   <ul class="vertical menu" data-accordion-menu multi-open-false>
-    <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
+    <li class="active"><a href="/web/accounts.html">Dashboard<i class="fa-solid fa-house"></i></a></li>
     <li>
       <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
           class="fa-regular fa-credit-card"></i></a>
@@ -103,7 +103,7 @@
 
     <ul class="vertical menu accordion-menu " data-accordion-menu>
       <li class="flex-container align-middle active"><a
-          :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a><i class="fa-solid fa-house"></i></li>
+          href="/web/accounts.html">Dashboard</a><i class="fa-solid fa-house"></i></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
@@ -155,7 +155,7 @@
       </button>
     </div>
     <span class="flex-container align-center-middle">
-    <h1 class="text-center txt-3d cube-box target-animation">Request New Card</h1></span>
+    <h1 class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-credit-card"></i>Request New Card<i class="fa-solid fa-credit-card"></i></h1></span>
     <div class="div-shadow req-card" v-if="client.cards.length<6">
       <form class="request-card-form flex-container flex-dir-column align-center-middle">
         <div class="flex-container card-type-div align-center-middle flex-dir-column">
