@@ -13,7 +13,8 @@ createApp({
             newCardColor: null,
             newCardType: null,
             loaded: false,
-            cardsToRenew:[]
+            cardsToRenew:[],
+            clientAccounts:[]
         }
     },
     beforeUpdate() {
@@ -41,19 +42,22 @@ createApp({
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     this.client = data.data;
                     this.cards = this.client.cards
                     this.filterCreditCards()
                     this.filterDebitCards()
-                    this.addDateObj(this.cards)                
+                    this.addDateObj(this.cards)     
+                    this.sortAccounts()           
                 }
                 )
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         filterCreditCards() {
@@ -100,6 +104,18 @@ createApp({
             this.loadData()
         },
 
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
+        },
+
 
 
 
@@ -130,7 +146,14 @@ createApp({
                 localStorage.setItem('theme', body.className);
                 console.log(localStorage.getItem('theme'))
             }
-        }
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
+        },
     }
 
 }).mount("#app")

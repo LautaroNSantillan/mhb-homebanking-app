@@ -5,6 +5,8 @@ import com.mindhub.homeBanking.dtos.CardDTO;
 import com.mindhub.homeBanking.dtos.ClientDTO;
 import com.mindhub.homeBanking.models.Client;
 import com.mindhub.homeBanking.models.Loan;
+import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.ClientService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class ClientController {
 
-    private final ClientServiceImpl clientService;
-    private final AccountServiceImpl accService;
+    private final ClientService clientService;
+    private final AccountService accService;
 
-    public ClientController(ClientServiceImpl clientService, AccountServiceImpl accService) {
+    public ClientController(ClientService clientService, AccountService accService) {
         this.clientService = clientService;
         this.accService = accService;
     }
@@ -78,7 +80,7 @@ public class ClientController {
 
     @RequestMapping("clients/current")
     public ClientDTO getCurrentClient(Authentication authentication) {
-        return new ClientDTO(clientService.findByEmail(authentication.getName()));
+        return new ClientDTO(clientService.findClientByEmailExcludingDisabledAccounts(authentication.getName()));
     }
     @RequestMapping("clients/current/cards")
     public List<CardDTO> getCurrentCards(Authentication authentication) {

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,7 +45,8 @@ public class Transaction {
         }
     }
     public void setRemainingBalance(Account acc){
-        this.remainingBalance =acc.getBalance()+this.amount;
+        double balance = acc.getBalance() + this.amount;
+        this.remainingBalance = Math.floor(balance * 10) / 10;
     }
 
 }

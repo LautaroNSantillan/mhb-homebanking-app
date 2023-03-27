@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mindhub.homeBanking.repositories.AccountRepository;
 import com.mindhub.homeBanking.repositories.TransactionRepository;
 import com.mindhub.homeBanking.services.AccountService;
+import com.mindhub.homeBanking.services.TransactionService;
 import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
 import com.mindhub.homeBanking.services.impl.TransactionServiceImpl;
 import com.mindhub.homeBanking.utilities.InsufficientFundsException;
@@ -25,6 +26,7 @@ public class Account {
     private LocalDateTime creationDate;
     private double balance;
     private String alias;
+    private boolean isDisabled;
     @Enumerated(EnumType.STRING)
     private AccountType type;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -44,6 +46,7 @@ public class Account {
         this.setAlias(accService);
         this.setClient(client);
         this.setType(accountType);
+        this.setDisabled(false);
     }
 
     public void depositInterest(AccountServiceImpl accountService, TransactionServiceImpl transactionService) {
@@ -64,7 +67,7 @@ public class Account {
         this.alias=(Utils.generateUniqueAlias(accService));
     }
 
-    public Transaction withdraw(double amount, String description, TransactionServiceImpl transactionService, AccountServiceImpl accService,double accBalance) throws InsufficientFundsException {
+    public Transaction withdraw(double amount, String description, TransactionService transactionService, AccountService accService, double accBalance) throws InsufficientFundsException {
         if (accBalance < amount) {
             throw new InsufficientFundsException();
         }
@@ -75,7 +78,7 @@ public class Account {
         return withdraw;
     }
 
-    public Transaction deposit(double amount, String description,Client originClient,TransactionServiceImpl transactionService, AccountServiceImpl accService){
+    public Transaction deposit(double amount, String description,Client originClient,TransactionService transactionService, AccountService accService){
         this.setBalance(this.getBalance()+amount);
         Transaction deposit = transactionService.createNewCreditTransaction(amount, description, this, originClient);
         transactionService.save(deposit);
@@ -92,7 +95,6 @@ public class Account {
     public Client getClient() {
         return client;
     }
-
     public long getId() {
         return id;
     }
@@ -100,7 +102,6 @@ public class Account {
     public Set<Transaction> getTransactions() {
         return transactions;
     }
-
     public String getNumber() {
         return number;
     }
@@ -110,15 +111,12 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-
     public String getAlias() {
         return alias;
     }
-
     public void setClient(Client client) {
         this.client = client;
     }
-
     public void setNumber(String number) {
         this.number = number;
     }
@@ -128,14 +126,19 @@ public class Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
-
     public AccountType getType() {
         return type;
     }
-
     public void setType(AccountType type) {
         this.type = type;
     }
 
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+    }
 }
 

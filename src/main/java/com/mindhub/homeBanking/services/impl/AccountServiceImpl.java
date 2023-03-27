@@ -72,12 +72,20 @@ public class AccountServiceImpl implements AccountService {
         return accs.stream().map(AccountDTO::new).collect(Collectors.toList());
     }
     @Override
+    public List<Account> findNonDisabledAccountsByClient(Client client){
+        return this.accRepo.findNonDisabledAccountsByClient(client);
+    }
+    @Override
     public void save(Account acc){
         this.accRepo.save(acc);
     }
     @Override
     public void updateBalance(Account acc, double amount){
         acc.setBalance(acc.getBalance()+ amount);
+    }
+    @Override
+    public void disableAcc(Account acc){
+        acc.setDisabled(true);
     }
 
     private List<Account> findAccounts(){

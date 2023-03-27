@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#90fd1b" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
+    crossorigin="anonymous">
+  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+  <link rel="stylesheet" href="./assets/scss/main.min.css">
+  <title>MHB&CO | Index</title>
+</head>
+
+<body id="login" class="green-theme tinted-image">
+
+  <nav class="top-bar off-canvas-content" data-off-canvas-content>
+    <button class="toggler hide-for-large" id="toggler" @click="toggleToggler" aria-label="Main Menu"
+      data-toggle="offCanvas">
+      <svg viewBox="0 0 100 100">
+        <path class="line line1"
+          d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+        <path class="line line2" d="M 20,50 H 80" />
+        <path class="line line3"
+          d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+      </svg>
+    </button>
+    <p class="mhb--index">WELCOME TO MIND HUB BROTHERS & CO. BANK</p>
+    <a class="nav-logo" href="#"><img src="./assets/images/logo.png" alt="MINDHUB BROTHERS"></a>
+  </nav>
+
+  <main class="flex-container p-0 small-flex-dir-column medium-flex-dir-column large-flex-dir-row">
+    <div class="index-msg box-boxsh target-animation">
+      <p>
+        Join us for a painless homebanking experience ! &#128116; &#9749;
+      </p>
+    </div>
+
+    <div class="index-harold show-for-large">
+      <img src="./assets/images/indexharold.png" alt="INDEX">
+    </div>
+
+    <section class="w-50">
+      <div v-if="invalidLogin" class="callout small alert" data-closable>
+        <h5>Invalid Credentials ({{loginError}})</h5>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form autocomplete='off' class='form' @submit.prevent name="login">
+        <div class='control'>
+          <h1>
+            Sign In
+          </h1>
+        </div>
+        <div class='control block-cube block-input'>
+          <input name='username' placeholder='Username' type='text' v-model="email">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <div class='control block-cube block-input'>
+          <input name='password' placeholder='Password' type='password' v-model="pwd">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <button class='btn block-cube block-cube-hover' type='button' @click="login">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='text'>
+            Log In
+          </div>
+        </button>
+      </form>
+
+      <h4 class="text-center or">OR</h4>
+
+      <form autocomplete='off' class='form' @submit.prevent name="register" @change="validateForm">
+        <div class='control'>
+          <h1>
+            Register
+          </h1>
+        </div>
+        <p v-if="!filledFname">*Enter a valid name</p>
+        <div class='control block-cube block-input'>
+          <input name='firstname' placeholder='First Name' type='text' v-model="fname">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <p v-if="!filledLname">*Enter a valid name</p>
+        <div class='control block-cube block-input'>
+          <input name='lastname' placeholder='Last Name' type='text' v-model="lname">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <p v-if="!filledEmail">*Enter a valid email</p>
+        <div class='control block-cube block-input'>
+          <input name='email' placeholder='Email' type='text' v-model="regemail">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <p v-if="!filledPwd">*Enter a valid password</p>
+        <div class='control block-cube block-input'>
+          <input name='password' placeholder='Password' type='password' v-model="regpwd">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+        </div>
+        <p v-if="!validForm">**Complete form to register</p>
+        <button v-else
+          :class="[validForm? 'btn block-cube block-cube-hover' : 'btn block-cube block-cube-hover disabled' ]"
+          type='button' @click="register" :disabled="!validForm">
+          <div class='bg-top'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg-right'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='bg'>
+            <div class='bg-inner'></div>
+          </div>
+          <div class='text'>
+            Register
+          </div>
+        </button>
+      </form>
+    </section>
+  </main>
+
+
+
+  <footer class="off-canvas-content" data-off-canvas-content>
+
+    <div class="grid-x align-center-middle">
+      <div class="cell small-6 medium-2 "><a href="https://www.facebook.com/" target="_blank"><i
+            class="fa-brands fa-square-facebook"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://twitter.com/" target="_blank"><i
+            class="fa-brands fa-square-twitter"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.instagram.com/" target="_blank"><i
+            class="fa-brands fa-square-instagram"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"><i
+            class="fa-brands fa-square-youtube"></i></a></div>
+      <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
+            class="fa-brands fa-square-github"></i></a></div>
+      <div class="cell small-6 flex-container align-left">
+        <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
+      </div>
+      <div class="cell small-6 flex-container align-right">
+        <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
+      </div>
+    </div>
+
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"
+    integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="./assets/scripts/index.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+  <script src="https://kit.fontawesome.com/7c09b330ed.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

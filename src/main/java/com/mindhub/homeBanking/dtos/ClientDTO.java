@@ -1,10 +1,14 @@
 package com.mindhub.homeBanking.dtos;
 
 import com.mindhub.homeBanking.models.Client;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+@Getter
+@Setter
 @NoArgsConstructor
 public class ClientDTO {
     private long id;
@@ -32,60 +36,5 @@ public class ClientDTO {
         this.setCards(client.getCards().stream().map(CardDTO::new).collect(Collectors.toSet()));
     }
 
-    public Set<CardDTO> getCards() {
-        return cards;
-    }
-
-    public Set<ClientLoanDTO> getLoans() {
-        return loans;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public Set<AccountDTO> getAccounts() {
-        return accounts;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public void setAccounts(Set<AccountDTO> accounts) {
-        this.accounts = accounts;
-    }
-
-    public void setLoans(Set<ClientLoanDTO> loans) {
-        this.loans = loans;
-    }
-
-    public void setCards(Set<CardDTO> cards) {
-        this.cards = cards;
-    }
 }
 

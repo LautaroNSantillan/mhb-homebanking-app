@@ -1,4 +1,7 @@
 .callout{
+    &.alert{
+        background-color: crimson;
+    }
     z-index: 999;
     position: fixed!important;
 top: 25%;

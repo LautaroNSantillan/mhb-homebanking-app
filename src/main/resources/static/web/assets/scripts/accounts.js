@@ -9,24 +9,28 @@ createApp({
             totalBalance: 0,
             createdAcc: false,
             maxAcc: false,
-            requestedAmount:0,
-            requestedPayments:0,
-            loanDTO:undefined,
-            finalPayments:0,
-            loanId:"",
-            loanType:"",
-            destinationAccNumber:null,
-            loanSuccess:false,
-            loanError:false,
-            loading:true,
-            accType:null,
-            loanErrorMessage:null
+            requestedAmount: 0,
+            requestedPayments: 0,
+            loanDTO: undefined,
+            finalPayments: 0,
+            loanId: "",
+            loanType: "",
+            destinationAccNumber: null,
+            loanSuccess: false,
+            loanError: false,
+            loading: true,
+            accType: null,
+            loanErrorMessage: null,
+            accountToDelete: null,
+            deletedAccError:null,
+            deletedAccMsg:null,
         }
     },
     watch: {
-        loanId: function(newValue, oldValue) {
-          this.requestedPayments = null;}
-        },
+        loanId: function (newValue, oldValue) {
+            this.requestedPayments = null;
+        }
+    },
     updated() {
         $(document).foundation();
     },
@@ -46,7 +50,7 @@ createApp({
         loadData() {
             this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     console.log(data);
                     this.client = data.data;
@@ -82,7 +86,7 @@ createApp({
                 .then(response => {
                     if (response.status == "201") {
                         console.log(response),
-                        this.createdAcc = true,
+                            this.createdAcc = true,
                             this.loadData(),
                             setTimeout(() => {
                                 this.createdAcc = false;
@@ -92,77 +96,93 @@ createApp({
                 }
                 )
                 .catch(error => {
-                    console.log(error);      
-                    if(error.code == "ERR_BAD_REQUEST"){
+                    console.log(error);
+                    if (error.code == "ERR_BAD_REQUEST") {
                         console.log(error),
-                    this.maxAcc = true,
-                    setTimeout(() => {
-                        this.maxAcc = false;
-                    }, 6000)
+                            this.maxAcc = true,
+                            setTimeout(() => {
+                                this.maxAcc = false;
+                            }, 6000)
                     }
-                })    
+                })
         },
-        deleteAccount(id) {
-            axios.delete('/api/clients/current/delete-account', { params: { accId: id } })
-              .then(response => {
-                if (response.status === 200) {
-                  console.log(response);
-                  this.deletedAcc = true;
-                  this.loadData();
-                  setTimeout(() => {
-                    this.deletedAcc = false;
-                  }, 6000);
-                }
-              });
-          },
-
-        requestLoan(){
-            let newLoan={
-            loanId:this.loanId,
-            amount:this.requestedAmount,
-            payments:this.requestedPayments,
-            destinationAccNumber:this.destinationAccNumber}
-            axios.post('/api/loans',newLoan)
-            .then(response =>{
-                console.log(response)
-                if(response.status === 201){
-                    this.loanSuccess=true,
+        deleteAccount() {
+            axios.post('/api/clients/current/delete-account?accId=' + this.accountToDelete)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log(response);
+                        this.deletedAcc = true;
+                        this.loadData();
+                        setTimeout(() => {
+                            this.deletedAcc = false;
+                        }, 6000);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.deletedAccMsg= error.response.data;
+                    this.deletedAccError = true;
                     setTimeout(() => {
-                        this.loanSucces=false;
-                      }, 5000)
-                }
-            })
-            .catch(error =>
-                this.loanErrorMessage=error.response.data.message,
-                this.loanError=true,
-                setTimeout(() => {
-                    this.loanError=false;
-                  }, 5000))      
+                        this.deletedAccError = false;
+                    }, 6000);
+                })
+        },
+        
+        setAccountToDelete(id){
+            this.accountToDelete = id;
         },
 
-        getPayments(){
-            axios.post('/api/loans/final-payments', `amount=${this.requestedAmount}&payments=${this.requestedPayments}`)
-            .then(r=>{
-                console.log(r)
-                this.finalPayments = r.data;
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        requestLoan() {
+            let newLoan = {
+                loanId: this.loanId,
+                amount: this.requestedAmount,
+                payments: this.requestedPayments,
+                destinationAccNumber: this.destinationAccNumber
+            }
+            axios.post('/api/loans', newLoan)
+                .then(response => {
+                    if (response.status === 201) {
+                        this.loanSuccess = true,
+                            setTimeout(() => {
+                                this.loanSucces = false;
+                                this.loadData()
+                            }, 5000)
+                    }
+                })
+                .catch(error => {
+                    this.loanErrorMessage = error.response.data.message,
+                        this.loanError = true,
+                        setTimeout(() => {
+                            this.loanError = false;
+                        }, 5000)
+                }
+                )
+            this.loadData()
         },
-        getLoanDTO(){
+
+        getPayments() {
+            axios.post('/api/loans/final-payments', `amount=${this.requestedAmount}&payments=${this.requestedPayments}`)
+                .then(r => {
+                    console.log(r)
+                    this.finalPayments = r.data;
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        getLoanDTO() {
             console.log(this.loanId)
             axios.get(`/api/loans/${this.loanId}/DTO`)
-            .then(r=>{
-                console.log(r)
-                this.loanDTO = r.data;
-            })
+                .then(r => {
+                    console.log(r)
+                    this.loanDTO = r.data;
+                })
         },
 
-        isLoading(){
+        isLoading() {
             this.loading = true;
         },
-        finishedLoading(){
+        finishedLoading() {
             this.loading = false;
         },
 

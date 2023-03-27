@@ -10,6 +10,7 @@ createApp({
             cardReqFailed: false,
             missingData: false,
             errMsg: "",
+            clientAccounts: [], 
         }
     },
     beforeUpdate() {
@@ -33,16 +34,19 @@ createApp({
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     this.client = data.data
                     console.log(data)
+                    this.sortAccounts()
                 }
                 )
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         createNewCard() {
@@ -51,10 +55,8 @@ createApp({
             axios.post('/api/clients/current/cards', `type=${this.newCardType}&color=${this.newCardColor}`)
                 .then(response => {
                     if (response.status == "201") {
-                        console.log(response),
                             this.createdCard = response.data
                     }
-
                 }
                 )
                 .catch(error => {
@@ -86,9 +88,22 @@ createApp({
                 .catch(error => console.log(error))
         },
 
+
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
+        },
+
         toggleTogglerLarge() {
             const toggler = document.getElementById("togglerLarge");
             toggler.classList.toggle('opened'); toggler.setAttribute('aria-expanded', toggler.classList.contains('opened'))
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
         },
 
         //------
@@ -113,7 +128,14 @@ createApp({
                 localStorage.setItem('theme', body.className);
                 console.log(localStorage.getItem('theme'))
             }
-        }
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
+        },
     }
 
 }).mount("#app")

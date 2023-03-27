@@ -17,6 +17,15 @@
   <title>MHB&CO | Account</title>
 </head>
 
+<div v-if="loading" class="loader flex-dir-column">
+  <img src="./assets/images/logo.png" alt="MHB" class="loader__image">
+  <div class="lds-circle">
+    <div>
+    </div>
+  </div>
+  <p>Loading... &#128116; 	&#9749;</p>
+</div>
+
 <body id="app" class="green-theme tinted-image" >
   <!-- -------------------------------------------------------------------------------------------MOBILE OFF CANVAS -->
   <nav class="top-bar off-canvas-content" data-off-canvas-content>
@@ -49,8 +58,7 @@
   <div class="off-canvas position-bottom hide-for-large accordion-menu" id="offCanvas" data-off-canvas
     data-transition="overlap">
     <ul class="vertical menu" data-accordion-menu multi-open-false>
-      <li><a href="#">Profile</a></li>
-      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard</a></li>
+      <li class="active"><a :href="'/web/accounts.html?clientId=' + currentId">Dashboard<i class="fa-solid fa-house"></i></a></li>
       <li>
         <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>My cards<i
             class="fa-regular fa-credit-card"></i></a>
@@ -63,30 +71,27 @@
           </li>
         </ul>
       </li>
-      <!-- <li>
-        <a href="#">Theme</a>
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
         <ul class="vertical menu nested">
           <li>
-            <div class="grid-x">
-              <div class="cell small-3"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-            </div>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+            <ul class="vertical menu nested">
+              <li v-for="account in clientAccounts">
+                <div class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
-      </li> -->
+      </li>
       <li @click="logOut" class="flex-container align-middle align-center"><a href="#">Log Out</a> <i
           class="fa-solid fa-right-from-bracket"></i></li>
     </ul>
   </div>
-
   <!-- ------------------------------------------------------------------------RIGHT OFF CANVAS -->
   <div class="off-canvas position-left show-for-large " id="offCanvasRight" data-off-canvas data-transition="overlap">
 
@@ -113,26 +118,23 @@
           </li>
         </ul>
       </li>
-      <!-- <li>
-        <a href="#">Theme</a>
-        <ul class="vertical menu nested is-active">
+      <li>
+        <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>Transactions<i class="fa-solid fa-money-bill-transfer"></i></a>
+        <ul class="vertical menu nested">
           <li>
-            <div class="grid-x">
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('mh')"><i
-                    class="fa-solid fa-palette pallete pallete--mh"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('dark')"><i
-                    class="fa-solid fa-palette pallete pallete--dark"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('red')"><i
-                    class="fa-solid fa-palette pallete pallete--red"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('green')"><i
-                    class="fa-solid fa-palette pallete pallete--green"></i></a></div>
-              <div class="cell small-3 large-6"><a href="#" @click="changeTheme('blue')"><i
-                    class="fa-solid fa-palette pallete pallete--blue"></i></a></div>
-
-            </div>
+            <a class="flex-container align-middle my-cards-a" href="#" @click.prevent>See transactions</a>
+            <ul class="vertical menu nested">
+              <li v-for="account in clientAccounts">
+                <div v-if="accounts" class="flex-container accounts-navbar"><a :href="'http://localhost:8080/web/account.html?accountId=' + account.id">  <i
+                  class="fa-solid fa-arrow-right-long"></i>{{account.number}}</a></div>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <div><a href="http://localhost:8080/web/transaction.html">Transfer money</a></div>
           </li>
         </ul>
-      </li> -->
+      </li>
       <li @click="logOut" class="flex-container align-middle "><a href="#">Log Out</a> <i
           class="fa-solid fa-right-from-bracket"></i>
       </li>
@@ -143,31 +145,11 @@
   <!-- ------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
   <main class="off-canvas-content" data-off-canvas-content data-close="offCanvas" @click="toggleTogglerMain">
-
-    <h1 class="text-center txt-3d"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp;
-        {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1>
-    <!-- <div v-if="accounts" class="accordion-wrapper">
-            <div v-if="accounts && sortedTransactions.length==0">
-                <h3>No transactions to show</h3>
-            </div>
-            <div v-else>
-                <ul class="accordion" data-accordion>
-                    <li class="accordion-item" data-accordion-item v-for="transaction of sortedTransactions">
-
-                        <a href="#" class="accordion-title flex-container align-spaced">
-                            <p :class="[transaction.type === 'CREDIT'? 'credit' : 'debit']"> {{transaction.type }}</p>
-                            <p :class="[transaction.type === 'CREDIT'? 'credit' : 'debit']"> {{transaction.amount }}</p>
-                        </a>
-                        <div class="accordion-content" data-tab-content>
-                            <p> Type: {{transaction.type}} </p>
-                            <p> Description : {{transaction.description}} </p>
-                            <p> Date : {{transaction.date.slice(0,10)}}, {{transaction.date.slice(11,16)}}hs </p>
-                        </div>
-                    </li>
-                </ul>
-            </div> -->
-            <div class="transaction-filters flex-container flex-dir-column large-flex-dir-row">
-              <table class="datepicker-table">
+    <span class="flex-container align-center-middle">
+    <h1 v-if="accounts" class="text-center txt-3d cube-box target-animation"><i class="fa-solid fa-brain"></i>&nbsp;Transactions &nbsp;for <em> &nbsp;
+        {{accounts.number}} &nbsp; </em> <i class="fa-sharp fa-solid fa-building-columns"></i></i> </h1></span>
+            <div v-if="sortedTransactions.length>0" class="transaction-filters flex-container flex-dir-column large-flex-dir-row">
+              <table  class="datepicker-table">
                 <thead>
                   <tr>
                     <th>Start date&nbsp;
@@ -191,8 +173,8 @@
                 <button class="box-shadow-btn" @click="filterTransactionsByDate">Filter Transactions</button>
                 <button class="box-shadow-btn" @click="downloadPDF">Download PDF</button>
           </div>
-    <div v-if="accounts && slicedTransactions.length==0">
-      <h3 class="text-center">No transactions to show</h3>
+    <div v-if="accounts && filteredTransactions.length==0">
+      <h3 class="text-center">No transactions to show&#129335; </h3>
     </div>
     <div v-else class="container">
       <ul class="responsive-table">
@@ -213,11 +195,11 @@
           <div class="col col-4" data-label="DESCRIPTION"> {{transaction.description}} </div>
           <div v-if="!transaction.sender" class="col col-5" data-label="DESCRIPTION"> N/A </div>
           <div v-else class="col col-5" data-label="DESCRIPTION"> {{transaction.sender}}</div>
-          <div class="col col-6" data-label="DESCRIPTION"> {{transaction.remainingBalance}} </div>
+          <div class="col col-6" data-label="DESCRIPTION"> ${{transaction.remainingBalance}} </div>
         </li>
 
       </ul>
-      <nav aria-label="Pagination" class="flex-container align-center-middle paginator-div" @click.prevent>
+      <nav aria-label="Pagination" class="flex-container align-center-middle paginator-div" @click.prevent v-if="filteredTransactions.length>0">
         <ul class="pagination" id="paginationDiv" @click.prevent>
       
         </ul>
@@ -241,10 +223,10 @@
             class="fa-brands fa-square-youtube"></i></a></div>
       <div class="cell small-6 medium-2 "><a href="https://github.com/LautaroNSantillan" target="_blank"><i
             class="fa-brands fa-square-github"></i></a></div>
-      <div class="cell small-6 flex-container align-left">
+      <div class="cell small-12 medium-6 flex-container align-left">
         <p>Invest with Harold and Mind Hub Brothers - It's a No-Brainer!</p> <i class="fa-solid fa-brain"></i>
       </div>
-      <div class="cell small-6 flex-container align-right">
+      <div class="cell cell small-12 medium-6 flex-container align-right">
         <p>&copy; 2023 Yours truly Lautaro Nahuel Santillán</p>
       </div>
     </div>

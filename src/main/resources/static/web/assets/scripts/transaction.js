@@ -13,6 +13,7 @@ createApp({
           invalidTransaction:false,
           transactionError:"",
           transactionSuccess:false,
+          clientAccounts:[]
           
         }
     },
@@ -29,44 +30,49 @@ createApp({
 
     methods: {
         loadData() {
+            this.isLoading()
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     console.log(data);
                     this.client = data.data;
                     console.log(this.client);
-                   // this.currentId=this.client=localStorage.getItem('clientId');
+                   this.sortAccounts()
                 }
                 )
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
         },
 
         makeTransaction() {
             axios.post('/api/transaction',`originAccNumber=${this.originAccNumber}&destinationAccNumber=${this.destinationAccNumber}&amount=${this.amount}&description=${this.description}`)
-            .then(response => {
+              .then(response => {
                 if(response.data=='Transaction successful'){
-                    console.log(response)
-                    this.transactionSuccess=true;
-                    setTimeout(() => {
-                        this.transactionSuccess = false;
-                      }, 5000)
+                  console.log(response)
+                  this.transactionSuccess=true;
+                  setTimeout(() => {
+                    this.transactionSuccess = false;
+                  }, 5000)
                 }
-            }
-                )
-
-                .catch(error =>  {
-                        console.log(error)
-                        this.transactionError = error.message
-                        console.log(this.transactionError)
-                        this.invalidTransaction = true
-                        setTimeout(() => {
-                            this.invalidTransaction = false;
-                          }, 5000)
-                    })
-        },
-
+              })
+              .catch(error =>  {
+                console.log(error)
+                this.transactionError = error.response.data.message
+                console.log(this.transactionError)
+                this.invalidTransaction = true
+                setTimeout(() => {
+                  this.invalidTransaction = false;
+                }, 5000)
+              })
+          
+            this.destination=null;
+            this.description="";
+            this.originAccNumber=null;
+            this.destinationAccNumber=null;
+            this.amount=null;
+          },
         filterAccounts() {
             this.filteredAccounts = this.client.accounts.filter(account => account.number !== this.originAccNumber)
           },
@@ -108,8 +114,17 @@ createApp({
 			
         },
 
-        logOut(){
-            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
+        },
+
+
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
         toggleToggler() {
@@ -127,6 +142,13 @@ createApp({
                 toggler.classList.toggle('opened'); toggler.setAttribute('aria-expanded', toggler.classList.contains('opened'))
             }
 
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
         },
         
     }

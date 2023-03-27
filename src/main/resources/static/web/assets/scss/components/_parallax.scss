@@ -1,0 +1,76 @@
+@mixin align-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.parallax{
+
+    // sclae calc : 1 + ((Z transform val * -1) / perspective)
+    &__wrapper{
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        perspective: 300px;
+        .intro_screen{
+            height: 100vh;
+            background-color: 	#66b2b2;
+            @include align-center();
+        }
+        .outro_screen{
+            height: 100vh;
+            background-color: green;
+            @include align-center();
+        }
+
+        #intro{
+            z-index: 0;
+        }
+    
+        #group-1{
+            z-index: -1;
+        }
+        #group-1 > .base_layer{
+            background-color: teal;
+        }
+    
+        #group-2{
+    
+        }
+        #group-2 > .mid_layer{
+            background-color: yellowgreen;
+        }
+    
+        #outro{}
+
+    }
+
+    &__group{
+        position: relative;
+        height: 100vh;
+        transform-style: preserve-3d;
+
+        .parallax__layer{
+            position: absolute;
+            inset:0 ;
+            @include align-center();
+        }
+
+        .base_layer{
+            transform: translateZ(-300px) scale(2);
+        }
+
+        .mid_layer{
+            transform: translateZ(0);
+        }
+        .top_layer{
+            transform: translateZ(210px) scale(0.7);
+        }
+    }
+
+}
+
+.bg-cover{
+    background-size: cover;
+    background-repeat: no-repeat;
+}

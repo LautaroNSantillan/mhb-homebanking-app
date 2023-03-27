@@ -1,5 +1,6 @@
 package com.mindhub.homeBanking.services.impl;
 
+import com.mindhub.homeBanking.dtos.CardDTO;
 import com.mindhub.homeBanking.models.Card;
 import com.mindhub.homeBanking.models.CardColor;
 import com.mindhub.homeBanking.models.CardType;
@@ -46,7 +47,7 @@ private final CardsRepository cardRepo;
     public ResponseEntity<Object> saveNewCard(int acc,Card card){
         if (acc < 3){
             this.save(card);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(new CardDTO(card),HttpStatus.CREATED);
         }else {
             return new ResponseEntity<>("Max owned cards reached", HttpStatus.FORBIDDEN);
         }

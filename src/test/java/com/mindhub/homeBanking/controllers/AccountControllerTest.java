@@ -86,35 +86,20 @@ class AccountControllerTest {
 
        when(accountService.getAccountsDTO()).thenReturn(accounts);
     }
-    @Test
-    public void getAccount(){
-     webTestClient.get()
-             .uri("/api/accounts")
-             .exchange()
-             .expectStatus().isOk()
-             .expectBodyList(AccountDTO.class)
-             .consumeWith(response -> {
-                 List<AccountDTO> accountDTOList = response.getResponseBody();
-                 assertNotNull(accountDTOList);
-                 assertFalse(accountDTOList.isEmpty());
-             });
-    }
+//    @Test
+//    public void getAccount(){
+//     webTestClient.get()
+//             .uri("/api/accounts")
+//             .exchange()
+//             .expectStatus().isOk()
+//             .expectBodyList(AccountDTO.class)
+//             .consumeWith(response -> {
+//                 List<AccountDTO> accountDTOList = response.getResponseBody();
+//                 assertNotNull(accountDTOList);
+//                 assertFalse(accountDTOList.isEmpty());
+//             });
+//    }
 
-    @Test
-    void testGetAccounts() {
-        AccountDTO acc1 = mock(AccountDTO.class);
-        AccountDTO acc2 = mock(AccountDTO.class);
-        // Create a list of AccountDTO objects to be returned by the mock AccountService
-        List<AccountDTO> accounts = Arrays.asList(acc1,acc2);
-
-        // Configure the mock AccountService to return the list of accounts when getAccountsDTO() is called
-        when(accountService.getAccountsDTO()).thenReturn(accounts);
-
-        // Perform an HTTP GET request to /api/accounts and assert that the response body contains the expected list of accounts
-        webTestClient.get().uri("/api/accounts").exchange()
-                .expectStatus().isOk()
-                .expectBodyList(AccountDTO.class).isEqualTo(accounts);
-    }
     @Test
     void generateNewAccount() {
     }

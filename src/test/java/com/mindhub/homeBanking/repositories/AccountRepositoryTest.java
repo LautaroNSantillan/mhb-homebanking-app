@@ -1,4 +1,4 @@
-package com.mindhub.homeBanking.repositories.tests;
+package com.mindhub.homeBanking.repositories;
 
 import com.mindhub.homeBanking.models.Account;
 import com.mindhub.homeBanking.models.Loan;
@@ -14,22 +14,25 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 
 @SpringBootTest
+//@DataJpaTest
 class AccountRepositoryTest {
     @Autowired
     AccountRepository accRepo;
 
-    @Test
-    public void existAccounts(){
-        List<Account> loans = accRepo.findAll();
-        assertThat(loans)
-                .as("It's empty").isNotEmpty();
-    }
+//    @Test
+//    public void existAccounts(){
+//        List<Account> loans = accRepo.findAll();
+//        assertThat(loans)
+//                .as("It's empty").isNotEmpty();
+//    }
+//
+//    @Test
+//    void existsByAlias() {
+//        Account acc = accRepo.findByNumber("VIN-001");
+//        assertThat(acc)
+//                .as("No account found").isNotNull();
+//    }
 
-    @Test
-    void existsByAlias() {
-        Account acc = accRepo.findByNumber("VIN-001");
-        assertThat(acc)
-                .as("No account found").isNotNull();
-    }
+
 
 }

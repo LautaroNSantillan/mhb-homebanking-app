@@ -9,6 +9,8 @@ public interface ClientService {
     List<ClientDTO> getClientsDTO();
     ClientDTO getClientDTO(Long id);
     Client findByEmail(String email);
+    Client findClientByEmailExcludingDisabledAccounts(String email);
     Client findById(Long id);
     void saveNewClient(String fname,String lname, String email, String pwd);
+
 }

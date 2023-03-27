@@ -6,6 +6,7 @@ createApp({
             accId: null,
             accounts: null,
             sortedTransactions: [],
+            filteredTransactions:[],
             windowWidth: window.innerWidth,
             currentTheme: null,
             fromDate: null,
@@ -15,6 +16,10 @@ createApp({
             itemsPerPage: 5,
             totalPages: 1,
             paginationDiv: undefined,
+            loading:true,
+            clientAccounts:[],
+            currentId: null,
+            domloaded:false,
         }
     },
 
@@ -22,7 +27,6 @@ createApp({
         this.paginationDiv = document.getElementById('paginationDiv')
         console.log('updated', this.paginationDiv)
         this.renderNumbers()
-        console.log(this.paginationDiv)
         document.addEventListener('click', this.onDocumentClick)
         $(document).foundation();
         this.datePicker()
@@ -38,10 +42,14 @@ createApp({
         console.log($(app).foundation())
     },
     created() {
+        document.addEventListener('DOMContentLoaded', () => {
+           this.domloaded = true;
+          })
         window.addEventListener('click', this.onDocumentClick)
         $(document).foundation();
         //  this.accId=this.client=localStorage.getItem('clientId');
         this.accId = new URLSearchParams(location.search).get("accountId");
+        this.loadClient()
         this.loadData()
         this.getCurrentTheme()
         this.setCurrentTheme()
@@ -49,18 +57,20 @@ createApp({
         this.datePicker()
         this.paginationDiv = document.getElementById('paginationDiv')
         console.log(this.paginationDiv)
+        this.fromDate =new Date().setHours(0, 0, 0, 0)
+        this.toDate =new Date().setHours(23, 59, 59, 999)
     },
 
     methods: {
         loadData: function () {
+            this.isLoading()
             axios
-                .get(`http://localhost:8080/api/accounts/${this.accId}`)
+                .get(`/api/accounts/${this.accId}`)
                 .then(data => {
                     this.accounts = data.data;
-                    console.log(this.accounts)
-                    console.log(this.accounts.transactions)
                     // this.accounts.transactions.sort((a, b) =>b.id -a.id)      funciona si las creas en orden
                     this.sortTransactions()
+                    this.filteredTransactions=this.sortedTransactions
                     this.renderRows()
                     this.setPageNumber();
                     this.renderNumbers()
@@ -70,6 +80,33 @@ createApp({
                 .catch(error => {
                     console.log(error);
                 })
+                this.finishedLoading()
+        },
+
+        isLoading() {
+            this.loading = true;
+        },
+        finishedLoading() {
+            this.loading = false;
+        },
+
+        loadClient() {
+            this.isLoading()
+            axios
+                .get(`/api/clients/current`)
+                .then(data => {
+                    this.client = data.data;
+                    this.sortAccounts()
+                }
+                )
+                .catch(error => {
+                    console.log(error);
+                })
+                this.finishedLoading()
+        },
+        sortAccounts() {
+            let sortedAccounts = this.client.accounts.sort((acc1, acc2) => acc1.id - acc2.id)
+            this.clientAccounts = sortedAccounts
         },
 
         sortTransactions() {
@@ -78,7 +115,6 @@ createApp({
                 const newTransaction = { ...transaction };
                 newTransaction.date = new Date(transaction.date);
                 newTransaction.dateObj = new Date(transaction.date);
-                console.log(newTransaction.dateObj)
                 return newTransaction;
             });
 
@@ -93,15 +129,14 @@ createApp({
             const sortedTransactionsArray = JSON.parse(sortedTransactionsString)
 
             this.sortedTransactions = sortedTransactionsArray;
-            console.log(this.sortedTransactions);
         },
 
         getClient() {
             axios
-                .get(`http://localhost:8080/api/clients/current`)
+                .get(`/api/clients/current`)
                 .then(data => {
                     this.client = data.data
-                    console.log(this.client)
+                    this.currentId=this.client.id
 
                 })
                 .catch(error => {
@@ -115,14 +150,20 @@ createApp({
 
         filterTransactionsByDate() {
             let fromDate = new Date(this.fromDate);
+            console.log(fromDate, this.fromDate)
             fromDate.setHours(0, 0, 0, 0);
             let toDate = new Date(this.toDate);
+            console.log(toDate,this.toDate)
             toDate.setHours(23, 59, 59, 999);
 
-            this.sortedTransactions = this.sortedTransactions.filter((transaction) => {
+            this.filteredTransactions = this.sortedTransactions.filter((transaction) => {
                 let transactionDate = new Date(transaction.date);
-                return transactionDate >= fromDate && transactionDate <= toDate;
+                console.log(transactionDate >= fromDate && transactionDate<=toDate, fromDate, toDate)
+                return transactionDate >= fromDate && transactionDate<=toDate;
             });
+            console.log(this.filteredTransactions)
+            this.renderRows()
+            this.renderNumbers()
         },
 
         downloadPDF() {
@@ -133,7 +174,6 @@ createApp({
             };
             axios.post('/api/export-to-PDF-stream-output', data, { responseType: 'blob' })
                 .then(response => {
-                    console.log(response)
                     const url = window.URL.createObjectURL(response.data);
                     const link = document.createElement('a');
                     link.href = url;
@@ -185,32 +225,30 @@ createApp({
             // implementation of custom elements instead of inputs
             var startDate = new Date();
             startDate.setHours(0, 0, 0, 0);
-            this.fromDate = startDate
             var endDate = new Date();
             endDate.setHours(0, 0, 0, 0);
-            this.toDate = endDate
             $('#dp4').fdatepicker()
-                .on('changeDate', function (ev) {
+                .on('changeDate', (ev)=> {
                     if (ev.date.valueOf() > endDate.valueOf()) {
                         $('#alert').show().find('strong').text('The start date can not be greater then the end date');
                     } else {
                         $('#alert').hide();
                         startDate = new Date(ev.date);
                         this.fromDate = startDate
-                        console.log(startDate)
+                        console.log("SRAT DATE",this.fromDate,startDate)
                         $('#startDate').text($('#dp4').data('date'));
                     }
                     $('#dp4').fdatepicker('hide');
                 });
             $('#dp5').fdatepicker()
-                .on('changeDate', function (ev) {
+                .on('changeDate',  (ev)=> {
                     if (ev.date.valueOf() < startDate.valueOf()) {
                         $('#alert').show().find('strong').text('The end date can not be less then the start date');
                     } else {
                         $('#alert').hide();
                         endDate = new Date(ev.date);
                         this.toDate = endDate
-                        console.log(this.toDate)
+                        console.log("END DATE",endDate,this.toDate)
                         $('#endDate').text($('#dp5').data('date'));
                     }
                     $('#dp5').fdatepicker('hide');
@@ -220,24 +258,28 @@ createApp({
 
         //----------------------------------------------PAGINATOR--------------------------------
         renderRows() {
-            this.slicedTransactions = this.sortedTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
-                this.itemsPerPage * this.currentPage);
+           
+               this.slicedTransactions = this.filteredTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
+                this.itemsPerPage * this.currentPage); 
+            
+            
         },
         setPageNumber() {
-            let numOfTransactions = this.sortedTransactions.length;
+            let numOfTransactions = this.filteredTransactions.length;
             this.totalPages = Math.ceil(numOfTransactions / this.itemsPerPage);
             console.log(this.totalPages);
         },
         renderNumbers() {
-            let paginationDiv = document.getElementById('paginationDiv')
-            console.log(paginationDiv)
-            console.log(this.totalPages > 0)
+            if(this.filteredTransactions.length>0 && this.domloaded){
 
-            paginationDiv.innerHTML = `  <li ><a href="#" data-pagination="firstPage"><i class="fa-solid fa-backward-step"></i> First page </a></li>`
+            let paginationDivv = document.getElementById('paginationDiv')
+            console.log("TOTAL PAGES",paginationDivv)
+
+            paginationDivv.innerHTML = `  <li ><a href="#" data-pagination="firstPage"><i class="fa-solid fa-backward-step"></i> First page </a></li>`
 
             if (this.currentPage != 1) {
 
-                paginationDiv.innerHTML +=
+                paginationDivv.innerHTML +=
                     ` 
               <li ><a href="#" data-pagination="previous"> <i class="fa-solid fa-chevron-left"></i>  <span > Previous </span></a></li>
               
@@ -246,7 +288,7 @@ createApp({
 
             if (this.totalPages > 0) {
                 for (let i = 1; i <= this.totalPages; i++) {
-                    paginationDiv.innerHTML +=
+                    paginationDivv.innerHTML +=
                         ` 
                  <li> <a href="#" data-pagination="pageNumber"> ${i}</a> </li>
                 
@@ -256,17 +298,17 @@ createApp({
 
             if (this.currentPage !== this.totalPages) {
 
-                paginationDiv.innerHTML +=
+                paginationDivv.innerHTML +=
                     ` 
             <li ><a href="#" data-pagination="next">  Next <i class="fa-solid fa-chevron-right"></i> </a></li>
             
             `
             }
-            paginationDiv.innerHTML += ` <li ><a href="#" data-pagination="lastPage"><i class="fa-solid fa-forward-step"></i>  <span >Last page</span> </a></li>`
+            paginationDivv.innerHTML += ` <li ><a href="#" data-pagination="lastPage"><i class="fa-solid fa-forward-step"></i>  <span >Last page</span> </a></li>`
+        }
 
         },
         onDocumentClick(event) {
-            console.log(event.target.dataset.pagination)
             switch (event.target.dataset.pagination) {
                 case "pageNumber":
                     this.currentPage = Number(event.target.innerText);
@@ -289,7 +331,7 @@ createApp({
             }
             this.renderRows()
             this.renderNumbers()
-            console.log(this.currentPage)
+            console.log("CURRENT PAGE", this.currentPage)
         },
 
 
@@ -338,7 +380,6 @@ createApp({
             const body = document.querySelector('body');
             body.className = body.className = ('');
             body.classList.add(color + "-theme");
-            console.log(body.className)
         },
         getCurrentTheme() {
             const body = document.querySelector('body');
@@ -352,9 +393,15 @@ createApp({
             const body = document.querySelector('body');
             if (localStorage.getItem('theme')) {
                 localStorage.setItem('theme', body.className);
-                console.log(localStorage.getItem('theme'))
             }
-        }
+        },
+        logOut() {
+            axios.post('/api/logout').then(response => console.log('signed out!!!'))
+                .then(response => {
+                    window.location.href = '/web/index.html'
+                }
+                )
+        },
     }
 
 }).mount("#app")

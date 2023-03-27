@@ -14,13 +14,12 @@
 }
 
 .title {
-  margin-bottom: 30px;
   color: #162969;
 }
 
 .small-flex-dir-column {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  // margin-top: 2rem;
+  // margin-bottom: 2rem;
   @media (max-width: 768px) {
     flex-direction: column;
   }

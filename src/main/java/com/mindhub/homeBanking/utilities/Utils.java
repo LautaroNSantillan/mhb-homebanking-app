@@ -75,7 +75,7 @@ public class Utils {
     }
     public static String aliasGenerator() {
             Faker faker = new Faker();
-            String alias = faker.animal().name().toUpperCase() + "."+ faker.book().author().toUpperCase() + "." + faker.superhero().name().toUpperCase();
+            String alias = faker.animal().name().toUpperCase() + "."+ faker.book().author().toUpperCase();
             alias = alias.replace(" ", "");
             return alias;
     }

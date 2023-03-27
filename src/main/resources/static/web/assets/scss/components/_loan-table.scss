@@ -4,8 +4,9 @@
     width: 90%;
     padding: .7rem;
     box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
-    @media (min-width:1024px ){
-        margin-top: 2rem;
+    margin-top: 2rem;
+    @media (max-width:1024px ){
+        margin-top: 3rem;
     }
 }
 
