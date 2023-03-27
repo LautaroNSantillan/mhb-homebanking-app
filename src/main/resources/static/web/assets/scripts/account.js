@@ -160,8 +160,8 @@ createApp({
                 let transactionDate = new Date(transaction.date);
                 console.log(transactionDate >= fromDate && transactionDate<=toDate, fromDate, toDate)
                 return transactionDate >= fromDate && transactionDate<=toDate;
-            });
-            console.log(this.filteredTransactions)
+            })
+            this.setPageNumber()
             this.renderRows()
             this.renderNumbers()
         },
@@ -258,10 +258,8 @@ createApp({
 
         //----------------------------------------------PAGINATOR--------------------------------
         renderRows() {
-           
                this.slicedTransactions = this.filteredTransactions.slice(this.itemsPerPage * (this.currentPage - 1),
-                this.itemsPerPage * this.currentPage); 
-            
+                this.itemsPerPage * this.currentPage);  
             
         },
         setPageNumber() {
@@ -273,7 +271,6 @@ createApp({
             if(this.filteredTransactions.length>0 && this.domloaded){
 
             let paginationDivv = document.getElementById('paginationDiv')
-            console.log("TOTAL PAGES",paginationDivv)
 
             paginationDivv.innerHTML = `  <li ><a href="#" data-pagination="firstPage"><i class="fa-solid fa-backward-step"></i> First page </a></li>`
 
