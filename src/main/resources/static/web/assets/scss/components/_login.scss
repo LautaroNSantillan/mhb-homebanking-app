@@ -266,9 +266,15 @@ $bg_gradient: linear-gradient(
     color: white;
     padding: .5rem;
     font-size: 2rem;
+    @media(max-width: 425px){
+      font-size: 1rem;
+  }
     i {
       color: white;
       font-size: 2rem;
+      @media(max-width: 425px){
+        font-size: 1rem;
+    }
     }
   }
 }
