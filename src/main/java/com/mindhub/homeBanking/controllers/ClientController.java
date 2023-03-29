@@ -93,11 +93,13 @@ public class ClientController {
 
     @GetMapping("clients/current")
     public ClientDTO getCurrentClient(Authentication authentication) {
-        System.out.println(authentication.getName());
-        Client client = clientService.findByEmail(authentication.getName());
-        Set<Account> notDisabledAccs =  client.getAccounts().stream().filter(account -> !account.isDisabled()).collect(Collectors.toSet());
-        client.setAccounts(notDisabledAccs);
-        return new ClientDTO(client);
+//        System.out.println(authentication.getName());
+//        Client client = clientService.findByEmail(authentication.getName());
+//        Set<Account> notDisabledAccs =  client.getAccounts().stream().filter(account -> !account.isDisabled()).collect(Collectors.toSet());
+//        client.setAccounts(notDisabledAccs);
+//        return new ClientDTO(client);
+
+        return new ClientDTO(this.clientService.findClientByEmailExcludingDisabledAccounts(authentication.getName()));
 
     }
     @GetMapping("clients/current/cards")

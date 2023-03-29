@@ -13,7 +13,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface ClientRepository extends JpaRepository<Client, Long> {
     Client findByEmail(String email);
-    @Query("SELECT c FROM Client c JOIN FETCH c.accounts a LEFT JOIN FETCH a.transactions WHERE c.email = :clientEmail AND a.isDisabled = false")
+    @Query("SELECT c FROM Client c LEFT JOIN FETCH c.accounts a LEFT JOIN FETCH a.transactions WHERE c.email = :clientEmail AND (a.isDisabled IS NULL OR a.isDisabled = false)")
     Client findClientByEmailExcludingDisabledAccounts(@Param("clientEmail") String clientEmail);
 
 }
