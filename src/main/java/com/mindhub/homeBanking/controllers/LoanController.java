@@ -4,14 +4,7 @@ import com.mindhub.homeBanking.dtos.LoanApplicationDTO;
 import com.mindhub.homeBanking.dtos.LoanDTO;
 import com.mindhub.homeBanking.models.*;
 import com.mindhub.homeBanking.models.loans.DynamicLoan;
-import com.mindhub.homeBanking.services.AccountService;
-import com.mindhub.homeBanking.services.ClientLoanService;
-import com.mindhub.homeBanking.services.ClientService;
-import com.mindhub.homeBanking.services.LoanService;
-import com.mindhub.homeBanking.services.impl.AccountServiceImpl;
-import com.mindhub.homeBanking.services.impl.ClientLoanServiceImpl;
-import com.mindhub.homeBanking.services.impl.ClientServiceImpl;
-import com.mindhub.homeBanking.services.impl.LoanServiceImpl;
+import com.mindhub.homeBanking.services.*;
 import com.mindhub.homeBanking.utilities.ErrorResponse;
 import com.mindhub.homeBanking.utilities.LoanNotFoundException;
 import com.mindhub.homeBanking.utilities.SuccessResponse;
@@ -31,13 +24,15 @@ public class LoanController {
     private final ClientLoanService clientLoanService;
     private final ClientService clientService;
     private final AccountService accService;
+    private final TransactionService transactionService;
 
 
-    public LoanController(LoanService loanService, ClientLoanService clientLoanService, ClientService clientService, AccountService accService) {
+    public LoanController(LoanService loanService, ClientLoanService clientLoanService, ClientService clientService, AccountService accService, TransactionService transactionService) {
         this.loanService = loanService;
         this.clientLoanService = clientLoanService;
         this.clientService = clientService;
         this.accService = accService;
+        this.transactionService = transactionService;
     }
 
     @Transactional
@@ -113,8 +108,7 @@ public class LoanController {
                         HttpStatus.FORBIDDEN);
             }
 
-        accService.updateBalance(clientAcc, requestedLoan.getAmount());
-        accService.save(clientAcc);
+     clientAcc.deposit(requestedLoan.getAmount(), requestedLoan.getLoanId(), null, transactionService, accService);
 
         // Save the loan to the database and return the response
         clientLoanService.saveNewClientLoan(this.calculatePayments(requestedLoan.getAmount(), injectedLoan.getInterestRate()), requestedLoan.getPayments(),currentClient,injectedLoan);
